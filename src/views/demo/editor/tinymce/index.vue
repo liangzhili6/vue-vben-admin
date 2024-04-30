@@ -4,12 +4,16 @@
   </PageWrapper>
 </template>
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { ref, nextTick } from 'vue';
   import { Tinymce } from '@/components/Tinymce';
   import { PageWrapper } from '@/components/Page';
 
+  const emit = defineEmits(['change']);
   const value = ref('hello world!');
   function handleChange(value: string) {
     console.log(value);
+    nextTick(() => {
+      emit('change', value);
+    });
   }
 </script>

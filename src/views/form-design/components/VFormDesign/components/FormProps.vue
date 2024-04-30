@@ -6,6 +6,12 @@
     <Form class="properties-body" label-align="left" layout="vertical">
       <!--      <e-upload v-model="fileList"></e-upload>-->
 
+      <FormItem label="表单标题" v-show="formConfig.labelLayout === 'flex'">
+        <Input :style="{ width: '100%' }" v-model:value="formConfig.title" />
+      </FormItem>
+      <FormItem label="保存数据" v-show="formConfig.labelLayout === 'flex'">
+        <Input :style="{ width: '100%' }" v-model:value="formConfig.submitFormTemplateTxt" />
+      </FormItem>
       <FormItem label="表单布局">
         <RadioGroup button-style="solid" v-model:value="formConfig.layout">
           <RadioButton value="horizontal">水平</RadioButton>
@@ -88,6 +94,7 @@
     FormItem,
     RadioButton,
     RadioGroup,
+    Input,
   } from 'ant-design-vue';
 
   const { formConfig } = useFormDesignState();

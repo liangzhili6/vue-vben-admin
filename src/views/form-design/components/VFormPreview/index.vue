@@ -14,7 +14,7 @@
     :width="900"
   >
     <VFormCreate
-      :form-config="formConfig as any"
+      :form-config="formConfig"
       v-model:fApi="fApi"
       v-model:formModel="formModel"
       @submit="onSubmit"
@@ -49,7 +49,7 @@
       const state = reactive<{
         formModel: IAnyObject;
         visible: boolean;
-        formConfig: IFormConfig;
+        formConfig: any;
         fApi: IVFormMethods;
       }>({
         formModel: {},
@@ -83,6 +83,7 @@
       };
 
       const onSubmit = (_data: IAnyObject) => {
+        console.log('_data', _data);
         //
       };
       const onCancel = () => {

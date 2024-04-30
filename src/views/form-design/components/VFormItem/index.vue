@@ -4,7 +4,17 @@
 <template>
   <Col v-bind="colPropsComputed">
     <FormItem v-bind="{ ...formItemProps }">
-      <template #label v-if="!formItemProps.hiddenLabel && schema.component !== 'Divider'">
+      <template
+        #label
+        v-if="
+          !formItemProps.hiddenLabel &&
+          schema.component !== 'Divider' &&
+          !formItemProps.hiddenLabel &&
+          schema.component !== 'Tinymce' &&
+          !formItemProps.hiddenLabel &&
+          schema.component !== 'ImageText'
+        "
+      >
         <Tooltip>
           <span>{{ schema.label }}</span>
           <template #title v-if="schema.helpMessage"
@@ -32,9 +42,12 @@
           :schema="schema"
           :style="schema.width ? { width: schema.width } : {}"
           @change="handleChange"
+          :width="schema.width"
           @click="handleClick(schema)"
       /></div>
-
+      <div v-if="['ImageText'].includes(schema.component)">
+        <div v-html="schema.defaultValue ? schema.defaultValue : '图文内容'"></div>
+      </div>
       <span v-if="['Button'].includes(schema.component)">{{ schema.label }}</span>
     </FormItem>
   </Col>
@@ -50,7 +63,12 @@
   import { Tooltip, FormItem, Divider, Col } from 'ant-design-vue';
   import Icon from '@/components/Icon/Icon.vue';
   import { useFormModelState } from '../../hooks/useFormDesignState';
+  import { CollapseContainer } from '@/components/Container';
+  import { BasicForm } from '@/components/Form';
+  import Tinymce from '@/views/demo/editor/tinymce/Editor.vue';
+  import { Signature } from '@/components/Signature';
 
+  //
   export default defineComponent({
     name: 'VFormItem',
     components: {
@@ -59,6 +77,10 @@
       FormItem,
       Divider,
       Col,
+      CollapseContainer,
+      BasicForm,
+      Tinymce,
+      Signature,
     },
 
     props: {
@@ -146,8 +168,8 @@
 
       const componentItem = computed(() => componentMap.get(props.schema.component as string));
 
-      // console.log('component change:', props.schema.component, componentItem.value);
       const handleClick = (schema: IVFormComponent) => {
+        console.log('component handleClick---schema:', schema);
         if (schema.component === 'Button' && schema.componentProps?.handle)
           emit(schema.componentProps?.handle);
       };
@@ -185,7 +207,10 @@
       });
 
       const handleChange = function (e) {
+        console.log('handleChange-------e', e);
         const isCheck = ['Switch', 'Checkbox', 'Radio'].includes(props.schema.component);
+        const isSignatureCheck = ['Signature'].includes(props.schema.component);
+        console.log('isSignatureCheck', isSignatureCheck);
         const target = e ? e.target : null;
         const value = target ? (isCheck ? target.checked : target.value) : e;
         setFormModel(props.schema.field!, value);

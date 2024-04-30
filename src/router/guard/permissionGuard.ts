@@ -74,13 +74,13 @@ export function createPermissionGuard(router: Router) {
     // get userinfo while last fetch time is empty
     if (userStore.getLastUpdateTime === 0) {
       try {
-        await userStore.getUserInfoAction();
+        await userStore.getUserInfoAction(userStore.getUserInfo.userCode);
       } catch (err) {
         next();
         return;
       }
     }
-
+    console.log('permissionStore', permissionStore);
     // 动态路由加载（首次）
     if (!permissionStore.getIsDynamicAddedRoute) {
       const routes = await permissionStore.buildRoutesAction();

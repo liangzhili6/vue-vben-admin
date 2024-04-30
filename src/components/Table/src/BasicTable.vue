@@ -14,7 +14,6 @@
         <slot :name="item" v-bind="data || {}"></slot>
       </template>
     </BasicForm>
-
     <Table
       ref="tableElRef"
       v-bind="getBindValues"
@@ -243,6 +242,7 @@
       columns: toRaw(unref(getViewColumns)),
       pagination: toRaw(unref(getPaginationInfo)),
       dataSource,
+      showIndexColumn: false,
       footer: unref(getFooterProps),
       ...unref(getExpandOption),
     };

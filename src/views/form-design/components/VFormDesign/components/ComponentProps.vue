@@ -7,6 +7,13 @@
       <Empty class="hint-box" v-if="!formConfig.currentItem.key" description="未选择组件" />
 
       <Form label-align="left" layout="vertical">
+        <FormItem label="图文内容" v-if="['ImageText'].includes(formConfig.currentItem.component)">
+          <Tinymce
+            :schema="{ ...formConfig, defaultValue: '图文内容' }"
+            v-model:value="formConfig.currentItem['defaultValue']"
+            @change="handleChange"
+          />
+        </FormItem>
         <!--    循环遍历渲染组件属性      -->
 
         <div v-if="formConfig.currentItem && formConfig.currentItem.componentProps">
@@ -101,6 +108,7 @@
   import FormOptions from './FormOptions.vue';
   import { formItemsForEach, remove } from '../../../utils';
   import { IBaseFormAttrs } from '../config/formItemPropsConfig';
+  import { Tinymce } from '@/components/Tinymce';
 
   export default defineComponent({
     name: 'ComponentProps',
@@ -118,6 +126,7 @@
       RadioButtonGroup,
       Col,
       Row,
+      Tinymce,
     },
     setup() {
       // 让compuated属性自动更新
@@ -230,12 +239,20 @@
             .map(({ label, field }) => ({ label: label + '/' + field, value: field }))
         );
       });
+      const handleChange = (val: any) => {
+        formConfig.value.schemas.filter((item) => {
+          item.defaultValue = val;
+          return item.key === formConfig.value.currentItem!.key;
+        });
+        console.log('handleChange239', val, formConfig.value.schemas);
+      };
       return {
         formConfig,
         showControlAttrs,
         linkOptions,
         controlOptions,
         inputOptions,
+        handleChange,
       };
     },
   });

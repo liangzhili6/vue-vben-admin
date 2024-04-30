@@ -95,15 +95,15 @@ export const useUserStore = defineStore({
 
         // save token
         this.setToken(token);
-        return this.afterLoginAction(goHome);
+        return this.afterLoginAction(goHome, data);
       } catch (error) {
         return Promise.reject(error);
       }
     },
-    async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
+    async afterLoginAction(goHome?: boolean, data?: any): Promise<GetUserInfoModel | null> {
       if (!this.getToken) return null;
       // get user info
-      const userInfo = await this.getUserInfoAction();
+      const userInfo = await this.getUserInfoAction(data.userCode);
 
       const sessionTimeout = this.sessionTimeout;
       if (sessionTimeout) {
@@ -125,9 +125,10 @@ export const useUserStore = defineStore({
       }
       return userInfo;
     },
-    async getUserInfoAction(): Promise<UserInfo | null> {
+    async getUserInfoAction(userCode?: String): Promise<UserInfo | null> {
       if (!this.getToken) return null;
-      const userInfo = await getUserInfo();
+      const userInfo = await getUserInfo(userCode);
+      console.log('userInfo', userInfo);
       const { roles = [] } = userInfo;
       if (isArray(roles)) {
         const roleList = roles.map((item) => item.value) as RoleEnum[];
@@ -136,6 +137,7 @@ export const useUserStore = defineStore({
         userInfo.roles = [];
         this.setRoleList([]);
       }
+      console.log('userInfo-----------------', userInfo);
       this.setUserInfo(userInfo);
       return userInfo;
     },

@@ -11,7 +11,7 @@
       }"
       breakpoint="md"
     >
-      <div style=" height: 90vh;overflow: hidden scroll; overflow-x: visible">
+      <div style="height: 90vh; overflow: hidden scroll; overflow-x: visible">
         <CollapseContainer title="基础控件">
           <CollapseItem
             :list="baseComponents"
@@ -20,7 +20,7 @@
             @handle-list-push="handleListPush"
           />
         </CollapseContainer>
-        <CollapseContainer title="自定义控件">
+        <CollapseContainer title="联系信息字段">
           <CollapseItem
             :list="customComponents"
             @add-attrs="handleAddAttrs"
@@ -127,6 +127,8 @@
   const formModel = ref({});
   // endregion
   const formConfig = ref<IFormConfig>({
+    title: '新增表单',
+    submitFormTemplateTxt: '保存数据',
     // 表单配置
     schemas: [],
     layout: 'horizontal',
@@ -294,7 +296,9 @@
    * @param Modal {IToolbarMethods}
    */
   const handleOpenModal = (Modal: IToolbarMethods) => {
+    console.log('handleOpenModal---Modal', Modal);
     const config = cloneDeep(formConfig.value);
+    console.log('config', config);
     Modal?.showModal(config);
   };
   /**

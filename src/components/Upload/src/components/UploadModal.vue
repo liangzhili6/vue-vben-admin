@@ -178,7 +178,9 @@
         {
           data: {
             ...(props.uploadParams || {}),
+            fromId: item.file,
           },
+          fromId: item.file,
           file: item.file,
           name: props.name,
           filename: props.filename,

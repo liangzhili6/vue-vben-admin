@@ -2,11 +2,11 @@
   <div :class="prefixCls" class="relative w-full h-full px-4">
     <div class="flex items-center absolute right-4 top-4">
       <AppDarkModeToggle class="enter-x mr-2" v-if="!sessionTimeout" />
-      <AppLocalePicker
+      <!-- <AppLocalePicker
         class="text-white enter-x xl:text-gray-600"
         :show-text="false"
         v-if="!sessionTimeout && showLocale"
-      />
+      /> -->
     </div>
 
     <span class="-enter-x xl:hidden">
@@ -24,11 +24,11 @@
               class="w-1/2 -mt-16 -enter-x"
             />
             <div class="mt-10 font-medium text-white -enter-x">
-              <span class="inline-block mt-4 text-3xl"> {{ t('sys.login.signInTitle') }}</span>
+              <span class="inline-block mt-4 text-3xl"> {{ 'UAT - 急性脑梗死溶栓评估' }}</span>
             </div>
-            <div class="mt-5 font-normal text-white dark:text-gray-500 -enter-x">
+            <!-- <div class="mt-5 font-normal text-white dark:text-gray-500 -enter-x">
               {{ t('sys.login.signInDesc') }}
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="flex w-full h-full py-5 xl:h-auto xl:py-0 xl:my-0 xl:w-6/12">
@@ -48,11 +48,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-  import { AppDarkModeToggle, AppLocalePicker, AppLogo } from '@/components/Application';
+  import { AppDarkModeToggle, /* AppLocalePicker, */ AppLogo } from '@/components/Application';
   import { useGlobSetting } from '@/hooks/setting';
   import { useDesign } from '@/hooks/web/useDesign';
-  import { useI18n } from '@/hooks/web/useI18n';
-  import { useLocaleStore } from '@/store/modules/locale';
+  // import { useI18n } from '@/hooks/web/useI18n';
+  // import { useLocaleStore } from '@/store/modules/locale';
   import { computed } from 'vue';
   import ForgetPasswordForm from './ForgetPasswordForm.vue';
   import LoginForm from './LoginForm.vue';
@@ -68,9 +68,9 @@
 
   const globSetting = useGlobSetting();
   const { prefixCls } = useDesign('login');
-  const { t } = useI18n();
-  const localeStore = useLocaleStore();
-  const showLocale = localeStore.getShowPicker;
+  // const { t } = useI18n();
+  // const localeStore = useLocaleStore();
+  // const showLocale = localeStore.getShowPicker;
   const title = computed(() => globSetting?.title ?? '');
 </script>
 <style lang="less">

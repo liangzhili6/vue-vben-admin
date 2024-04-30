@@ -18,6 +18,15 @@ declare type Value = [number, number] | number;
 /**
  * 组件属性
  */
+
+export interface MemberFormComponent {
+  label: string;
+  value: string;
+}
+export interface CentreFormComponent {
+  label: string;
+  value: string;
+}
 export interface IVFormComponent {
   // extends Omit<FormSchema, 'component' | 'label' | 'field' | 'rules'> {
   // 对应的字段
@@ -70,6 +79,8 @@ export interface IVFormComponent {
   columns?: Array<{ span: number; children: any[] }>;
   hiddenView?: any;
   flag?: any;
+  render?: (value: any, formItem: IVFormComponent, fApi: IVFormMethods) => void;
+  defaultValue?: string;
 }
 
 declare type namesType = string | string[];
@@ -95,6 +106,8 @@ export interface IVhiddenView {
 // 使用extends 而不使用 &联结 是为了避免 type:check指令类型重载错误
 export interface IFormConfig extends PickAntFormConfig {
   labelLayout?: labelLayout;
+  title: string;
+  submitFormTemplateTxt: string;
   labelWidth?: number;
   schemas: IVFormComponent[];
   currentItem?: IVFormComponent;

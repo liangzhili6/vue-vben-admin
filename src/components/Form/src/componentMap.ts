@@ -20,6 +20,7 @@ import {
   TimePicker,
   TreeSelect,
   Transfer,
+  Button,
 } from 'ant-design-vue';
 import ApiRadioGroup from './components/ApiRadioGroup.vue';
 import RadioButtonGroup from './components/RadioButtonGroup.vue';
@@ -35,9 +36,13 @@ import { CountdownInput } from '@/components/CountDown';
 import { BasicTitle } from '@/components/Basic';
 import { CropperAvatar } from '@/components/Cropper';
 
+import { Tinymce } from '@/components/Tinymce';
+import { Signature } from '@/components/Signature';
+// import { Member } from '@/components/Member';
 const componentMap = new Map<ComponentType | string, Component>();
 
 componentMap.set('Input', Input);
+componentMap.set('Button', Button);
 componentMap.set('InputGroup', Input.Group);
 componentMap.set('InputPassword', Input.Password);
 componentMap.set('InputSearch', Input.Search);
@@ -76,6 +81,9 @@ componentMap.set('InputCountDown', CountdownInput);
 componentMap.set('Upload', BasicUpload);
 componentMap.set('Divider', Divider);
 componentMap.set('CropperAvatar', CropperAvatar);
+componentMap.set('Signature', Signature);
+componentMap.set('Tinymce', Tinymce);
+// componentMap.set('Member', Member);
 
 componentMap.set('BasicTitle', BasicTitle);
 

@@ -18,7 +18,8 @@ export default defineApplicationConfig({
     server: {
       proxy: {
         '/basic-api': {
-          target: 'http://localhost:3000',
+          target: 'http://119.96.117.48:18630/',
+          // target: 'http://localhost:3000/',
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^/basic-api`), ''),
@@ -26,7 +27,8 @@ export default defineApplicationConfig({
           // secure: false
         },
         '/upload': {
-          target: 'http://localhost:3300/upload',
+          target: 'http://119.96.117.48:18630/upload',
+          // target: 'http://localhost:3300/upload',
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^/upload`), ''),

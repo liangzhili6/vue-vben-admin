@@ -18,6 +18,9 @@
       </Col>
     </Row>
   </template>
+  <!-- <div v-else-if="['Signature'].includes(schema.component)">
+    {{ schema.label }}
+  </div> -->
   <VFormItem
     v-else
     :formConfig="formConfig"

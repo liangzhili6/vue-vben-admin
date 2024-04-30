@@ -46,7 +46,7 @@
     userStore.setToken(token);
 
     // 重新获取用户信息和菜单
-    userStore.getUserInfoAction();
+    userStore.getUserInfoAction(userStore.getUserInfo.userCode);
     refreshMenu();
   }
 </script>

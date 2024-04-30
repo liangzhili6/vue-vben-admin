@@ -47,6 +47,7 @@ export default [
   // mock user login
   {
     url: '/basic-api/login',
+    // url: '/basic-api/dynamicFormsService/api/v1/u4a/auth/login',
     timeout: 200,
     method: 'post',
     response: ({ body }) => {

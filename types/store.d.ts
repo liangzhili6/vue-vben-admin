@@ -36,13 +36,29 @@ export interface ErrorLogInfo {
 }
 
 export interface UserInfo {
-  userId: string | number;
-  username: string;
-  realName: string;
-  avatar: string;
+  userId?: string | number;
+  username?: string;
+  userName?: string;
+  realName?: string;
+  avatar?: string;
   desc?: string;
   homePath?: string;
-  roles: RoleInfo[];
+  roles?: RoleInfo[];
+  createBy?: string | number;
+  createTime?: string;
+  hospitalId?: string | number;
+  id?: string | number;
+  isEnabled?: string | number;
+  menus?: Array | Any;
+  password?: string | number;
+  phoneNum?: string | number;
+  roleId?: number;
+  roleName?: string | number;
+  updateBy?: string | number;
+  updateTime?: string;
+  userCode?: string | number;
+  userName?: string | number;
+  userType?: string | number;
 }
 
 export interface BeforeMiniState {

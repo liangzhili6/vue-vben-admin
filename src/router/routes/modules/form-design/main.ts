@@ -9,7 +9,7 @@ const permission: AppRouteModule = {
   meta: {
     orderNo: 10000,
     icon: 'ion:build-outline',
-    title: '表单设计',
+    title: '研究设置',
   },
   children: [
     {
@@ -27,6 +27,30 @@ const permission: AppRouteModule = {
         title: '示例',
       },
       component: () => import('@/views/form-design/examples/baseForm.vue'),
+    },
+    {
+      path: 'crf',
+      name: 'CRF',
+      meta: {
+        title: '病例报告表',
+      },
+      component: () => import('@/views/form-design/crf/crf.vue'),
+    },
+    {
+      path: 'example2',
+      name: 'Example2',
+      meta: {
+        title: '查看',
+      },
+      component: () => import('@/views/form-design/examples/baseForm.vue'),
+    },
+    {
+      path: 'form-manager',
+      name: 'FormManager',
+      meta: {
+        title: '表单管理',
+      },
+      component: () => import('@/views/form-design/form-manager/form-manager.vue'),
     },
   ],
 };
