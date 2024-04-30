@@ -1,21 +1,23 @@
 import { defHttp } from '@/utils/http/axios';
-import { LoginParams, LoginResultModel, GetUserInfoModel } from './model/userModel';
+import { LoginParams, GetUserInfoModel } from './model/userModel';
 
 import { ErrorMessageMode } from '#/axios';
 
 enum Api {
-  Login = '/login',
-  Logout = '/logout',
-  GetUserInfo = '/getUserInfo',
+  Login = '/dynamicFormsService/api/v1/u4a/auth/login',
+  Logout = '/dynamicFormsService/api/v1/u4a/auth/logout',
+  // GetUserInfo = UserCode_EnumToString,
   GetPermCode = '/getPermCode',
   TestRetry = '/testRetry',
 }
-
+/* export function UserCode_EnumToString(userCode: string ) {
+  return `/dynamicFormsService/api/v1/u4a/users/${userCode}/detail`;
+} */
 /**
  * @description: user login api
  */
 export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
-  return defHttp.post<LoginResultModel>(
+  return defHttp.post(
     {
       url: Api.Login,
       params,
@@ -29,8 +31,11 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') 
 /**
  * @description: getUserInfo
  */
-export function getUserInfo() {
-  return defHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
+export function getUserInfo(userCode) {
+  return defHttp.get<GetUserInfoModel>(
+    { url: `/dynamicFormsService/api/v1/u4a/users/${userCode}/detail` },
+    { errorMessageMode: 'none' },
+  );
 }
 
 export function getPermCode() {
@@ -38,7 +43,7 @@ export function getPermCode() {
 }
 
 export function doLogout() {
-  return defHttp.get({ url: Api.Logout });
+  return defHttp.post({ url: Api.Logout });
 }
 
 export function testRetry() {
