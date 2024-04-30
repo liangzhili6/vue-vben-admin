@@ -54,6 +54,17 @@
           />
         </FormItem>
         <FormItem
+          v-if="
+            ['CheckboxGroup', 'RadioGroup', 'RadioButtonGroup', 'Select'].includes(
+              formConfig.currentItem.component,
+            )
+          "
+          label=""
+          :class="{ 'form-rule-props': !!formConfig.currentItem.itemProps['rules'] }"
+        >
+          <HiddProps />
+        </FormItem>
+        <FormItem
           v-if="!['Grid'].includes(formConfig.currentItem.component)"
           label="校验规则"
           :class="{ 'form-rule-props': !!formConfig.currentItem.itemProps['rules'] }"
@@ -75,11 +86,13 @@
 
   import { Empty, Input, Form, FormItem, Switch, Checkbox, Col } from 'ant-design-vue';
   import RuleProps from './RuleProps.vue';
+  import HiddProps from './HiddProps.vue';
   import { useFormDesignState } from '../../../hooks/useFormDesignState';
   import { isArray } from 'lodash-es';
 
   const { formConfig } = useFormDesignState();
-
+  console.log('formConfig90-----', formConfig);
+  console.log('formConfig', formConfig.value.currentItem.component);
   watch(
     () => formConfig.value,
     () => {

@@ -53,89 +53,8 @@ export const customComponents: IVFormComponent[] = [];
 // 属性props，类型为对象，不能为undefined或是null。
 export const baseComponents: IVFormComponent[] = [
   {
-    component: 'InputCountDown',
-    label: '倒计时输入',
-    icon: 'line-md:iconify2',
-    colProps: { span: 24 },
-    field: '',
-    componentProps: {},
-  },
-  {
-    component: 'IconPicker',
-    label: '图标选择器',
-    icon: 'line-md:iconify2',
-    colProps: { span: 24 },
-    field: '',
-    componentProps: {},
-  },
-  {
-    component: 'StrengthMeter',
-    label: '密码强度',
-    icon: 'wpf:password1',
-    colProps: { span: 24 },
-    field: '',
-    componentProps: {},
-  },
-  {
-    component: 'AutoComplete',
-    label: '自动完成',
-    icon: 'wpf:password1',
-    colProps: { span: 24 },
-    field: '',
-    componentProps: {
-      placeholder: '请输入正则表达式',
-      options: [
-        {
-          value: '/^(?:(?:\\+|00)86)?1[3-9]\\d{9}$/',
-          label: '手机号码',
-        },
-        {
-          value: '/^((ht|f)tps?:\\/\\/)?[\\w-]+(\\.[\\w-]+)+:\\d{1,5}\\/?$/',
-          label: '网址带端口号',
-        },
-      ],
-    },
-  },
-  {
-    component: 'Divider',
-    label: '分割线',
-    icon: 'radix-icons:divider-horizontal',
-    colProps: { span: 24 },
-    field: '',
-    componentProps: {
-      orientation: 'center',
-      dashed: true,
-    },
-  },
-  {
-    component: 'Checkbox',
-    label: '复选框',
-    icon: 'ant-design:check-circle-outlined',
-    colProps: { span: 24 },
-    field: '',
-  },
-  {
-    component: 'CheckboxGroup',
-    label: '复选框-组',
-    icon: 'ant-design:check-circle-filled',
-    field: '',
-    colProps: { span: 24 },
-    componentProps: {
-      options: [
-        {
-          label: '选项1',
-          value: '1',
-        },
-        {
-          label: '选项2',
-          value: '2',
-        },
-      ],
-    },
-  },
-  {
     component: 'Input',
-    label: '输入框',
+    label: '单行文本',
     icon: 'bi:input-cursor-text',
     field: '',
     colProps: { span: 24 },
@@ -144,67 +63,20 @@ export const baseComponents: IVFormComponent[] = [
     },
   },
   {
-    component: 'InputNumber',
-    label: '数字输入框',
-    icon: 'ant-design:field-number-outlined',
-    field: '',
-    colProps: { span: 24 },
-    componentProps: { style: 'width:200px' },
-  },
-  {
     component: 'InputTextArea',
-    label: '文本域',
+    label: '多行文本',
     icon: 'ant-design:file-text-filled',
     field: '',
     colProps: { span: 24 },
     componentProps: {},
   },
   {
-    component: 'Select',
-    label: '下拉选择',
-    icon: 'gg:select',
+    component: 'InputNumber',
+    label: '数字输入框',
+    icon: 'ant-design:field-number-outlined',
     field: '',
     colProps: { span: 24 },
-    componentProps: {
-      options: [
-        {
-          label: '选项1',
-          value: '1',
-        },
-        {
-          label: '选项2',
-          value: '2',
-        },
-      ],
-    },
-  },
-
-  {
-    component: 'Radio',
-    label: '单选框',
-    icon: 'ant-design:check-circle-outlined',
-    field: '',
-    colProps: { span: 24 },
-    componentProps: {},
-  },
-  {
-    component: 'RadioGroup',
-    label: '单选框-组',
-    icon: 'carbon:radio-button-checked',
-    field: '',
-    colProps: { span: 24 },
-    componentProps: {
-      options: [
-        {
-          label: '选项1',
-          value: '1',
-        },
-        {
-          label: '选项2',
-          value: '2',
-        },
-      ],
-    },
+    componentProps: { style: 'width:200px' },
   },
   {
     component: 'DatePicker',
@@ -243,6 +115,101 @@ export const baseComponents: IVFormComponent[] = [
     componentProps: {},
   },
   {
+    component: 'RadioGroup',
+    label: '单选框',
+    icon: 'carbon:radio-button-checked',
+    field: '',
+    colProps: { span: 24 },
+    componentProps: {
+      options: [
+        {
+          label: '选项1',
+          value: '1',
+        },
+        {
+          label: '选项2',
+          value: '2',
+        },
+      ],
+    },
+  },
+  {
+    component: 'CheckboxGroup',
+    label: '多选框',
+    icon: 'ant-design:check-circle-filled',
+    field: '',
+    colProps: { span: 24 },
+    componentProps: {
+      options: [
+        {
+          label: '选项1',
+          value: '1',
+        },
+        {
+          label: '选项2',
+          value: '2',
+        },
+      ],
+    },
+  },
+  {
+    component: 'Select',
+    label: '下拉选择',
+    icon: 'gg:select',
+    field: '',
+    colProps: { span: 24 },
+    componentProps: {
+      options: [
+        {
+          label: '选项1',
+          value: '1',
+        },
+        {
+          label: '选项2',
+          value: '2',
+        },
+      ],
+    },
+  },
+  {
+    component: 'Upload',
+    label: '上传',
+    icon: 'ant-design:upload-outlined',
+    field: '',
+    colProps: { span: 24 },
+    componentProps: {
+      api: () => 1,
+    },
+  },
+  {
+    component: 'IconPicker',
+    label: '图标选择器',
+    icon: 'line-md:iconify2',
+    colProps: { span: 24 },
+    field: '',
+    componentProps: {},
+  },
+
+  {
+    component: 'InputCountDown',
+    label: '倒计时输入',
+    icon: 'line-md:iconify2',
+    colProps: { span: 24 },
+    field: '',
+    componentProps: {},
+  },
+  {
+    component: 'Divider',
+    label: '分割线',
+    icon: 'radix-icons:divider-horizontal',
+    colProps: { span: 24 },
+    field: '',
+    componentProps: {
+      orientation: 'center',
+      dashed: true,
+    },
+  },
+  {
     component: 'Slider',
     label: '滑动输入条',
     icon: 'vaadin:slider',
@@ -258,6 +225,21 @@ export const baseComponents: IVFormComponent[] = [
     colProps: { span: 24 },
     componentProps: {},
   },
+  /*{
+    component: 'Checkbox',
+    label: '复选框',
+    icon: 'ant-design:check-circle-outlined',
+    colProps: { span: 24 },
+    field: '',
+  },
+  {
+    component: 'Radio',
+    label: '单选框',
+    icon: 'ant-design:check-circle-outlined',
+    field: '',
+    colProps: { span: 24 },
+    componentProps: {},
+  },
   {
     component: 'Switch',
     label: '开关',
@@ -265,6 +247,34 @@ export const baseComponents: IVFormComponent[] = [
     field: '',
     colProps: { span: 24 },
     componentProps: {},
+  },
+  {
+    component: 'StrengthMeter',
+    label: '密码强度',
+    icon: 'wpf:password1',
+    colProps: { span: 24 },
+    field: '',
+    componentProps: {},
+  },
+  {
+    component: 'AutoComplete',
+    label: '自动完成',
+    icon: 'wpf:password1',
+    colProps: { span: 24 },
+    field: '',
+    componentProps: {
+      placeholder: '请输入正则表达式',
+      options: [
+        {
+          value: '/^(?:(?:\\+|00)86)?1[3-9]\\d{9}$/',
+          label: '手机号码',
+        },
+        {
+          value: '/^((ht|f)tps?:\\/\\/)?[\\w-]+(\\.[\\w-]+)+:\\d{1,5}\\/?$/',
+          label: '网址带端口号',
+        },
+      ],
+    },
   },
   {
     component: 'TreeSelect',
@@ -292,16 +302,6 @@ export const baseComponents: IVFormComponent[] = [
     },
   },
   {
-    component: 'Upload',
-    label: '上传',
-    icon: 'ant-design:upload-outlined',
-    field: '',
-    colProps: { span: 24 },
-    componentProps: {
-      api: () => 1,
-    },
-  },
-  {
     component: 'Cascader',
     label: '级联选择',
     icon: 'ant-design:check-outlined',
@@ -326,27 +326,26 @@ export const baseComponents: IVFormComponent[] = [
       ],
     },
   },
-  // {
-  //   component: 'Button',
-  //   label: '按钮',
-  //   icon: 'dashicons:button',
-  //   field: '',
-  //   colProps: { span: 24 },
-  //   hiddenLabel: true,
-  //   componentProps: {},
-  // },
-  // {
-  //   component: 'ColorPicker',
-  //   label: '颜色选择器',
-  //   icon: 'carbon:color-palette',
-  //   field: '',
-  //   colProps: { span: 24 },
-  //   componentProps: {
-  //     defaultValue: '',
-  //     value: '',
-  //   },
-  // },
-
+  {
+    component: 'Button',
+    label: '按钮',
+    icon: 'dashicons:button',
+    field: '',
+    colProps: { span: 24 },
+    hiddenLabel: true,
+    componentProps: {},
+  },
+  {
+    component: 'ColorPicker',
+    label: '颜色选择器',
+    icon: 'carbon:color-palette',
+    field: '',
+    colProps: { span: 24 },
+    componentProps: {
+      defaultValue: '',
+      value: '',
+    },
+  },
   {
     component: 'slot',
     label: '插槽',
@@ -356,44 +355,44 @@ export const baseComponents: IVFormComponent[] = [
     componentProps: {
       slotName: 'slotName',
     },
-  },
+  }, */
 ];
 
 // https://next.antdv.com/components/transfer-cn
-const transferControl = {
-  component: 'Transfer',
-  label: '穿梭框',
-  icon: 'bx:bx-transfer-alt',
-  field: '',
-  colProps: { span: 24 },
-  componentProps: {
-    render: (item) => item.title,
-    dataSource: [
-      {
-        key: 'key-1',
-        title: '标题1',
-        description: '描述',
-        disabled: false,
-        chosen: true,
-      },
-      {
-        key: 'key-2',
-        title: 'title2',
-        description: 'description2',
-        disabled: true,
-      },
-      {
-        key: 'key-3',
-        title: '标题3',
-        description: '描述3',
-        disabled: false,
-        chosen: true,
-      },
-    ],
-  },
-};
+// const transferControl = {
+//   component: 'Transfer',
+//   label: '穿梭框',
+//   icon: 'bx:bx-transfer-alt',
+//   field: '',
+//   colProps: { span: 24 },
+//   componentProps: {
+//     render: (item) => item.title,
+//     dataSource: [
+//       {
+//         key: 'key-1',
+//         title: '标题1',
+//         description: '描述',
+//         disabled: false,
+//         chosen: true,
+//       },
+//       {
+//         key: 'key-2',
+//         title: 'title2',
+//         description: 'description2',
+//         disabled: true,
+//       },
+//       {
+//         key: 'key-3',
+//         title: '标题3',
+//         description: '描述3',
+//         disabled: false,
+//         chosen: true,
+//       },
+//     ],
+//   },
+// };
 
-baseComponents.push(transferControl);
+// baseComponents.push(transferControl);
 
 export const layoutComponents: IVFormComponent[] = [
   {

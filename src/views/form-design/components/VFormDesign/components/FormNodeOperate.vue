@@ -44,6 +44,12 @@
        */
       const handleDelete = () => {
         const traverse = (schemas: IVFormComponent[]) => {
+          schemas.forEach((val) => {
+            if (val.hiddenView && val.hiddenView.key === props.schema.key) {
+              delete val.hiddenView;
+              delete val.hidden;
+            }
+          });
           schemas.some((formItem, index) => {
             const { component, key } = formItem;
             // 处理栅格和标签页布局

@@ -11,30 +11,32 @@
       }"
       breakpoint="md"
     >
-      <CollapseContainer title="基础控件">
-        <CollapseItem
-          :list="baseComponents"
-          :handleListPush="handleListPushDrag"
-          @add-attrs="handleAddAttrs"
-          @handle-list-push="handleListPush"
-        />
-      </CollapseContainer>
-      <CollapseContainer title="自定义控件">
-        <CollapseItem
-          :list="customComponents"
-          @add-attrs="handleAddAttrs"
-          :handleListPush="handleListPushDrag"
-          @handle-list-push="handleListPush"
-        />
-      </CollapseContainer>
-      <CollapseContainer title="布局控件">
-        <CollapseItem
-          :list="layoutComponents"
-          :handleListPush="handleListPushDrag"
-          @add-attrs="handleAddAttrs"
-          @handle-list-push="handleListPush"
-        />
-      </CollapseContainer>
+      <div style=" height: 90vh;overflow: hidden scroll; overflow-x: visible">
+        <CollapseContainer title="基础控件">
+          <CollapseItem
+            :list="baseComponents"
+            :handleListPush="handleListPushDrag"
+            @add-attrs="handleAddAttrs"
+            @handle-list-push="handleListPush"
+          />
+        </CollapseContainer>
+        <CollapseContainer title="自定义控件">
+          <CollapseItem
+            :list="customComponents"
+            @add-attrs="handleAddAttrs"
+            :handleListPush="handleListPushDrag"
+            @handle-list-push="handleListPush"
+          />
+        </CollapseContainer>
+        <CollapseContainer title="布局控件">
+          <CollapseItem
+            :list="layoutComponents"
+            :handleListPush="handleListPushDrag"
+            @add-attrs="handleAddAttrs"
+            @handle-list-push="handleListPush"
+          />
+        </CollapseContainer>
+      </div>
     </LayoutSider>
     <LayoutContent>
       <Toolbar
@@ -182,7 +184,6 @@
   const setGlobalConfigState = (formItem: IVFormComponent) => {
     formItem.colProps = formItem.colProps || {};
     formItem.colProps.span = globalConfigState.span;
-    // console.log('setGlobalConfigState', formItem);
   };
 
   /**
@@ -204,7 +205,6 @@
    * @param item {IVFormComponent} 当前点击的组件
    */
   const handleListPush = (item: IVFormComponent) => {
-    // console.log('handleListPush', item);
     const formItem = cloneDeep(item);
     setGlobalConfigState(formItem);
     generateKey(formItem);
@@ -250,9 +250,13 @@
       schemas.some((formItem: IVFormComponent, index: number) => {
         if (formItem.key === key) {
           // 判断是不是复制
-          isCopy
-            ? schemas.splice(index, 0, copyFormItem(formItem))
-            : schemas.splice(index + 1, 0, item);
+          if (isCopy) {
+            schemas.splice(index, 0, copyFormItem(formItem));
+            delete schemas[index + 1].hiddenView; //清除复制之后的显隐控制
+            delete schemas[index + 1].hidden; //清除复制之后的显隐控制
+          } else {
+            schemas.splice(index + 1, 0, item);
+          }
           const event = {
             newIndex: index + 1,
           };

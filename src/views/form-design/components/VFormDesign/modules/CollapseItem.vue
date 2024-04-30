@@ -24,7 +24,7 @@
             <use :xlink:href="`#${element.icon}`" />
           </svg> -->
           <Icon :icon="element.icon" />
-          {{ element.label }}</li
+          <div>{{ element.label }}</div></li
         ></template
       >
     </draggable>
@@ -86,13 +86,14 @@
 
       li {
         width: calc(50% - 6px);
-        height: 36px;
+        height: 66px;
         margin: 2.7px;
         padding: 8px 12px;
         transition: all 0.3s;
         border: 1px solid @border-color;
         border-radius: 3px;
         line-height: 20px;
+        text-align: center;
         cursor: move;
 
         &:hover {

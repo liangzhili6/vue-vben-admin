@@ -68,6 +68,8 @@ export interface IVFormComponent {
   wrapperCol?: IAnyObject;
   // 子控件
   columns?: Array<{ span: number; children: any[] }>;
+  hiddenView?: any;
+  flag?: any;
 }
 
 declare type namesType = string | string[];
@@ -87,6 +89,9 @@ export type PickAntFormConfig = Pick<
   | 'hideRequiredMark'
 >;
 
+export interface IVhiddenView {
+  hidden?: Boolean;
+}
 // 使用extends 而不使用 &联结 是为了避免 type:check指令类型重载错误
 export interface IFormConfig extends PickAntFormConfig {
   labelLayout?: labelLayout;
@@ -94,6 +99,8 @@ export interface IFormConfig extends PickAntFormConfig {
   schemas: IVFormComponent[];
   currentItem?: IVFormComponent;
   activeKey?: PropsTabKey;
+  hidden?: Boolean;
+  hiddenView?: any;
 }
 
 export interface AForm {

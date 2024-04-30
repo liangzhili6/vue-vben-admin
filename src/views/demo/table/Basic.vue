@@ -33,9 +33,9 @@
   import { BasicTable, ColumnChangeParam } from '@/components/Table';
   import { getBasicColumns, getBasicData } from './tableData';
 
-  const canResize = ref(false);
+  const canResize = ref(true);
   const loading = ref(false);
-  const striped = ref(true);
+  const striped = ref(false);
   const border = ref(true);
   const pagination = ref<any>(false);
 

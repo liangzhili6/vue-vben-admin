@@ -129,7 +129,6 @@
       };
 
       const { formConfig } = useFormDesignState();
-
       if (formConfig.value.currentItem) {
         formConfig.value.currentItem.componentProps =
           formConfig.value.currentItem.componentProps || {};
@@ -241,3 +240,9 @@
     },
   });
 </script>
+<style lang="less" scoped>
+  .properties-content {
+    height: calc(100vh - @header-height - (@multiple-height*2 + 30px));
+    overflow: hidden scroll;
+  }
+</style>

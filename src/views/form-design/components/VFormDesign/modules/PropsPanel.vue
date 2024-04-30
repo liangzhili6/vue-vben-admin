@@ -2,16 +2,22 @@
  * @Description: 右侧属性配置面板
 -->
 <template>
-  <div>
+  <div class="formConfigView">
     <Tabs v-model:activeKey="formConfig.activeKey" :tabBarStyle="{ margin: 0 }">
       <TabPane :key="1" tab="表单">
-        <FormProps />
+        <div class="formConfigViewItem">
+          <FormProps />
+        </div>
       </TabPane>
       <TabPane :key="2" tab="控件">
-        <FormItemProps />
+        <div class="formConfigViewItem">
+          <FormItemProps />
+        </div>
       </TabPane>
       <TabPane :key="3" tab="栅格">
-        <ComponentColumnProps />
+        <div class="formConfigViewItem">
+          <ComponentColumnProps />
+        </div>
       </TabPane>
       <TabPane :key="4" tab="组件">
         <slot v-if="slotProps" :name="slotProps.component + 'Props'"></slot>
@@ -29,7 +35,7 @@
   import { useFormDesignState } from '../../../hooks/useFormDesignState';
   import { customComponents } from '../../../core/formItemConfig';
   import { TabPane, Tabs } from 'ant-design-vue';
-
+  // import { IFormConfig } from '../../../typings/v-form-component';
   type ChangeTabKey = 1 | 2;
   export interface IPropsPanel {
     changeTab: (key: ChangeTabKey) => void;
@@ -46,11 +52,13 @@
     },
     setup() {
       const { formConfig } = useFormDesignState();
+      console.log('formConfig---64', formConfig.value.schemas);
       const slotProps = computed(() => {
         return customComponents.find(
           (item) => item.component === formConfig.value.currentItem?.component,
         );
       });
+      console.log('slotProps', slotProps);
       return { formConfig, customComponents, slotProps };
     },
   });
@@ -59,14 +67,19 @@
 <style lang="less" scoped>
   @import url('../styles/variable.less');
 
+  .formConfigViewItem {
+    height: calc(100vh - @header-height - (@multiple-height*2 + 30px));
+    overflow: hidden scroll;
+  }
+
   :deep(.ant-tabs) {
     box-sizing: border-box;
 
     form {
       width: 100%;
-      height: 85vh;
+      // height: 85vh;
       margin-right: 10px;
-      overflow: hidden auto;
+      // overflow: hidden auto;
     }
 
     .hint-box {
