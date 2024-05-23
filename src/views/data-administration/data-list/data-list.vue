@@ -78,6 +78,7 @@
       @change="handlerChange"
       @columns-change="handleColumnChange"
       @row-click="rowClick"
+      @filterDropdown="filterDropdown"
     >
       <template #toolbar>
         <div style="display: flex;flex-direction: row;
@@ -193,6 +194,9 @@
     },
     activeKey: 1,
   });
+  const filterDropdown = () => {
+    console.log('filterDropdown')
+  }
   const { go } = useRouter();
   const onSearchKeyword = (searchValue: string) => {
     console.log('searchValue',searchValue)
@@ -320,7 +324,7 @@
             arr = [...arr, ...res.childrenData[el].schemas]
           })
         }
-        arr =  [...arr, ...res.schemas]
+        arr =  [ ...res.schemas, ...arr]
         BasicTableData.columns = arr.map((item, index)=>{
           console.log('index',index)
           return {

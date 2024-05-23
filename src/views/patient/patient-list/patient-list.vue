@@ -17,6 +17,12 @@
   .FilterDropdown-view{
       padding: 8px;
     }
+    .FilterDropdownLi{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content:space-between;
+    }
     .FilterDropdownInput{
       width: 188px;
       margin-bottom: 8px;
@@ -24,10 +30,15 @@
     }
     .FilterDropdownButton{
       width: 90px;
-      margin-right: 8px;
+    }
+    .FilterDropdownBtn{
+      display: flex;
+      flex: 1;
+      justify-content: end;
     }
     .FilterDropdownButtonTwo{
       width: 90px;
+      margin-right: 8px;
     }
     .CRF-view, .CRF-view-t{
       position: relative;
@@ -84,18 +95,10 @@
         flex-wrap: nowrap;flex: 1;
         justify-content: space-between;">
         <div>
-        <!--   <Button type="primary" @click="goBack" :icon="h(ArrowLeftOutlined)" style="margin: 0 10px">
-          {{ '返回' }}
-        </Button> -->
           <Button type="primary" @click="handleOpenModal(eFormAddValue)" :icon="h(PlusOutlined)">
           {{ '新增' }}
         </Button>
-  <!--         <Button type="link" :icon="h(EditOutlined)" > 编辑 </Button>
-          <Button type="link" :icon="h(CopyOutlined)" > 复制 </Button>
-          <Button type="link" :icon="h(UploadOutlined)" > 导入 </Button>
-          <Button type="link" :icon="h(DownloadOutlined)" > 导出 </Button> -->
           <Button type="link" :icon="h(DeleteOutlined)" > 删除 </Button>
-          <!-- <Button type="link" :icon="h(WarningOutlined)" > 回收站 </Button> -->
         </div>
         <div>
           <InputSearch
@@ -107,34 +110,35 @@
               class="keywordView"
               @pressEnter="onSearchKeyword"
             />
-          <Button type="link" :icon="h(FunnelPlotOutlined)" > 筛选 </Button>
+          <!-- <Button type="link" :icon="h(FunnelPlotOutlined)" > 筛选 </Button> -->
+          
+          <Popover trigger="click" placement="bottom" style="z-index: 9999;" >
+                <template #content>
+                  <FilterDropdown ref="FilterDropdownRef" :BasicTableData="BasicTableData" :column="[]" :handleSearch="handleSearch"></FilterDropdown>
+                </template>
+                <template #Footer>
+                  
+              <Button
+                type="primary"
+                class="FilterDropdownButton"
+                @click="props.handleSearch"
+              >
+                筛选
+              </Button>
+                  <span>Footer</span>
+                </template>
+                <Button type="link" :icon="h(FunnelPlotOutlined)" > 筛选 </Button>
+              </Popover>
         </div>
         </div>
       </template>
       <template
-        #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
+        #customFilterDropdown="{ column }"
       >
-        <div class="FilterDropdown-view">
-          <Input
-            ref="searchInput"
-            :placeholder="`请输入 ${column.title}`"
-            :value="selectedKeys[0]"
-            class="FilterDropdownInput"
-            @change="(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])"
-            @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"
-          />
-          <Button
-            type="primary"
-            size="small"
-            class="FilterDropdownButton"
-            @click="handleSearch(selectedKeys, confirm, column.dataIndex)"
-          >
-            搜索
-          </Button>
-          <Button size="small" class="FilterDropdownButtonTwo" @click="handleReset(clearFilters)">
-            重置
-          </Button>
-        </div>
+      <!-- 
+        #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }" -->
+      <FilterDropdown ref="FilterDropdownRef" :BasicTableData="BasicTableData" :column="column" :handleSearch="handleSearch"></FilterDropdown>
+        
       </template>
     </BasicTable>
   <VFormAddValue ref="eFormAddValue" :key="formConfig.title" :formConfig="formConfig" :handleGetDatas="handleGetDatas" :updateDynamicValue="updateDynamicValue"/>
@@ -145,12 +149,13 @@
 <script lang="ts" setup>
   import { ref, onMounted, h, reactive, watch } from 'vue';
   import { BasicTable, ColumnChangeParam } from '@/components/Table';
+  import { FilterDropdown } from '@/components/FilterDropdown';
   import { PlusOutlined, DeleteOutlined, FunnelPlotOutlined} from '@ant-design/icons-vue';
   import VFormAddValue from '@/views/form-design/components/VFormAddValue/index.vue';
   import VFormAddValueN from '@/views/form-design/components/VFormAddValue/index.vue';
   import JsonModal from '@/views/form-design/components/VFormDesign/components/JsonModal.vue';
   // import { useRouter } from 'vue-router';
-  import { Button, Input, InputSearch } from 'ant-design-vue';
+  import { Button, Input, InputSearch, Select, Popover } from 'ant-design-vue';
   import { getRandomOneApi } from '@/api/sys/form';
   import { getOneFieldApi, getAllDynamicValueApi, AddDynamicValueApi, getOneDynamicValueApi, UpdataDynamicValueApi } from '@/api/sys/data';
   import { IFormConfig  } from '@/views/form-design/typings/v-form-component';
@@ -158,6 +163,7 @@
   import { cloneDeep } from 'lodash-es';
   import { useMessage } from '@/hooks/web/useMessage';
   import { useFormStore } from '@/store/modules/form';  
+import { Item } from 'ant-design-vue/es/menu';
   const FormStore = useFormStore();
 
   const { notification } = useMessage();
@@ -165,8 +171,9 @@
   const loading = ref(true);
   const striped = ref(false);
   const border = ref(true);
+  const FilterDropdownRef = ref<any>(null)
   const pagination = ref<any>(true);
-  const searchInput = ref<any>();
+  // const searchInput = ref<any>();
   const keyword = ref<any>('');
   const keywordRef = ref<any>(true);
   const jsonModal = ref<null | IToolbarMethods>(null);
@@ -177,6 +184,67 @@
   const recordValue = ref<any>(null);
   const recordObj = ref<any>(null);
   // const key = Symbol();
+  const searchList = reactive<any>({
+    id: undefined,
+    // id: '',
+    conditions:[
+       /*  {
+          "id": "",
+          "op": "EQ",
+          "value": ""
+        }, */
+    ],
+    opList: [{
+      op:'GT',
+      title: '>',
+    },
+    {
+      op:'LT',
+      title: '<',
+    },
+    {
+      op:'GE',
+      title: '>=',
+    },
+    {
+      op:'LE',
+      title: '<=',
+    },
+    {
+      op:'NE',
+      title: '不包含',
+    },
+    {
+      op:'EQ',
+      title: '包含',
+    },
+  ],
+    optionList: [{
+      value:1,
+      // title: 
+    }]
+  })
+const addSearchItem = (val) => {
+  console.log('addSearchItem', val, searchList.conditions);
+  if(val){
+    const exist = searchList.conditions.some((item) => item.id === val);
+    if (!exist) {
+      searchList.conditions.push({
+        "id": val,
+        "op": "EQ",
+        "value": ""
+      })
+      setTimeout(()=>{
+        searchList.id = undefined;
+      },100)
+    }
+  }
+  
+}
+const delSearchItem = (val, index) => {
+  console.log('delSearchItem', val)
+  searchList.conditions.splice(index, 1)
+}
   const formConfig = ref<IFormConfig>({
     title: '新增表单',
     submitFormTemplateTxt: '保存数据',
@@ -278,6 +346,7 @@
     columns: [],
     current: 1,
     size: 10,
+    conditions: []
   });
   
   const handleGetDatas = async (_data,id) => {
@@ -310,10 +379,9 @@
   };
   const handleBasicColumns = () =>{
     getOneFieldApi({
-      id: 237,
+      id: 242,
       formVersion: history.state.formVersion
     }).then(res=>{
-      console.log('res', res)
       if(res&&res.schemas&&res.schemas.length){
       let arr = [];
         if(res.joinFrom&& res.joinFrom.length){
@@ -321,17 +389,31 @@
             arr = [...arr, ...res.childrenData[el].schemas]
           })
         }
-        arr =  [...arr, ...res.schemas]
-        BasicTableData.columns = arr.map((item)=>{
+        let arr1 = [ ...res.schemas, ...arr].map((item)=>{
           return {
             title: item.label,
             dataIndex: item.key,
-            sorter: true,
-            // customFilterDropdown: true,
           }
         })
-        BasicTableData.columns = [...BasicTableData.columns, {title: "提交者",dataIndex: 'createBy', sorter: true,/* customFilterDropdown: true, */},{title: "提交时间",dataIndex: 'createTime', sorter: true,/* customFilterDropdown: true, */},{title: "更新者",dataIndex: 'modifiedBy', sorter: true,/* customFilterDropdown: true, */},{title: "更新时间",dataIndex: 'modifiedAt', sorter: true,/* customFilterDropdown: true, */}]
-        console.log('BasicTableData.columns', BasicTableData.columns)
+        BasicTableData.columns = [...arr1, {title: "提交者",dataIndex: 'createBy', },{title: "提交时间",dataIndex: 'createTime', },{title: "更新者",dataIndex: 'modifiedBy', },{title: "更新时间",dataIndex: 'modifiedAt', }].map((el:any)=>{
+          return {
+            ...el,
+            value: el.dataIndex,
+            label: el.title,
+            sorter: true,
+            customFilterDropdown: true,
+            onFilter: (value, record) =>{
+              return record.formName.toString().toLowerCase().includes(value.toLowerCase());
+            },
+            onFilterDropdownOpenChange: (visible) => {
+              if (visible) {
+                setTimeout(() => {
+                  FilterDropdownRef.value.addSearchItem(el.dataIndex)
+                }, 100);
+              }
+            },
+          }
+        })
       }
     }).catch(e=>{console.log('e', e)})
   }
@@ -344,7 +426,7 @@
   }
   const getFormManagerList = async () =>{
     try{
-      const data = await getAllDynamicValueApi({current: BasicTableData.current, size: BasicTableData.size, fromId: 237, sortType: 0, param: keyword.value});
+      const data = await getAllDynamicValueApi({current: BasicTableData.current, size: BasicTableData.size, fromId: 242, sortType: 0, param: keyword.value, conditions: BasicTableData.conditions});
       loading.value = false;
       BasicTableData.list = data!.records
       pagination.value = {total: data.total}
@@ -357,10 +439,9 @@
     searchText: '',
     searchedColumn: '',
   });
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    state.searchText = selectedKeys[0];
-    state.searchedColumn = dataIndex;
-    confirm();
+  const handleSearch = () => {
+    BasicTableData.conditions = FilterDropdownRef.value.searchList.conditions.filter(el=>el.id&&el.op&&el.value);
+    getFormManagerList();
   };
 
   const handleReset = (clearFilters) => {
@@ -369,7 +450,6 @@
   };
   const rowClick = async  (record) => {
     recordObj.value = record;
-    console.log('recordObj.value', recordObj.value)
     //点击行
     // const data = await getOneDynamicValueApi({valueId: record.id})
     recordValue.value = await getOneDynamicValueApi({valueId: record.id})

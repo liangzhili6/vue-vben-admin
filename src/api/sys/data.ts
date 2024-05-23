@@ -50,7 +50,7 @@ export function getOneDynamicValueApi(params: {valueId: string | number}, mode: 
 /**
  * @description: 数据列表
  */
-export function getAllDynamicValueApi(params: {current: number | string, size: number | string, fromId: number | string, sortType: number, param?: string | number}, mode: ErrorMessageMode = 'none') {
+export function getAllDynamicValueApi(params: {current: number | string, size: number | string, fromId: number | string, sortType: number, param?: string | number, conditions?: any}, mode: ErrorMessageMode = 'none') {
   return defHttp.post(
     {
       url: Api.getAllDynamicValue,
