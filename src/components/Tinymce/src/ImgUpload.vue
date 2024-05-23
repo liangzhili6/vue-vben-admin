@@ -5,6 +5,10 @@
       multiple
       @change="handleChange"
       :action="uploadUrl"
+      :data="{fromId: 1}"
+      :headers="{
+        'Authorization': 'Bearer ' + getToken(),
+      }"
       :showUploadList="false"
       accept=".jpg,.jpeg,.gif,.png,.webp"
     >
@@ -21,7 +25,7 @@
   import { useDesign } from '@/hooks/web/useDesign';
   import { useGlobSetting } from '@/hooks/setting';
   import { useI18n } from '@/hooks/web/useI18n';
-
+  import { getToken } from '@/utils/auth';
   defineOptions({ name: 'TinymceImageUpload' });
 
   const props = defineProps({
@@ -48,7 +52,6 @@
       disabled,
     };
   });
-
   function handleChange(info: Record<string, any>) {
     const file = info.file;
     const status = file?.status;

@@ -20,7 +20,7 @@
         </div>
       </TabPane>
       <TabPane :key="4" tab="组件">
-        <slot v-if="slotProps" :name="slotProps.component + 'Props'"></slot>
+        <slot v-if="slotProps && slotProps.component !== 'MemberSelect' && slotProps.component !== 'CentreSelect' && slotProps.component !== 'Correlation'" :name="slotProps.component + 'Props'"></slot>
         <ComponentProps v-else />
       </TabPane>
     </Tabs>
@@ -52,13 +52,11 @@
     },
     setup() {
       const { formConfig } = useFormDesignState();
-      console.log('formConfig---64', formConfig.value.schemas);
       const slotProps = computed(() => {
         return customComponents.find(
           (item) => item.component === formConfig.value.currentItem?.component,
         );
       });
-      console.log('slotProps', slotProps);
       return { formConfig, customComponents, slotProps };
     },
   });
@@ -71,10 +69,8 @@
     height: calc(100vh - @header-height - (@multiple-height*2 + 30px));
     overflow: hidden scroll;
   }
-
   :deep(.ant-tabs) {
     box-sizing: border-box;
-
     form {
       width: 100%;
       // height: 85vh;

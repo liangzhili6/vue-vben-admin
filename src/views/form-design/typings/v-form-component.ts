@@ -19,15 +19,15 @@ declare type Value = [number, number] | number;
  * 组件属性
  */
 
-export interface MemberFormComponent {
-  label: string;
-  value: string;
-}
-export interface CentreFormComponent {
-  label: string;
-  value: string;
-}
-export interface IVFormComponent {
+  export interface MemberFormComponent {
+    label: string;
+    value: string;
+  }
+  export interface CentreFormComponent {
+    label: string;
+    value: string;
+  }
+  export interface IVFormComponent {
   // extends Omit<FormSchema, 'component' | 'label' | 'field' | 'rules'> {
   // 对应的字段
   field?: string;
@@ -45,8 +45,8 @@ export interface IVFormComponent {
   hidden?: boolean;
   // 隐藏label
   hiddenLabel?: boolean;
-  // 组件宽度
-  width?: string;
+  // 组件宽度  
+  width?: number | string;
   // 是否必选
   required?: boolean;
   // 必选提示
@@ -67,6 +67,12 @@ export interface IVFormComponent {
   colProps?: Partial<ColEx>;
   // 联动字段
   link?: string[];
+  // 关联记录
+  Correlation?: string[];
+  CorrelationShowKeyItem?: any[];
+  CorrelationShowKey?: any[];
+  children?: any;
+  format?: any;
   // 联动属性变化的回调
   update?: (value: any, formItem: IVFormComponent, fApi: IVFormMethods) => void;
   // 控件栅格数
@@ -78,9 +84,9 @@ export interface IVFormComponent {
   // 子控件
   columns?: Array<{ span: number; children: any[] }>;
   hiddenView?: any;
-  flag?: any;
+  flag?:any;
   render?: (value: any, formItem: IVFormComponent, fApi: IVFormMethods) => void;
-  defaultValue?: string;
+  defaultValue?:string;
 }
 
 declare type namesType = string | string[];
@@ -102,18 +108,22 @@ export type PickAntFormConfig = Pick<
 
 export interface IVhiddenView {
   hidden?: Boolean;
+
 }
 // 使用extends 而不使用 &联结 是为了避免 type:check指令类型重载错误
 export interface IFormConfig extends PickAntFormConfig {
-  labelLayout?: labelLayout;
-  title: string;
+  title?: string;
   submitFormTemplateTxt: string;
+  labelLayout?: labelLayout;
   labelWidth?: number;
-  schemas: IVFormComponent[];
+  schemas: IVFormComponent&any[];
   currentItem?: IVFormComponent;
   activeKey?: PropsTabKey;
-  hidden?: Boolean;
+  hidden?:Boolean;
   hiddenView?: any;
+  children?: any;
+  childrenData?: any;
+  format?: any;
 }
 
 export interface AForm {

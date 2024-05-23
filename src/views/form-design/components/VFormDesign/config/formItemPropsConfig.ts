@@ -2,6 +2,7 @@ import { IAnyObject } from '../../../typings/base-type';
 import { baseComponents, customComponents } from '../../../core/formItemConfig';
 import { Input, Select, RadioGroup, Slider } from 'ant-design-vue';
 import { Component } from 'vue';
+import { Correlation } from '@/components/Correlation';
 
 export const globalConfigState: { span: number } = {
   span: 24,
@@ -218,6 +219,15 @@ export const baseFormItemProps: IBaseFormAttrs[] = [
       placeholder: '请输入提示信息',
     },
     exclude: ['Grid'],
+  },
+  {
+    name: 'helpMessage',
+    label: 'helpMessage',
+    component: Correlation,
+    componentProps: {
+      placeholder: '请选择关联表单',
+    },
+    exclude: ['Correlation'],
   },
 ];
 

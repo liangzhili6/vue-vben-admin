@@ -38,7 +38,10 @@ import { CropperAvatar } from '@/components/Cropper';
 
 import { Tinymce } from '@/components/Tinymce';
 import { Signature } from '@/components/Signature';
-// import { Member } from '@/components/Member';
+import { MemberSelect } from '@/components/MemberSelect';
+import { Correlation } from '@/components/Correlation';
+import { JournalNumber } from '@/components/JournalNumber';
+
 const componentMap = new Map<ComponentType | string, Component>();
 
 componentMap.set('Input', Input);
@@ -83,9 +86,11 @@ componentMap.set('Divider', Divider);
 componentMap.set('CropperAvatar', CropperAvatar);
 componentMap.set('Signature', Signature);
 componentMap.set('Tinymce', Tinymce);
-// componentMap.set('Member', Member);
-
+componentMap.set('MemberSelect', MemberSelect);
+componentMap.set('CentreSelect', Select);
+componentMap.set('Correlation', Correlation);
 componentMap.set('BasicTitle', BasicTitle);
+componentMap.set('JournalNumber', JournalNumber);
 
 export function add<T extends string, R extends Component>(
   compName: ComponentType | T,

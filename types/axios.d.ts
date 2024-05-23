@@ -52,6 +52,7 @@ export interface UploadFileParams {
   name?: string;
   // file name
   file: File | Blob;
+  fromId?: string | number;
   // file name
   filename?: string;
   [key: string]: any;

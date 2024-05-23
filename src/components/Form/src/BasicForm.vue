@@ -25,14 +25,6 @@
         </FormItem>
       </template>
 
-      <FormAction v-bind="getFormActionBindProps" @toggle-advanced="handleToggleAdvanced">
-        <template
-          #[item]="data"
-          v-for="item in ['resetBefore', 'submitBefore', 'advanceBefore', 'advanceAfter']"
-        >
-          <slot :name="item" v-bind="data || {}"></slot>
-        </template>
-      </FormAction>
       <slot name="formFooter"></slot>
     </Row>
   </Form>
@@ -45,7 +37,7 @@
   import { reactive, ref, computed, unref, onMounted, watch, nextTick, useAttrs } from 'vue';
   import { Form, Row, type FormProps as AntFormProps } from 'ant-design-vue';
   import FormItem from './components/FormItem.vue';
-  import FormAction from './components/FormAction.vue';
+  // import FormAction from './components/FormAction.vue';
 
   import { dateItemType, isIncludeSimpleComponents } from './helper';
   import { dateUtil } from '@/utils/dateUtil';
@@ -171,7 +163,7 @@
     }
   });
 
-  const { handleToggleAdvanced, fieldsIsAdvancedMap } = useAdvanced({
+  const {fieldsIsAdvancedMap } = useAdvanced({
     advanceState,
     emit,
     getProps,
@@ -307,9 +299,9 @@
     scrollToField: scrollToField,
   };
 
-  const getFormActionBindProps = computed(
+ /*  const getFormActionBindProps = computed(
     () => ({ ...getProps.value, ...advanceState }) as InstanceType<typeof FormAction>['$props'],
-  );
+  ); */
 
   defineExpose({
     ...formActionType,

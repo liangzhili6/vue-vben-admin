@@ -12,7 +12,9 @@
           !formItemProps.hiddenLabel &&
           schema.component !== 'Tinymce' &&
           !formItemProps.hiddenLabel &&
-          schema.component !== 'ImageText'
+          schema.component !== 'ImageText' &&
+          !formItemProps.hiddenLabel &&
+          schema.component !== 'Correlation'
         "
       >
         <Tooltip>
@@ -40,19 +42,21 @@
           :is="componentItem"
           v-bind="{ ...cmpProps, ...asyncProps }"
           :schema="schema"
+          :formConfig="formConfig"
           :style="schema.width ? { width: schema.width } : {}"
-          @change="handleChange"
-          :width="schema.width"
+          @change="handleChange" :width="schema.width"
           @click="handleClick(schema)"
       /></div>
       <div v-if="['ImageText'].includes(schema.component)">
-        <div v-html="schema.defaultValue ? schema.defaultValue : '图文内容'"></div>
+        <div v-html="schema.defaultValue?schema.defaultValue: '图文内容'"></div>
       </div>
-      <span v-if="['Button'].includes(schema.component)">{{ schema.label }}</span>
+      <!-- <span v-if="['Button'].includes(schema.component)">{{ schema.label }}</span> -->
     </FormItem>
   </Col>
 </template>
 <script lang="ts">
+import { JournalNumber } from '@/components/JournalNumber';
+
   import { type Recordable } from '@vben/types';
   import { defineComponent, reactive, toRefs, computed, PropType, unref } from 'vue';
   import { componentMap } from '../../core/formItemConfig';
@@ -67,8 +71,7 @@
   import { BasicForm } from '@/components/Form';
   import Tinymce from '@/views/demo/editor/tinymce/Editor.vue';
   import { Signature } from '@/components/Signature';
-
-  //
+  import { uploadApi } from '@/api/sys/upload';
   export default defineComponent({
     name: 'VFormItem',
     components: {
@@ -81,6 +84,7 @@
       BasicForm,
       Tinymce,
       Signature,
+      JournalNumber,
     },
 
     props: {
@@ -102,18 +106,26 @@
       const state = reactive({
         componentMap,
       });
-
       const { formModel: formData1, setFormModel } = useFormModelState();
       const colPropsComputed = computed(() => {
         const { colProps = {} } = props.schema;
+      
         return colProps;
       });
+
       const formItemProps = computed(() => {
         const { formConfig } = unref(props);
         let { field, required, rules, labelCol, wrapperCol } = unref(props.schema);
         const { colon } = props.formConfig;
 
         const { itemProps } = unref(props.schema);
+        formConfig.schemas.forEach(items=>{
+          
+        if(items!.component === "Upload" || items!.component === "ImageUpload" ){
+          items!.componentProps = { api: uploadApi}
+        }
+        })
+    
 
         //<editor-fold desc="布局属性">
         labelCol = labelCol
@@ -169,7 +181,6 @@
       const componentItem = computed(() => componentMap.get(props.schema.component as string));
 
       const handleClick = (schema: IVFormComponent) => {
-        console.log('component handleClick---schema:', schema);
         if (schema.component === 'Button' && schema.componentProps?.handle)
           emit(schema.componentProps?.handle);
       };
@@ -207,10 +218,8 @@
       });
 
       const handleChange = function (e) {
-        console.log('handleChange-------e', e);
         const isCheck = ['Switch', 'Checkbox', 'Radio'].includes(props.schema.component);
-        const isSignatureCheck = ['Signature'].includes(props.schema.component);
-        console.log('isSignatureCheck', isSignatureCheck);
+        // const isSignatureCheck = ['Signature'].includes(props.schema.component);
         const target = e ? e.target : null;
         const value = target ? (isCheck ? target.checked : target.value) : e;
         setFormModel(props.schema.field!, value);

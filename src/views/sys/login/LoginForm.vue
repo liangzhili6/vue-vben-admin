@@ -82,7 +82,7 @@
 <script lang="ts" setup>
   import { reactive, ref, unref, computed } from 'vue';
 
-  import { /* Checkbox, */ Form, Input, Row, /*  Col, */ Button } from 'ant-design-vue';
+  import {  Form, Input, Row, /* Col, */ Button } from 'ant-design-vue';
   /* import {
     GithubFilled,
     WechatFilled,
@@ -139,7 +139,7 @@
         userCode: data.account,
         mode: 'none', //不要默认的错误提示
       });
-      console.log('userInfo', userInfo);
+      console.log('userInfo', userInfo)
       if (userInfo) {
         notification.success({
           message: t('sys.login.loginSuccessTitle'),

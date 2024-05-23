@@ -6,7 +6,7 @@
   </ConfigProvider>
 </template>
 
-<script setup>
+<script  setup>
   import { AppProvider } from '@/components/Application';
   import { useTitle } from '@/hooks/web/useTitle';
   import { useLocale } from '@/locales/useLocale';

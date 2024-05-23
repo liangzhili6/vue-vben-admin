@@ -11,25 +11,25 @@
 
     <template #overlay>
       <Menu @click="handleMenuClick">
-        <MenuItem
+   <!--      <MenuItem
           key="doc"
           :text="t('layout.header.dropdownItemDoc')"
           icon="ion:document-text-outline"
           v-if="getShowDoc"
-        />
-        <Menu.Divider v-if="getShowDoc" />
-        <MenuItem
+        /> -->
+        <!-- <Menu.Divider v-if="getShowDoc" /> -->
+      <!--   <MenuItem
           v-if="getShowApi"
           key="api"
           :text="t('layout.header.dropdownChangeApi')"
           icon="ant-design:swap-outlined"
-        />
-        <MenuItem
+        /> -->
+        <!-- <MenuItem
           v-if="getUseLockPage"
           key="lock"
           :text="t('layout.header.tooltipLock')"
           icon="ion:lock-closed-outline"
-        />
+        /> -->
         <MenuItem
           key="logout"
           :text="t('layout.header.dropdownItemLoginOut')"
@@ -47,7 +47,7 @@
   import { computed } from 'vue';
   import { DOC_URL } from '@/settings/siteSetting';
   import { useUserStore } from '@/store/modules/user';
-  import { useHeaderSetting } from '@/hooks/setting/useHeaderSetting';
+  // import { useHeaderSetting } from '@/hooks/setting/useHeaderSetting';
   import { useI18n } from '@/hooks/web/useI18n';
   import { useDesign } from '@/hooks/web/useDesign';
   import { useModal } from '@/components/Modal';
@@ -70,7 +70,7 @@
 
   const { prefixCls } = useDesign('header-user-dropdown');
   const { t } = useI18n();
-  const { getShowDoc, getUseLockPage, getShowApi } = useHeaderSetting();
+  // const { getShowDoc, getUseLockPage, getShowApi } = useHeaderSetting();
   const userStore = useUserStore();
 
   const getUserInfo = computed(() => {

@@ -33,7 +33,7 @@ export function checkStatus(
       if (stp === SessionTimeoutProcessingEnum.PAGE_COVERAGE) {
         userStore.setSessionTimeout(true);
       } else {
-        console.log('1111111111');
+        console.log('1111111111')
         // 被动登出，带redirect地址
         userStore.logout(false);
       }

@@ -11,7 +11,7 @@
       }"
       breakpoint="md"
     >
-      <div style="height: 90vh; overflow: hidden scroll; overflow-x: visible">
+      <div style="overflow: hidden scroll; height: 90vh; overflow-x: visible">
         <CollapseContainer title="基础控件">
           <CollapseItem
             :list="baseComponents"
@@ -28,14 +28,22 @@
             @handle-list-push="handleListPush"
           />
         </CollapseContainer>
-        <CollapseContainer title="布局控件">
+        <CollapseContainer title="高级字段">
+          <CollapseItem
+            :list="advanced"
+            @add-attrs="handleAddAttrs"
+            :handleListPush="handleListPushDrag"
+            @handle-list-push="handleListPush"
+          />
+        </CollapseContainer>
+        <!-- <CollapseContainer title="布局控件">
           <CollapseItem
             :list="layoutComponents"
             :handleListPush="handleListPushDrag"
             @add-attrs="handleAddAttrs"
             @handle-list-push="handleListPush"
           />
-        </CollapseContainer>
+        </CollapseContainer> -->
       </div>
     </LayoutSider>
     <LayoutContent>
@@ -50,6 +58,7 @@
       <FormComponentPanel
         :current-item="formConfig.currentItem"
         :data="formConfig"
+        :schema="formConfig.schema"
         @handle-set-select-item="handleSetSelectItem"
       />
     </LayoutContent>
@@ -62,10 +71,11 @@
       :zeroWidthTriggerStyle="{ 'margin-top': '-70px', 'background-color': 'gray' }"
       breakpoint="lg"
     >
-      <PropsPanel ref="propsPanel" :activeKey="formConfig.activeKey">
+      <PropsPanel ref="propsPanel" :activeKey="formConfig.activeKey" >
         <template v-for="item of formConfig.schemas" #[`${item.component}Props`]="data">
           <slot
             :name="`${item.component}Props`"
+            :schema="formConfig.schema"
             v-bind="{ formItem: data, props: data.componentProps }"
           ></slot>
         </template>
@@ -94,20 +104,21 @@
 
   import 'codemirror/mode/javascript/javascript';
 
-  import { ref, provide, Ref } from 'vue';
+  import { ref, provide, Ref, onMounted } from 'vue';
   import { Layout, LayoutContent, LayoutSider } from 'ant-design-vue';
 
   import { IVFormComponent, IFormConfig, PropsTabKey } from '../../typings/v-form-component';
   import { formItemsForEach, generateKey } from '../../utils';
   import { cloneDeep } from 'lodash-es';
-  import { baseComponents, customComponents, layoutComponents } from '../../core/formItemConfig';
+  import { baseComponents, customComponents, advanced } from '../../core/formItemConfig';
   import { useRefHistory, UseRefHistoryReturn } from '@vueuse/core';
   import { globalConfigState } from './config/formItemPropsConfig';
   import { IFormDesignMethods, IPropsPanel, IToolbarMethods } from '../../typings/form-type';
   import { useDesign } from '@/hooks/web/useDesign';
 
   import { CollapseContainer } from '@/components/Container';
-
+  import { GetOneFormApi} from '@/api/sys/form';
+  import { useFormStore } from '@/store/modules/form';  
   defineProps({
     title: {
       type: String,
@@ -142,7 +153,17 @@
     },
     activeKey: 1,
   });
-
+  
+  onMounted(async ()=>{
+    if(history.state.isEdit){
+      // 接收 History API 参数
+      await handleOneForm(history.state.id,history.state.formVersion)
+    }
+  })
+  async function  handleOneForm (id, formVersion) {
+    const data = await GetOneFormApi({id, formVersion});
+    await setFormConfig(JSON.parse(data.fieldJson))
+  }
   const setFormConfig = (config: IFormConfig) => {
     //外部导入时，可能会缺少必要的信息。
     config.schemas = config.schemas || [];
@@ -252,13 +273,13 @@
       schemas.some((formItem: IVFormComponent, index: number) => {
         if (formItem.key === key) {
           // 判断是不是复制
-          if (isCopy) {
-            schemas.splice(index, 0, copyFormItem(formItem));
-            delete schemas[index + 1].hiddenView; //清除复制之后的显隐控制
-            delete schemas[index + 1].hidden; //清除复制之后的显隐控制
-          } else {
-            schemas.splice(index + 1, 0, item);
-          }
+            if(isCopy){
+              schemas.splice(index, 0, copyFormItem(formItem))
+              delete schemas[index+1].hiddenView//清除复制之后的显隐控制
+              delete schemas[index+1].hidden//清除复制之后的显隐控制
+            }else{
+              schemas.splice(index + 1, 0, item);
+            }
           const event = {
             newIndex: index + 1,
           };
@@ -296,9 +317,9 @@
    * @param Modal {IToolbarMethods}
    */
   const handleOpenModal = (Modal: IToolbarMethods) => {
-    console.log('handleOpenModal---Modal', Modal);
+    const FormStore = useFormStore();
+    FormStore.updateIsPreview(true)
     const config = cloneDeep(formConfig.value);
-    console.log('config', config);
     Modal?.showModal(config);
   };
   /**

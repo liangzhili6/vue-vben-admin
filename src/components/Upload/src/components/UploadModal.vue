@@ -178,9 +178,12 @@
         {
           data: {
             ...(props.uploadParams || {}),
-            fromId: item.file,
+            // fromId: item.file,
+            fromId: 1,
+
           },
-          fromId: item.file,
+          // fromId: item.file,
+          fromId: 1,
           file: item.file,
           name: props.name,
           filename: props.filename,
@@ -244,7 +247,6 @@
   //   点击保存
   function handleOk() {
     const { maxNumber } = props;
-
     if (fileListRef.value.length > maxNumber) {
       return createMessage.warning(t('component.upload.maxNumber', [maxNumber]));
     }
@@ -256,7 +258,7 @@
     for (const item of fileListRef.value) {
       const { status, response } = item;
       if (status === UploadResultStatus.SUCCESS && response) {
-        fileList.push(response.url);
+        fileList.push(response.data);
       }
     }
     // 存在一个上传成功的即可保存

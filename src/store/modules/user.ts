@@ -128,7 +128,6 @@ export const useUserStore = defineStore({
     async getUserInfoAction(userCode?: String): Promise<UserInfo | null> {
       if (!this.getToken) return null;
       const userInfo = await getUserInfo(userCode);
-      console.log('userInfo', userInfo);
       const { roles = [] } = userInfo;
       if (isArray(roles)) {
         const roleList = roles.map((item) => item.value) as RoleEnum[];
@@ -137,7 +136,7 @@ export const useUserStore = defineStore({
         userInfo.roles = [];
         this.setRoleList([]);
       }
-      console.log('userInfo-----------------', userInfo);
+      // console.log('userInfo-----------------', userInfo);
       this.setUserInfo(userInfo);
       return userInfo;
     },

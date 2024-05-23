@@ -59,9 +59,9 @@
       label: '字段3',
       componentProps: {
         resultField:"data3.url",
-        api: (file,progress)=>{
+        api: (file,progress, fromId)=>{
           return new Promise((resolve)=>{
-            uploadApi(file,progress).then((uploadApiResponse)=>{
+            uploadApi(file,progress,fromId).then((uploadApiResponse)=>{
               resolve({
                 code:200,
                 data3:{
@@ -82,9 +82,9 @@
       },
       componentProps: {
         resultField:"data4.url",
-        api: (file,progress)=>{
+        api: (file,progress,fromId)=>{
           return new Promise((resolve)=>{
-            uploadApi(file,progress).then((uploadApiResponse)=>{
+            uploadApi(file,progress,fromId).then((uploadApiResponse)=>{
               resolve({
                 code:200,
                 data4:{
@@ -141,9 +141,9 @@
           return data
         },
         resultField:"data5.url",
-        api: (file,progress)=>{
+        api: (file,progress,fromId)=>{
           return new Promise((resolve)=>{
-            uploadApi(file,progress).then((uploadApiResponse)=>{
+            uploadApi(file,progress,fromId).then((uploadApiResponse)=>{
               resolve({
                 code:200,
                 data5:{
@@ -173,6 +173,7 @@
     submitFunc:()=>{
       return new Promise((resolve)=>{
         validate().then((e)=>{
+          console.log('e',e)
           resolve()
           console.log(getFieldsValueValiate())
           createMessage.success(`请到控制台查看结果`);

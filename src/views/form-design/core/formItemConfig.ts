@@ -1,14 +1,18 @@
 /**
  * @description：表单配置
  */
-import { IVFormComponent } from '../typings/v-form-component';
+import { IVFormComponent, MemberFormComponent, CentreFormComponent } from '../typings/v-form-component';
 import { isArray } from 'lodash-es';
 import { componentMap as VbenCmp, add } from '@/components/Form/src/componentMap';
 import { ComponentType } from '@/components/Form/src/types';
 
-import { componentMap as Cmp } from '../components';
-import { Component } from 'vue';
+import { uploadApi } from '@/api/sys/upload';
+import { GetAllTDimDeptApi, getOneFieldApi } from '@/api/sys/data';
+import { getAlldynamicFromNameApi } from '@/api/sys/form';
 
+import { componentMap as Cmp } from '../components';
+import { Component, h } from 'vue';
+import { Tinymce } from '@/components/Tinymce';
 const componentMap = new Map<string, Component>();
 
 //如果有其它控件，可以在这里初始化
@@ -44,9 +48,123 @@ export function setFormDesignComponents(config: IVFormComponent | IVFormComponen
     customComponents.push(Object.assign({ props: {} }, rest));
   }
 }
+export const MemberList: MemberFormComponent[] = [
+  {
+    label: '成员1',
+    value: '1',
+  },
+  {
+    label: '成员2',
+    value: '2',
+  },
+]
 
-//外部设置的自定义控件
-export const customComponents: IVFormComponent[] = [];
+export const CentreList: CentreFormComponent & Function[] = async () => {
+  const data =  await GetAllTDimDeptApi()
+  return data.map(item=>{
+    return {
+      ...item,
+      label: item.name,
+    }
+  })
+}
+/**
+ * 高级字段
+ */
+export const advanced: IVFormComponent[]= [
+  {
+    component: 'Correlation',
+    label: '关联记录',
+    icon: 'gg:select',
+    field: '',
+    colProps: { span: 24 },
+    componentProps: {
+      api: [getAlldynamicFromNameApi, getOneFieldApi],
+    },
+  },
+  {
+    component: 'JournalNumber',
+    label: '流水号',
+    icon: 'gg:select',
+    field: '',
+    colProps: { span: 24 },
+    format: "{YYYY}{MM}{DD}{#2/D}",
+    componentProps: {
+    },
+  },
+]
+/**
+ * 外部设置的自定义控件
+ */
+export const customComponents: IVFormComponent[] = [
+/*{
+  component: 'MemberSelect',
+  label: '成员',
+  icon: 'gg:select',
+  field: '',
+  colProps: { span: 24 },
+  componentProps: {
+    options: MemberList,
+    api: GetAllTDimDeptApi,
+  },
+},
+{
+  component: 'CentreSelect',
+  label: '中心',
+  icon: 'gg:select',
+  field: '',
+  colProps: { span: 24 },
+  componentProps: {
+    api: GetAllTDimDeptApi,
+  },
+} ,
+{
+  component: 'Input',
+  label: '姓名',
+  icon: 'bi:input-cursor-text',
+  field: '',
+  colProps: { span: 24 },
+  componentProps: {
+    type: 'text',
+  },
+  rules: [
+      {
+          "pattern": "/^(?:[一-龥·]{2,16})$/",
+          "message": "请输入信息"
+      }
+  ]
+},
+{
+  component: 'Input',
+  label: '电话',
+  icon: 'bi:input-cursor-text',
+  field: '',
+  colProps: { span: 24 },
+  componentProps: {
+    type: 'text',
+  },
+},
+{
+  component: 'Input',
+  label: '电子邮箱',
+  icon: 'bi:input-cursor-text',
+  field: '',
+  colProps: { span: 24 },
+  componentProps: {
+    type: 'text',
+  },
+},
+{
+  component: 'Input',
+  label: '网址',
+  icon: 'bi:input-cursor-text',
+  field: '',
+  colProps: { span: 24 },
+  componentProps: {
+    type: 'text',
+  },
+} */
+];
 
 // 左侧控件列表与初始化的控件属性
 // props.slotName,会在formitem级别生成一个slot,并绑定当前record值
@@ -173,31 +291,30 @@ export const baseComponents: IVFormComponent[] = [
   },
   {
     component: 'Upload',
-    label: '上传',
+    label: '附件',
     icon: 'ant-design:upload-outlined',
     field: '',
     colProps: { span: 24 },
     componentProps: {
-      api: () => 1,
+      api: uploadApi,
     },
   },
-  {
+  /* {
     component: 'IconPicker',
     label: '图标选择器',
     icon: 'line-md:iconify2',
     colProps: { span: 24 },
     field: '',
     componentProps: {},
-  },
-
-  {
+  }, */
+  /* {
     component: 'InputCountDown',
     label: '倒计时输入',
     icon: 'line-md:iconify2',
     colProps: { span: 24 },
     field: '',
     componentProps: {},
-  },
+  }, */
   {
     component: 'Divider',
     label: '分割线',
@@ -225,6 +342,116 @@ export const baseComponents: IVFormComponent[] = [
     colProps: { span: 24 },
     componentProps: {},
   },
+  
+  /* {
+    component: 'Button',
+    label: '按钮',
+    icon: 'dashicons:button',
+    field: '',
+    colProps: { span: 24 },
+    hiddenLabel: true,
+    componentProps: {},
+  }, */
+  {
+    component: 'IconPicker',
+    label: '图标',
+    icon: 'line-md:iconify2',
+    colProps: { span: 24 },
+    field: '',
+    componentProps: {},
+  },
+  {
+    component: 'ImageUpload',
+    label: '图片',
+    icon: 'line-md:iconify2',
+    colProps: { span: 24 },
+    field: '',
+    componentProps: {
+      api: uploadApi,
+    },
+
+  },
+  {
+    // component: 'ImageText',
+    label: '图文',
+    component: 'ImageText',
+    componentProps: {
+      api: uploadApi,
+      rules: [{ required: true }],
+      render: ({ model, field }) => {
+        return h(Tinymce, {
+          value: model[field],
+          onChange: (value: string) => {
+            model[field] = value;
+          },
+        });
+      },
+    },
+  },
+  {
+    field: 'tinymce',
+    component: 'Tinymce',
+    label: 'HTML',
+    componentProps: {
+      api: uploadApi,
+      rules: [{ required: true }],
+      render: ({ model, field }) => {
+        return h(Tinymce, {
+          value: model[field],
+          onChange: (value: string) => {
+            model[field] = value;
+          },
+        });
+      },
+    },
+    // defaultValue: 'defaultValue',
+    rules: [{ required: true }],
+    render: ({ model, field }) => {
+      return h(Tinymce, {
+        value: model[field],
+        onChange: (value: string) => {
+          model[field] = value;
+        },
+      });
+    },
+  },
+  {
+    component: 'Signature',
+    label: '签名',
+    icon: 'ant-design:check-circle-outlined',
+    colProps: { span: 24 },
+    field: '',
+    componentProps: {
+      render: ({ model, field }) => {
+        return h(Tinymce, {
+          value: model[field],
+          onChange: (value: string) => {
+            model[field] = value;
+          },
+        });
+      },
+    },
+  },
+  /* {
+    component: 'AutoComplete',
+    label: '自动完成',
+    icon: 'wpf:password1',
+    colProps: { span: 24 },
+    field: '',
+    componentProps: {
+      placeholder: '请输入正则表达式',
+      options: [
+        {
+          value: '/^(?:(?:\\+|00)86)?1[3-9]\\d{9}$/',
+          label: '手机号码',
+        },
+        {
+          value: '/^((ht|f)tps?:\\/\\/)?[\\w-]+(\\.[\\w-]+)+:\\d{1,5}\\/?$/',
+          label: '网址带端口号',
+        },
+      ],
+    },
+  }, */
   /*{
     component: 'Checkbox',
     label: '复选框',
@@ -359,38 +586,38 @@ export const baseComponents: IVFormComponent[] = [
 ];
 
 // https://next.antdv.com/components/transfer-cn
-// const transferControl = {
-//   component: 'Transfer',
-//   label: '穿梭框',
-//   icon: 'bx:bx-transfer-alt',
-//   field: '',
-//   colProps: { span: 24 },
-//   componentProps: {
-//     render: (item) => item.title,
-//     dataSource: [
-//       {
-//         key: 'key-1',
-//         title: '标题1',
-//         description: '描述',
-//         disabled: false,
-//         chosen: true,
-//       },
-//       {
-//         key: 'key-2',
-//         title: 'title2',
-//         description: 'description2',
-//         disabled: true,
-//       },
-//       {
-//         key: 'key-3',
-//         title: '标题3',
-//         description: '描述3',
-//         disabled: false,
-//         chosen: true,
-//       },
-//     ],
-//   },
-// };
+/* const transferControl = {
+  component: 'Transfer',
+  label: '穿梭框',
+  icon: 'bx:bx-transfer-alt',
+  field: '',
+  colProps: { span: 24 },
+  componentProps: {
+    render: (item) => item.title,
+    dataSource: [
+      {
+        key: 'key-1',
+        title: '标题1',
+        description: '描述',
+        disabled: false,
+        chosen: true,
+      },
+      {
+        key: 'key-2',
+        title: 'title2',
+        description: 'description2',
+        disabled: true,
+      },
+      {
+        key: 'key-3',
+        title: '标题3',
+        description: '描述3',
+        disabled: false,
+        chosen: true,
+      },
+    ],
+  },
+}; */
 
 // baseComponents.push(transferControl);
 

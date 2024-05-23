@@ -1,23 +1,17 @@
 <template>
   <div>
-    <Select
-      class="v-form-item-wrapper"
-      :schema="schema"
-      @change="handleChange"
-      :style="schema.width ? { width: schema.width } : {}"
-      @click="handleClick(schema)"
-    />
+    <Select class="v-form-item-wrapper" :schema="schema" @change="handleChange" :style="schema.width ? { width: schema.width } : {}" @click="handleClick(schema)"></Select>
+    
   </div>
 </template>
 
 <script lang="ts" name="Member">
   import { defineComponent, computed, unref } from 'vue';
   import { asyncComputed } from '@vueuse/core';
-  import { Select } from 'ant-design-vue';
+  import {  Select } from 'ant-design-vue';
   import { IVFormComponent, IFormConfig } from '@/views/form-design/typings/v-form-component';
   import { useFormModelState } from '@/views/form-design/hooks/useFormDesignState';
   import { omit } from 'lodash-es';
-
   export default defineComponent({
     name: 'Member',
     components: {
@@ -110,7 +104,7 @@
       /* const componentItem = computed(() => componentMap.get(props.schema.component as string)); */
 
       const handleClick = (schema: IVFormComponent) => {
-        console.log('component handleClick---schema:', schema);
+      console.log('component handleClick---schema:', schema);
         if (schema.component === 'Button' && schema.componentProps?.handle)
           emit(schema.componentProps?.handle);
       };
@@ -119,8 +113,8 @@
        */
       const asyncProps = asyncComputed(async () => {
         let { options, treeData } = props.schema.componentProps ?? {};
-        /* if (options) options = await handleAsyncOptions(options);
-        if (treeData) treeData = await handleAsyncOptions(treeData); */
+        if (options) options = await handleAsyncOptions(options);
+        if (treeData) treeData = await handleAsyncOptions(treeData);
         return {
           options,
           treeData,
@@ -148,10 +142,7 @@
       });
 
       const handleChange = function (e) {
-        console.log('handleChange-------e', e);
         const isCheck = ['Switch', 'Checkbox', 'Radio'].includes(props.schema.component);
-        const isSignatureCheck = ['Signature'].includes(props.schema.component);
-        console.log('isSignatureCheck', isSignatureCheck);
         const target = e ? e.target : null;
         const value = target ? (isCheck ? target.checked : target.value) : e;
         setFormModel(props.schema.field!, value);

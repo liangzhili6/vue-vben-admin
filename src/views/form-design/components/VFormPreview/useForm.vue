@@ -3,15 +3,16 @@
 -->
 <template>
   <Modal
-    title="预览(不支持布局)"
+    :title="state.formConfig.title || '查看'"
     :open="state.visible"
     @ok="handleGetData"
     @cancel="handleCancel"
-    okText="获取数据"
+    :okText="state.formConfig.submitFormTemplateTxt || '保存数据'"
     cancelText="关闭"
     style="top: 20px"
     :destroyOnClose="true"
     :width="900"
+    :maskClosable="false"
   >
     <BasicForm v-bind="attrs" @register="registerForm" />
     <JsonModal ref="jsonModal" />
@@ -25,16 +26,22 @@
   import JsonModal from '../VFormDesign/components/JsonModal.vue';
   import { IToolbarMethods } from '../../typings/form-type';
   import { Modal } from 'ant-design-vue';
-
+  import { IVFormMethods } from '../../hooks/useVFormMethods';
+  import { useFormStore } from '@/store/modules/form';  
+  const FormStore = useFormStore();
   const jsonModal = ref<IToolbarMethods | null>(null);
   const state = reactive<{
     formModel: IAnyObject;
     visible: boolean;
     formConfig: IFormConfig;
+    fApi: IVFormMethods;
+    isEdit?: Boolean;
   }>({
     formModel: {},
     formConfig: {} as IFormConfig,
     visible: false,
+    fApi: {} as IVFormMethods,
+    isEdit: false,
   });
 
   const attrs = computed(() => {
@@ -42,7 +49,16 @@
       ...state.formConfig,
     } as Recordable;
   });
-
+/*   const props =  defineProps({
+    handleGetDatas: {
+        type: Function,
+        default: ()=>{},
+      },
+      updateDynamicValue: {
+        type: Function,
+        default: ()=>{},
+      },
+  }) */
   /**
    * 显示Json数据弹框
    * @param jsonData
@@ -57,6 +73,8 @@
 
   const handleCancel = () => {
     state.visible = false;
+    state.formModel = {};
+    FormStore.updateIsPreview(true)
   };
   /**
    * 获取表单数据

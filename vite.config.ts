@@ -19,6 +19,7 @@ export default defineApplicationConfig({
       proxy: {
         '/basic-api': {
           target: 'http://119.96.117.48:18630/',
+          // target: 'http://192.168.0.6:8085/',
           // target: 'http://localhost:3000/',
           changeOrigin: true,
           ws: true,
@@ -26,13 +27,14 @@ export default defineApplicationConfig({
           // only https
           // secure: false
         },
-        '/upload': {
-          target: 'http://119.96.117.48:18630/upload',
+        /* '/upload': {
+          target: 'http://119.96.117.48:18630',
+          // target: 'http://192.168.0.6:8085/',
           // target: 'http://localhost:3300/upload',
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^/upload`), ''),
-        },
+        }, */
       },
       open: true, // 项目启动后，自动打开
       warmup: {

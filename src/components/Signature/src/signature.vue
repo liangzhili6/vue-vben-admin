@@ -4,7 +4,7 @@
       <p>{{ modal.Text }}</p>
       <div>
         <Row :gutter="0" ref="ctxRef">
-          <canvas ref="canvasRef" style="width: 100%; background-color: antiquewhite"></canvas>
+          <canvas ref="canvasRef" style="background-color: antiquewhite; width: 100%"></canvas>
           <div class="btnBox"> </div>
         </Row>
       </div>
@@ -18,7 +18,7 @@
         v-if="modal.imgBase64"
         :width="props.width ? props.width : 200"
         :src="modal.imgBase64"
-      />
+      ></Image>
       <a @click="addRules">
         <Icon icon="ant-design:border-inner-outlined" />
         {{ !modal.imgBase64 ? '点击添加' : '重新签名' }}
@@ -52,7 +52,7 @@
   const cancels = () => {
     removeEventListener();
   };
-  /*  watch(
+ /*  watch(
     () => modal.imgBase64,
     (newVal, oldVal) => {
       if (newVal) {

@@ -61,7 +61,9 @@ export function useCustomRow(
             clearSelectedRowKeys();
           }
         }
-        handleClick();
+        if(!(propsRef.value.rowSelection.CheckRowBox)){
+          handleClick();
+        }
         emit('row-click', record, index, e);
       },
       onDblclick: (event: Event) => {

@@ -4,6 +4,7 @@
 export interface AddFromParams {
   fieldValueJson: any;
   formName: string;
+  joinForm?: string,
 }
 export interface FormManagerParams {
   current: string | number;

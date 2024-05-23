@@ -277,7 +277,6 @@
       const content = editor.getContent({ format: attrs.outputFormat });
       emit('update:modelValue', content);
       emit('change', content);
-      console.log('content', content);
     });
 
     editor.on('FullscreenStateChanged', (e) => {

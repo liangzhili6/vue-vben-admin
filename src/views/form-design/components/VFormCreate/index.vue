@@ -70,9 +70,9 @@
       const noHiddenList = computed(() => {
         return (
           props.formConfig.schemas &&
-          props.formConfig.schemas.filter((item) => {
+          props.formConfig.schemas.filter((item) =>{
             /* if( item.hiddenView&&item.hiddenView[item.hiddenView.key] && item.key === item.hiddenView.key) */
-            return item.hidden !== true;
+            return  item.hidden !== true 
           })
         );
       });
@@ -103,10 +103,10 @@
       );
       fApi.value = methods;
       const handleChange = (_event) => {
-        console.log('handleChange_event', _event);
+        console.log('handleChange_event', _event)
         const { schema, value } = _event;
         const { field } = unref(schema);
-        // ---------------------
+// ---------------------
         Object.values(linkOn).forEach((item) => {
           item.forEach((itemValue) => {
             // const isHidden = itemValue?.hidden;
@@ -115,21 +115,21 @@
               const hiddenValue = itemValue?.hiddenView?.value;
               if (field === hiddenKey && value.includes(hiddenValue)) {
                 console.log('关联组件显隐命中-操作显隐逻辑', itemValue.hidden);
-                itemValue.hidden = false;
-                itemValue.hiddenView.hidden = false;
+                itemValue.hidden = false
+                itemValue.hiddenView.hidden = false
               }
-            } else if (itemValue.hidden === false) {
+            }else if(itemValue.hidden === false){
               const hiddenKey = itemValue?.hiddenView?.key;
               const hiddenValue = itemValue?.hiddenView?.value;
               if (field === hiddenKey && !value.includes(hiddenValue)) {
                 console.log('关联组件显隐命中-操作显隐逻辑 yingcang', item);
-                itemValue.hidden = true;
-                itemValue.hiddenView.hidden = true;
+                itemValue.hidden = true
+                itemValue.hiddenView.hidden = true
               }
             }
           });
         });
-        // +++++++++++++++++++++
+// +++++++++++++++++++++
         linkOn[field!]?.forEach((formItem) => {
           formItem.update?.(value, formItem, fApi.value as IVFormMethods);
         });

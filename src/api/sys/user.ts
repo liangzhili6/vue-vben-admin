@@ -32,10 +32,7 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') 
  * @description: getUserInfo
  */
 export function getUserInfo(userCode) {
-  return defHttp.get<GetUserInfoModel>(
-    { url: `/dynamicFormsService/api/v1/u4a/users/${userCode}/detail` },
-    { errorMessageMode: 'none' },
-  );
+  return defHttp.get<GetUserInfoModel>({ url: `/dynamicFormsService/api/v1/u4a/users/${userCode}/detail` }, { errorMessageMode: 'none' });
 }
 
 export function getPermCode() {

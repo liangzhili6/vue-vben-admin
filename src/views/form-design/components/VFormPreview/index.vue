@@ -3,7 +3,7 @@
 -->
 <template>
   <Modal
-    title="预览(支持布局)"
+    title="预览"
     :open="visible"
     @ok="handleGetData"
     @cancel="handleCancel"
@@ -12,6 +12,7 @@
     style="top: 20px"
     :destroyOnClose="true"
     :width="900"
+    :maskClosable="false"
   >
     <VFormCreate
       :form-config="formConfig"
@@ -36,7 +37,8 @@
   import JsonModal from '../VFormDesign/components/JsonModal.vue';
   import { IToolbarMethods } from '../../typings/form-type';
   import { Modal } from 'ant-design-vue';
-
+  import { useFormStore } from '@/store/modules/form';  
+  const FormStore = useFormStore();
   export default defineComponent({
     name: 'VFormPreview',
     components: {
@@ -63,7 +65,7 @@
        * @param jsonData
        */
       const showModal = (jsonData: IFormConfig) => {
-        console.log('showModal-', jsonData);
+         console.log('showModal-', jsonData);
         formatRules(jsonData.schemas);
         state.formConfig = jsonData as any;
         state.visible = true;
@@ -74,7 +76,9 @@
        * @return {Promise<void>}
        */
       const handleCancel = () => {
+        console.log('FormStore.updateIsPreview(true)')
         state.visible = false;
+        FormStore.updateIsPreview(true)
         state.formModel = {};
       };
       const handleGetData = async () => {
@@ -83,7 +87,7 @@
       };
 
       const onSubmit = (_data: IAnyObject) => {
-        console.log('_data', _data);
+        console.log('_data', _data)
         //
       };
       const onCancel = () => {

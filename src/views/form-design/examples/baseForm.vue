@@ -1,37 +1,115 @@
 <template>
-  <BasicForm @register="register" />
+  <div style="padding: 20px">
+    <Button type="primary" @click="goBack" style="">
+      <ArrowLeftOutlined></ArrowLeftOutlined>
+      {{ '返回' }}
+    </Button>
+    <TypographyTitle style="display: flex; justify-content: center" :level="4">{{
+      formConfig?.title || '表单'
+    }}</TypographyTitle>
+    <VFormCreate
+      :form-config="formConfig"
+      v-model:fApi="fApi"
+      v-model:formModel="formModel"
+      @submit="onSubmit"
+    >
+      <template #slotName="{ formModel, field }">
+        <a-input v-model:value="formModel[field]" placeholder="我是插槽传递的输入框" />
+      </template>
+    </VFormCreate>
+    <div
+      style="display: flex; flex: 1; text-align: center; justify-content: center; padding: 10px 0"
+    >
+      <Button type="primary" @click="submitFormTemplate">{{
+        formConfig?.submitFormTemplateTxt || '保存数据'
+      }}</Button>
+    </div>
+  </div>
 </template>
-<script lang="ts" setup>
-  import { BasicForm, FormSchema, useForm } from '@/components/Form';
+<script lang="ts">
+  import { reactive, ref, defineComponent, toRefs } from 'vue';
+  import { TypographyTitle, Button } from 'ant-design-vue';
+  import { IAnyObject } from '../typings/base-type';
+  import VFormCreate from '../components/VFormCreate/index.vue';
+  import { IVFormMethods } from '../hooks/useVFormMethods';
+  import { IFormConfig } from '../typings/v-form-component';
+  import { IToolbarMethods } from '../typings/form-type';
+  import { GetOneFormApi} from '@/api/sys/form';
+  import { useRouter } from 'vue-router';
+  import { ArrowLeftOutlined } from '@ant-design/icons-vue';
 
-  const schemas: FormSchema[] = [
-    {
-      field: 'field1',
-      component: 'Input',
-      label: '字段1',
-      span: 8,
-      // colProps: {
-      //   span: 8,
-      // },
-      componentProps: {
-        placeholder: '自定义placeholder',
-        onChange: (_e: any) => {
-          //
+  export default defineComponent({
+    name: 'Crf',
+    components: { VFormCreate, Button, TypographyTitle, ArrowLeftOutlined },
+    setup() {
+      const { go } = useRouter();
+      // 接收 History API 参数
+      const jsonData = ref({
+        title: '新增表单',
+        submitFormTemplateTxt: '保存数据',
+        // 表单配置
+        schemas: [],
+        layout: 'horizontal',
+        labelLayout: 'flex',
+        labelWidth: 100,
+        labelCol: {},
+        wrapperCol: {},
+        currentItem: {
+          component: '',
+          componentProps: {},
         },
-      },
-    },
-    {
-      field: 'field2',
-      component: 'Input',
-      label: '字段2',
-      span: 8,
-      // colProps: {
-      //   span: 8,
-      // },
-    },
-  ];
+        activeKey: 1,
+      });
+      const jsonModal = ref<IToolbarMethods | null>(null);
+      const state = reactive<{
+        formModel: IAnyObject;
+        visible: boolean;
+        formConfig: any;
+        fApi: IVFormMethods;
+      }>({
+        formModel: {},
+        formConfig: {} as IFormConfig,
+        visible: false,
+        fApi: {} as IVFormMethods,
+      });
 
-  const [register] = useForm({
-    schemas,
+      state.formConfig = jsonData as any;
+
+  
+      const goBack = () =>{
+        go(-1)
+      }
+
+      const setFormConfig = (config: IFormConfig) => {
+        //外部导入时，可能会缺少必要的信息。
+        config.schemas = config.schemas || [];
+        config.schemas.forEach((item) => {
+          item.colProps = item.colProps || { span: 24 };
+          item.componentProps = item.componentProps || {};
+          item.itemProps = item.itemProps || {};
+        });
+        state.formConfig = config as any;
+      };
+      async function  handleOneForm (id, formVersion) {
+        const data = await GetOneFormApi({id, formVersion});
+        let list = JSON.parse(data.fieldJson);
+        await setFormConfig(list)
+      }
+      handleOneForm(history.state.id, history.state.formVersion)
+      const onSubmit = (_data: IAnyObject) => {
+      };
+      const submitFormTemplate = () => {
+      };
+      return {
+        handleOneForm,
+        ...toRefs(state),
+        // showModal,
+        jsonModal,
+        onSubmit,
+        submitFormTemplate,
+        go,
+        goBack,
+      };
+    },
   });
 </script>

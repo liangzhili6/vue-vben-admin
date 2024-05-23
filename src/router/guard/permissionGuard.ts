@@ -80,7 +80,7 @@ export function createPermissionGuard(router: Router) {
         return;
       }
     }
-    console.log('permissionStore', permissionStore);
+// console.log('permissionStore', permissionStore)
     // 动态路由加载（首次）
     if (!permissionStore.getIsDynamicAddedRoute) {
       const routes = await permissionStore.buildRoutesAction();

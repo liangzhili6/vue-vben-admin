@@ -86,6 +86,7 @@
 
       li {
         width: calc(50% - 6px);
+        height: 36px;
         height: 66px;
         margin: 2.7px;
         padding: 8px 12px;
@@ -93,9 +94,8 @@
         border: 1px solid @border-color;
         border-radius: 3px;
         line-height: 20px;
-        text-align: center;
         cursor: move;
-
+        text-align: center;
         &:hover {
           position: relative;
           border: 1px solid @primary-color;

@@ -1,22 +1,21 @@
 <template>
   <!-- <PageWrapper title="富文本嵌入表单示例"> -->
-  <div>
+    <div>
     <!-- <CollapseContainer title="富文本表单"> -->
-    <BasicForm
-      :labelWidth="100"
-      :schemas="schemas"
-      :actionColOptions="{ span: 24 }"
-      :baseColProps="{ span: 24 }"
-      @submit="handleSubmit"
-    />
+      <BasicForm
+        :labelWidth="100"
+        :schemas="schemas"
+        :actionColOptions="{ span: 24 }"
+        :baseColProps="{ span: 24 }"
+        @submit="handleSubmit"
+      />
     <!-- </CollapseContainer> -->
-  </div>
+    </div>
   <!-- </PageWrapper> -->
 </template>
 <script lang="ts" setup>
   import { h } from 'vue';
   import { BasicForm, FormSchema } from '@/components/Form';
-  // import { CollapseContainer } from '@/components/Container';
   import { useMessage } from '@/hooks/web/useMessage';
   import { Tinymce } from '@/components/Tinymce';
   // import { PageWrapper } from '@/components/Page';

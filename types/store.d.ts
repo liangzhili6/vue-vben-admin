@@ -59,6 +59,7 @@ export interface UserInfo {
   userCode?: string | number;
   userName?: string | number;
   userType?: string | number;
+ 
 }
 
 export interface BeforeMiniState {

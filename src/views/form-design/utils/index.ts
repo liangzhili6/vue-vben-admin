@@ -1,6 +1,7 @@
 // import { VueConstructor } from 'vue';
 import { IVFormComponent, IFormConfig, IValidationRule } from '../typings/v-form-component';
 import { cloneDeep, isArray, isFunction, isNumber, uniqueId } from 'lodash-es';
+import { getRandomOneApi } from '@/api/sys/form';
 // import { del } from '@vue/composition-api';
 // import { withInstall } from '@/utils';
 
@@ -21,9 +22,10 @@ import { cloneDeep, isArray, isFunction, isNumber, uniqueId } from 'lodash-es';
  * @param [formItem] 需要生成 key 的控件，可选，如果不传，默认返回一个唯一 key
  * @returns {string|boolean} 返回一个唯一 id 或者 false
  */
-export function generateKey(formItem?: IVFormComponent): string | boolean {
+export async function generateKey(formItem?: IVFormComponent): string | boolean {
   if (formItem && formItem.component) {
-    const key = uniqueId(`${toLine(formItem.component)}_`);
+  const  RandomOne = await getRandomOneApi()
+    const key = uniqueId(`${toLine(formItem.component)}_${RandomOne}`);
     formItem.key = key;
     formItem.field = key;
 

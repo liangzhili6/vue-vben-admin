@@ -7,27 +7,26 @@
     <!-- 操作左侧区域 start -->
     <div class="left-btn-box">
       <Tooltip v-for="item in toolbarsConfigs" :title="item.title" :key="item.icon">
-        <a @click="$emit(item.event)" class="toolbar-text"
-          >{{ item.lable }}
+        <a @click="$emit(item.event)" class="toolbar-text">{{ item.lable }}
           <!-- <Icon :icon="item.icon" /> -->
         </a>
       </Tooltip>
       <Divider type="vertical" />
-      <Tooltip title="撤销">
-        <a :class="{ disabled: !canUndo }" :disabled="!canUndo" @click="undo"
-          >{{ '撤销' }}
-          <!-- <Icon icon="ant-design:undo-outlined" /> -->
+      <!-- <Tooltip title="撤销">
+        <a :class="{ disabled: !canUndo }" :disabled="!canUndo" @click="undo">{{ '撤销' }}
         </a>
       </Tooltip>
       <Tooltip title="重做">
-        <a :class="{ disabled: !canRedo }" :disabled="!canRedo" @click="redo"
-          >{{ '重做' }}
+        <a :class="{ disabled: !canRedo }" :disabled="!canRedo" @click="redo">{{ '重做' }}
+        </a>
+      </Tooltip> -->
+      <Tooltip title="保存" v-if="!isEdit">
+        <a @click="submitFormJson">{{ '保存' }}
           <!-- <Icon icon="ant-design:redo-outlined" /> -->
         </a>
       </Tooltip>
-      <Tooltip title="保存">
-        <a @click="submitFormJson"
-          >{{ '保存' }}
+      <Tooltip title="保存编辑" v-if="isEdit">
+        <a @click="updateFormJson">{{ '保存编辑' }}
           <!-- <Icon icon="ant-design:redo-outlined" /> -->
         </a>
       </Tooltip>
@@ -41,9 +40,11 @@
   import { IFormConfig } from '../../../typings/v-form-component';
   import { Tooltip, Divider } from 'ant-design-vue';
   // import Icon from '@/components/Icon/Icon.vue';
-  import { AddDynamicFromApi } from '@/api/sys/form';
-  // import { AddFromParams } from '@/api/sys/model/formModel';
-  // import type { ErrorMessageMode } from '#/axios';
+  import { AddDynamicFromApi, UpdateDynamicFromApi } from '@/api/sys/form';
+  import { AddFromParams } from '@/api/sys/model/formModel';
+  import type { ErrorMessageMode } from '#/axios';
+  import { useMessage } from '@/hooks/web/useMessage';
+  const { notification } = useMessage();
   interface IToolbarsConfig {
     type: string;
     title: string;
@@ -62,22 +63,24 @@
     setup() {
       const state = reactive<{
         toolbarsConfigs: IToolbarsConfig[];
+        isEdit: Boolean;
       }>({
+        isEdit: false,
         toolbarsConfigs: [
           {
-            title: '预览-支持布局',
+            title: '预览',
             lable: '预览',
             type: 'preview',
             event: 'handlePreview',
             icon: 'ant-design:chrome-filled',
           },
-          {
+          /* {
             title: '预览-不支持布局',
             lable: '预览',
             type: 'preview',
             event: 'handlePreview2',
             icon: 'ant-design:chrome-filled',
-          },
+          }, */
           {
             title: '导入JSON',
             lable: '导入JSON',
@@ -92,13 +95,13 @@
             event: 'handleOpenJsonModal',
             icon: 'ant-design:export-outlined',
           },
-          {
+          /* {
             title: '生成代码',
             lable: '生成代码',
             type: 'exportCode',
             event: 'handleOpenCodeModal',
             icon: 'ant-design:code-filled',
-          },
+          }, */
           {
             title: '清空',
             lable: '清空',
@@ -108,23 +111,53 @@
           },
         ],
       });
+    if(history.state.isEdit){
+      state.isEdit = history.state.isEdit
+      // 接收 History API 参数
+      // handleOneForm(history.state.id,history.state.formVersion)
+    }
       const historyRef = inject('historyReturn') as UseRefHistoryReturn<IFormConfig, IFormConfig>;
-      const submitFormJson = async () => /* params: AddFromParams & {
+      const submitFormJson = async (
+      params: AddFromParams & {
         fieldValueJson?: any;
         formName?: string;
+        joinForm?: string;
         mode?: ErrorMessageMode;
-      } */ {
-        // const { fieldValueJson , formName, mode } = params;
-        const data = await AddDynamicFromApi(
-          {
-            fieldValueJson: JSON.stringify(source.value.schemas),
-            formName: source.value.title,
-          } /* , mode = ErrorMessageMode */,
-        );
-        console.log('submitFormJson', historyRef, '来源source', source, 'data----', data);
-      };
+      }) => {
+         params.joinForm = source.value.schemas.filter(item=>item.component ==="Correlation").map(val=>val.Correlation) +'';
+         params.fieldValueJson = JSON.stringify(source.value);
+         params.formName = source.value.title;
+        const data = await AddDynamicFromApi(params);
+        notification.success({
+          message: data,
+          duration: 3,
+        });
+      }
+      const updateFormJson = async (
+      params: AddFromParams & {
+        fieldValueJson?: any;
+        formName?: string;
+        id: string | number;
+        formVersion: string | number;
+        joinForm?: string;
+        formType: string ;
+        mode?: ErrorMessageMode;
+      }) => {
+         params.joinForm = source.value.schemas.filter(item=>item.component ==="Correlation").map(val=>val.Correlation) +'';
+         params.fieldValueJson = JSON.stringify(source.value);
+         params.formName = source.value.title;
+         params.id = history.state.id;
+         params.formVersion = history.state.formVersion;
+         params.formType = history.state.formType;
+        const data = await UpdateDynamicFromApi(params);
+        notification.success({
+          message: data,
+          duration: 3,
+        });
+      }
+      
       const { undo, redo, canUndo, canRedo, source } = historyRef;
-      return { ...toRefs(state), undo, redo, canUndo, canRedo, source, submitFormJson };
+      return { ...toRefs(state), undo, redo, canUndo, canRedo, source, submitFormJson, updateFormJson };
     },
   });
 </script>

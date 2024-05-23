@@ -122,7 +122,7 @@
   import { isFunction } from '@/utils/is';
   import { useI18n } from '@/hooks/web/useI18n';
 
-  type apiFunParams = { file: Blob; name: string; filename: string };
+  type apiFunParams = { file: Blob; name: string; filename: string, fromId?: string | number};
 
   defineOptions({ name: 'CropperModal' });
 
@@ -189,7 +189,7 @@
       const blob = dataURLtoBlob(previewSource.value);
       try {
         setModalProps({ confirmLoading: true });
-        const result = await uploadApi({ name: 'file', file: blob, filename });
+        const result = await uploadApi({ name: 'file', file: blob, filename, fromId: 1, });
         emit('uploadSuccess', { source: previewSource.value, data: result.url });
         closeModal();
       } finally {

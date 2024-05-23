@@ -119,6 +119,7 @@
 
   .layout-width {
     width: 100%;
+
   }
 
   .hidden-item {

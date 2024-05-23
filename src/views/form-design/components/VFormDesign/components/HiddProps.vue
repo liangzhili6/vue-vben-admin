@@ -16,7 +16,7 @@
           <Col :span="10">
             <div style="height: 400px">
               <div>当前选择项：</div>
-              <ScrollContainer style="border: 1px solid #ccc">
+              <ScrollContainer style="border: 1px solid #cccccc">
                 <RadioGroup v-model:value="currentItemOptions" style="width: 100%">
                   <ul style="width: 100%">
                     <template
@@ -34,10 +34,10 @@
               </ScrollContainer>
             </div>
           </Col>
-          <Col :span="1" />
+          <Col :span="1"></Col>
           <Col :span="13" style="height: 400px">
             <div>则显示以下字段：</div>
-            <ScrollContainer style="border: 1px solid #ccc">
+            <ScrollContainer style="border: 1px solid #cccccc">
               <CheckboxGroup v-model:value="schemasComponent" style="width: 100%">
                 <ul style="width: 100%">
                   <template v-for="(val, index) in modal?.schemasList" :key="index">
@@ -101,8 +101,8 @@
       if (formConfig?.value?.currentItem?.key != val.key && i >= index && index) {
         arr.push(val);
       }
-      currentItemOptions.value = formConfig?.value?.currentItem?.flag?.value;
-      schemasComponent.value = formConfig?.value?.currentItem?.flag?.keyList;
+      currentItemOptions.value = formConfig?.value?.currentItem?.flag?.value
+      schemasComponent.value = formConfig?.value?.currentItem?.flag?.keyList
     });
     modal.schemasList = arr;
     open.value = true;
@@ -126,20 +126,22 @@
             // arr.push({ key: formConfig?.value?.currentItem?.key });
           }
         });
-        if (formConfig?.value?.currentItem?.key === res.key) {
+        if(formConfig?.value?.currentItem?.key === res.key){
           formConfig.value.schemas[i].flag = {
             value: currentItemOptionsVal,
-            keyList: schemasComponentVal,
-          };
+            keyList: schemasComponentVal
+          } 
         }
       });
     }
   };
-  /* watch(
+  watch(
     () => formConfig.value,
-    (newVal, oldVal) => {},
+    (newVal, oldVal) => {
+      console.log('newVal, oldVal',newVal, oldVal)
+    },
     { deep: true, immediate: true },
-  ); */
+  );
   watch(
     () => currentItemOptions.value,
     (newVal) => {

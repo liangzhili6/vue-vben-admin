@@ -73,13 +73,13 @@ export function getBasicColumns(searchInput): BasicColumn[] {
       // sorter: true,
       dataIndex: 'status',
     },
-    {
-      width: 240,
-      title: '操作',
-      dataIndex: 'operation',
-      align: 'center',
-      fixed: 'right',
-    },
+  {
+    width: 240,
+    title: '操作',
+    dataIndex: 'operation',
+    align: 'center',
+    fixed: 'right',
+  },
   ];
 }
 

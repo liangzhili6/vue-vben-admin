@@ -11,7 +11,7 @@
     />
     <Form v-bind="formConfig">
       <div class="draggable-box">
-        <TypographyTitle style="display: flex; justify-content: center" :level="4">{{
+          <TypographyTitle style="display: flex; justify-content: center;" :level="4">{{
           formConfig.title
         }}</TypographyTitle>
         <draggable
@@ -40,14 +40,12 @@
           style="
             display: flex;
             flex: 1;
+            text-align: center;
             justify-content: center;
             padding: 10px 0;
-            text-align: center;
           "
         >
-          <Button type="primary" @click="submitFormTemplate">{{
-            formConfig.submitFormTemplateTxt
-          }}</Button>
+          <Button type="primary" @click="submitFormTemplate">{{ formConfig.submitFormTemplateTxt }}</Button>
         </div>
       </div>
     </Form>
@@ -59,7 +57,7 @@
   import { defineComponent, computed } from 'vue';
   import { cloneDeep } from 'lodash-es';
   import { useFormDesignState } from '../../../hooks/useFormDesignState';
-  import { Form, Empty, Button, /* Row, Col, */ TypographyTitle } from 'ant-design-vue';
+  import { Form, Empty, Button, TypographyTitle } from 'ant-design-vue';
 
   export default defineComponent({
     name: 'FormComponentPanel',
@@ -69,16 +67,14 @@
       Form,
       Empty,
       Button,
-      /* Row,
-      Col, */
       TypographyTitle,
     },
     emits: ['handleSetSelectItem'],
     setup(_, { emit }) {
       const { formConfig } = useFormDesignState();
       const submitFormTemplate = () => {
-        console.log('submitFormTemplate', formConfig.value);
-      };
+        console.log('submitFormTemplate', formConfig.value)
+      }
       /**
        * 拖拽完成事件
        * @param newIndex
@@ -155,16 +151,15 @@
 
     .draggable-box {
       height: calc(100vh - 120px);
-      min-height: calc(100% - 120px);
       // width: 100%;
       overflow: auto;
-
       .drag-move {
         min-height: 62px;
         cursor: move;
       }
 
       .list-main {
+        min-height: calc(100% - 120px);
         // 列表动画
         .list-enter-active {
           transition: all 0.5s;

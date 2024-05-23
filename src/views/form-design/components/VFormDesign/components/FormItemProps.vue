@@ -15,8 +15,8 @@
               :is="item.component"
               v-model:value="formConfig.currentItem[item.name]"
             />
-          </FormItem>
-        </div>
+          </FormItem> 
+        </div> 
         <div v-for="item of advanceFormItemProps" :key="item.name">
           <FormItem :label="item.label" v-if="showProps(item.exclude)">
             <component
@@ -54,15 +54,11 @@
           />
         </FormItem>
         <FormItem
-          v-if="
-            ['CheckboxGroup', 'RadioGroup', 'RadioButtonGroup', 'Select'].includes(
-              formConfig.currentItem.component,
-            )
-          "
+          v-if="['CheckboxGroup', 'RadioGroup', 'RadioButtonGroup', 'Select'].includes(formConfig.currentItem.component)"
           label=""
           :class="{ 'form-rule-props': !!formConfig.currentItem.itemProps['rules'] }"
         >
-          <HiddProps />
+        <HiddProps />
         </FormItem>
         <FormItem
           v-if="!['Grid'].includes(formConfig.currentItem.component)"
@@ -91,8 +87,8 @@
   import { isArray } from 'lodash-es';
 
   const { formConfig } = useFormDesignState();
-  console.log('formConfig90-----', formConfig);
-  console.log('formConfig', formConfig.value.currentItem.component);
+console.log('formConfig90-----', formConfig);
+console.log('formConfig', formConfig.value.currentItem.component)
   watch(
     () => formConfig.value,
     () => {
