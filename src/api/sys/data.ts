@@ -11,6 +11,7 @@ enum Api {
   AddDynamicValue = '/dynamicFormsService/api/v1/dynamicForms/value/addDynamicValue',
   getOneDynamicValue = '/dynamicFormsService/api/v1/dynamicForms/value/getOne',//获取表头
   UpdataDynamicValue = "/dynamicFormsService/api/v1/dynamicForms/value/updateDynamicValue",
+  DeleTeDynamicValue = "/dynamicFormsService/api/v1/dynamicForms/value/deleteOrRetractValue",
   /**
    * 中心相关
    */
@@ -75,6 +76,26 @@ export function AddDynamicValueApi(params: {fieldValueJson: string, fromId: stri
     },
   );
 }
+
+
+/**
+ * @description: 删除/撤回表单数据
+ * fromId	表单id
+ * 	type 0撤回 1删除
+ */
+export function DeleTeDynamicValueApi(params: { fromId: any, id: any, type: any}, mode: ErrorMessageMode = 'modal') {
+  console.log('params', params)
+  return defHttp.post(
+    {
+      url: Api.DeleTeDynamicValue,
+      params,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
 /**
  * @description: 修改表单数据
  */

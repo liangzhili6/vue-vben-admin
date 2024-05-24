@@ -202,7 +202,10 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'healthicons:i-schedule-school-date-time-outline',
     field: '',
     colProps: { span: 24 },
-    componentProps: {},
+    componentProps: {
+      format: "YYYY-MM-DD",
+      valueFormat: "YYYY-MM-DD"
+    },
   },
   {
     component: 'RangePicker',
@@ -212,6 +215,8 @@ export const baseComponents: IVFormComponent[] = [
     colProps: { span: 24 },
     componentProps: {
       placeholder: ['开始日期', '结束日期'],
+      format: 'YYYY-MM-DD HH:mm:ss',
+      valueFormat: 'YYYY-MM-DD HH:mm:ss'
     },
   },
   {
@@ -222,6 +227,8 @@ export const baseComponents: IVFormComponent[] = [
     colProps: { span: 24 },
     componentProps: {
       placeholder: '请选择月份',
+      format: "YYYY-MM",
+      valueFormat: "YYYY-MM"
     },
   },
   {
@@ -230,7 +237,10 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'healthicons:i-schedule-school-date-time',
     field: '',
     colProps: { span: 24 },
-    componentProps: {},
+    componentProps: {
+      format: "HH:mm:ss",
+      valueFormat: "HH:mm:ss"
+    },
   },
   {
     component: 'RadioGroup',

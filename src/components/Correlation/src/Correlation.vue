@@ -76,6 +76,7 @@
       const itemProp = unref(props.schema);
       const childrenDataProp = ref();
       const CorrelationForm = async (Modal: IToolbarMethods) => {
+        FormStore.updateIsPreview(false)
         await FormStore.updateChildrenSubmit( '打开子表单', itemProp.Correlation)
         console.log('CorrelationForm', itemProp)
         console.log('FormStore.childrenSubmit', FormStore.childrenSubmit)

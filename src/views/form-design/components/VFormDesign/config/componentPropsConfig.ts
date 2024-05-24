@@ -694,7 +694,7 @@ const componentAttrs: IBaseComponentProps = {
       label: '展示格式（format）',
       component: 'Input',
       componentProps: {
-        placeholder: 'YYYY-MM',
+        placeholder: 'HH:mm:ss',
       },
     },
     {
@@ -702,7 +702,7 @@ const componentAttrs: IBaseComponentProps = {
       label: '绑定值格式（valueFormat）',
       component: 'Input',
       componentProps: {
-        placeholder: 'YYYY-MM',
+        placeholder: 'HH:mm:ss',
       },
     },
   ],

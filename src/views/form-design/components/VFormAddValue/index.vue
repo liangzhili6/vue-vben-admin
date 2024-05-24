@@ -121,6 +121,7 @@
         }
       };
       const handleGetData = async () => {
+        console.log('FormStore.childrenSubmit', FormStore.childrenSubmit)
         if(FormStore.childrenSubmit.text === '打开子表单1'){
           await FormStore.updateChildrenSubmit('子表单提交')
         }
@@ -130,7 +131,8 @@
             _data = {..._data, [val.field]: val.format}
           }
         })
-        let fromId = FormStore.childrenSubmit.text === '子表单提交' ? FormStore.getAddChildrenData: history.state.id
+        console.log('FormStore.childrenSubmit--134', FormStore.childrenSubmit, FormStore.childrenSubmit.text)
+        let fromId = (FormStore.childrenSubmit.text === '子表单提交' ? FormStore.getAddChildrenData: history.state.id ) || 242
         if(state.isEdit){
           await props.updateDynamicValue(_data, fromId)
         }else{

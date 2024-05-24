@@ -84,7 +84,7 @@
       :bordered="border"
       showTableSetting
       editable
-      :rowSelection="{type: 'checkbox', fixed: true, checkStrictly: false, CheckRowBox: true}"
+      :rowSelection="{type: 'checkbox', fixed: true, checkStrictly: false, CheckRowBox: true, onChange:onChange,onSelect:onSelect, onSelectAll:onSelectAll}"
       :pagination="pagination"
       @change="handlerChange"
       @columns-change="handleColumnChange"
@@ -98,7 +98,17 @@
           <Button type="primary" @click="handleOpenModal(eFormAddValue)" :icon="h(PlusOutlined)">
           {{ '新增' }}
         </Button>
+        <Button type="link" :icon="h(DeleteOutlined)" @click="Warning('请先选择需要删除的数据！')" v-if="!selectedArr.length"> 删除 </Button>
+        <Popconfirm
+          v-else
+          title="确定删除选中的数据吗？"
+          ok-text="是"
+          cancel-text="否"
+          @confirm="confirm"
+          @cancel="cancel"
+        >
           <Button type="link" :icon="h(DeleteOutlined)" > 删除 </Button>
+        </Popconfirm>
         </div>
         <div>
           <InputSearch
@@ -155,9 +165,9 @@
   import VFormAddValueN from '@/views/form-design/components/VFormAddValue/index.vue';
   import JsonModal from '@/views/form-design/components/VFormDesign/components/JsonModal.vue';
   // import { useRouter } from 'vue-router';
-  import { Button, Input, InputSearch, Select, Popover } from 'ant-design-vue';
+  import { Button, Input, InputSearch, Select, Popover, Popconfirm, message } from 'ant-design-vue';
   import { getRandomOneApi } from '@/api/sys/form';
-  import { getOneFieldApi, getAllDynamicValueApi, AddDynamicValueApi, getOneDynamicValueApi, UpdataDynamicValueApi } from '@/api/sys/data';
+  import { getOneFieldApi, getAllDynamicValueApi, AddDynamicValueApi, getOneDynamicValueApi, UpdataDynamicValueApi, DeleTeDynamicValueApi } from '@/api/sys/data';
   import { IFormConfig  } from '@/views/form-design/typings/v-form-component';
   import { IToolbarMethods } from '@/views/form-design/typings/form-type';
   import { cloneDeep } from 'lodash-es';
@@ -166,6 +176,36 @@
 import { Item } from 'ant-design-vue/es/menu';
   const FormStore = useFormStore();
 
+  const selectedArr = ref<any>([])
+  const onChange = (selectedRowKeys: (string | number)[], selectedRows: any) => {
+    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    selectedArr.value = selectedRows
+  }
+  const onSelect = (record: any, selected: boolean, selectedRows: any[]) => {
+    console.log(record, selected, selectedRows);
+  };
+  const onSelectAll = (selected: boolean, selectedRows: any[], changeRows: any[]) => {
+    console.log(selected, selectedRows, changeRows);
+  };
+  const confirm = async () => {
+    if(selectedArr.value&&selectedArr.value.length){
+      const ids = selectedArr.value.map((IdItem:any)=> IdItem.id)
+      const data = await DeleTeDynamicValueApi({fromId: 242, id:  ids,type: 1})
+      console.log('data', data)
+      notification.success({
+        message: data,
+        duration: 3,
+      });
+      getFormManagerList();
+    }
+  }
+const cancel = () => {
+  
+}
+const Warning = (mag) => {
+  const hide = message.warning(mag, 0);
+  setTimeout(hide, 1000);
+};
   const { notification } = useMessage();
   const canResize = ref(true);
   const loading = ref(true);
@@ -278,7 +318,7 @@ const delSearchItem = (val, index) => {
    */
    const handleOpenModal = async (Modal: IToolbarMethods, id?: string |number | any, type?: any) => {
     FormStore.updateIsPreview(false)
-    formConfig.value =  await getOneFieldApi({ id: history.state.id, formVersion: history.state.formVersion }) as any;
+    formConfig.value =  await getOneFieldApi({ id: 242, formVersion: history.state.formVersion }) as any;
 
     const RandomOne = formConfig.value?.schemas.some(
       (item) => item.component ==='Correlation',

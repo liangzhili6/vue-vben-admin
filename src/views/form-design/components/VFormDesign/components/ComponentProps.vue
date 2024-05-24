@@ -60,11 +60,9 @@
           />
         </FormItem>
         <!--    循环遍历渲染组件属性      -->
-
         <div v-if="formConfig.currentItem && formConfig.currentItem.componentProps">
           <FormItem v-for="item in inputOptions" :key="item.name" :label="item.label">
             <!--     处理数组属性，placeholder       -->
-
             <div v-if="item.children">
               <template v-for="(child, index) of item.children" :key="index">
                 <component
@@ -217,7 +215,22 @@
             });
         },
       );
-
+   /**
+       * 关联记录
+       * @param fromId 自己的表单id--编辑表单使用
+       */
+       const CorrelationOptions = async (fromId?: any) => {
+        CorrelationOptionsList.value = (
+          await formConfig.value.currentItem!.componentProps!.api[0]({ fromId })
+        ).map((item: any) => {
+          return {
+            ...item,
+            value: item.id,
+            label: item.formName,
+          };
+        });
+      };
+      ['CentreSelect'].includes(formConfig.value.currentItem!.component)? CorrelationOptions(history.state.id ? history.state.id : 0):null
       watch(
         () => formConfig.value.currentItem && formConfig.value.currentItem.component,
         (_newValue) => {
@@ -340,22 +353,7 @@
       const changeJournalNumber = async (id) => {
         console.log('id',id)
       };
-      /**
-       * 关联记录
-       * @param fromId 自己的表单id--编辑表单使用
-       */
-      const CorrelationOptions = async (fromId?: any) => {
-        CorrelationOptionsList.value = (
-          await formConfig.value.currentItem!.componentProps!.api[0]({ fromId })
-        ).map((item: any) => {
-          return {
-            ...item,
-            value: item.id,
-            label: item.formName,
-          };
-        });
-      };
-      CorrelationOptions(history.state.id ? history.state.id : 0);
+   
       const handleChange = (val: any) => {
         formConfig.value.schemas.filter((item) => {
           item.defaultValue = val;

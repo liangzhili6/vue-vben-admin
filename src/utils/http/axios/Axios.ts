@@ -188,6 +188,29 @@ export class VAxios {
   post<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'POST' }, options);
   }
+  postformData<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+    const formData = new window.FormData()
+    if (config.params) {
+      Object.keys(config.params).forEach((key) => {
+        const value = config.params![key];
+        if (Array.isArray(value)) {
+          value.forEach((item) => {
+            formData.append(`${key}[]`, item);
+          });
+          return;
+        }
+
+        formData.append(key, config.params![key]);
+      });
+    }
+    return this.request({ ...config, data: formData, method: 'POST',
+      headers: {
+        'Content-type': ContentTypeEnum.FORM_DATA,
+        // @ts-ignore
+        ignoreCancelToken: true,
+      },
+    }, options);
+  }
 
   put<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'PUT' }, options);
