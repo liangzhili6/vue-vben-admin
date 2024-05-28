@@ -1,24 +1,92 @@
 <template>
+  <div class="p-4 my-gantt">
   <!-- follow-up-list 随访 -->
-  <section class="my-gantt" style="position: relative">
-    <div class="time-box" style="position: absolute; top: 10px; z-index: 999; right: 10px">
-    <Dropdown placement="bottom" :arrow="{ pointAtCenter: true }">
-      <Button>{{ data.timeList.find(v=>v.code === data.timeState).name }}</Button>
-      <template #overlay>
-        <Menu>
-          <MenuItem v-for="(time, t_index) in data.timeList" @click="changeTime(time)" :key="t_index" :value="time.code" :label="time.code">
-            {{ time.name }}
-          </MenuItem>
-        </Menu>
-      </template>
-    </Dropdown>
-    </div>
+    <Space  direction="horizontal" class="FollowUpType-view">
+      <Space>
+        <RadioGroup v-model:value="FollowUpType">
+          <RadioButton :value="'待随访'">待随访</RadioButton>
+          <RadioButton :value="'已随访'">已随访</RadioButton>
+        </RadioGroup>
+
+        <Button type="primary" @click="handleOpenModal" :icon="h(PlusOutlined)">
+          {{ '新增' }}
+        </Button>
+        <Button type="link" :icon="h(UploadOutlined)"> 导入 </Button>
+        <Button type="link" :icon="h(DownloadOutlined)"> 导出 </Button>
+      </Space>
+      <Space>
+        <Pagination
+          v-model:current="current"
+          v-model:page-size="pageSizeRef"
+          :page-size-options="pageSizeOptions"
+          :total="total"
+          show-size-changer
+          show-less-items
+          show-quick-jumper
+          @showSizeChange="onShowSizeChange"
+        >
+          <template #buildOptionText="props">
+            <span>{{ props.value }}条/页</span>
+          </template>
+        </Pagination>
+        <InputSearch
+          ref="keywordRef"
+          placeholder="请输入"
+          v-model:value="keyword"
+          :allowClear="true"
+          @search="onSearchKeyword"
+          class="keywordView"
+          @pressEnter="onSearchKeyword"
+        />
+        <Button type="link" :icon="h(FunnelPlotOutlined)"> 筛选 </Button>
+        <Button type="link" @click="handleOpenModal" :icon="h(RedoOutlined)">
+          {{ '刷新' }}
+        </Button>
+        <Dropdown placement="bottom" :arrow="{ pointAtCenter: true }">
+          <Button>{{ data.timeList.find((v) => v.code === data.timeState).name }}</Button>
+          <template #overlay>
+            <Menu>
+              <MenuItem
+                v-for="(time, t_index) in data.timeList"
+                @click="changeTime(time)"
+                :key="t_index"
+                :value="time.code"
+                :label="time.code"
+              >
+                {{ time.name }}
+              </MenuItem>
+            </Menu>
+          </template>
+        </Dropdown>
+      </Space>
+    </Space>
     <div id="gantt_here" class="gantt-container"></div>
-  </section>
+  </div>
 </template>
 
-<script setup>
-  import { reactive, toRefs, onBeforeMount, onMounted, watchEffect, defineExpose } from 'vue';
+<script lang="ts" setup>
+  import {
+    reactive,
+    toRefs,
+    onBeforeMount,
+    onMounted,
+    watchEffect,
+    defineExpose,
+    h,
+    ref,
+  } from 'vue';
+  import {
+    PlusOutlined,
+    ArrowLeftOutlined,
+    EditOutlined,
+    CopyOutlined,
+    UploadOutlined,
+    DownloadOutlined,
+    DeleteOutlined,
+    WarningOutlined,
+    FunnelPlotOutlined,
+    RedoOutlined,
+  } from '@ant-design/icons-vue';
   import {
     Button,
     Input,
@@ -27,15 +95,27 @@
     message,
     Radio,
     RadioGroup,
+    RadioButton,
     Dropdown,
     Menu,
     MenuItem,
+    Pagination,
+    Space,
   } from 'ant-design-vue';
   import dayjs from 'dayjs';
 
   import { gantt } from 'dhtmlx-gantt';
   import 'dhtmlx-gantt/codebase/dhtmlxgantt.css';
-
+  const keyword = ref<any>('');
+  const keywordRef = ref<any>(true);
+  const FollowUpType = ref<any>('待随访');
+  const pageSizeOptions = ref<any>(['20', '50', '100']);
+  const current = ref(1);
+  const pageSizeRef = ref(20);
+  const total = ref(50);
+  const onShowSizeChange = (current: any, pageSize: any) => {
+    pageSizeRef.value = pageSize;
+  };
   const data = reactive({
     timeList: [
       {
@@ -69,7 +149,7 @@
           endTime: '2023-10-31',
           showEndTime: '2023-11-01',
           projectStatus: '暂无任务',
-          projectProgress: 0,
+          projectProgress: 1,
           projectRatio: '',
           projectTotalTime: 0,
           projectUsedTime: 0,
@@ -80,8 +160,8 @@
           projectMap: {},
           parent: 0,
           start_date: '2023-01-01 16:00:00.000',
-          end_date: '2023-10-31 16:00:00.000',
-          progress: 0.5,
+          end_date: '2024-10-31 16:00:00.000',
+          progress: 1,
           duration: 37,
         },
         {
@@ -192,8 +272,71 @@
           progress: 0.33,
         },
         {
-          id: 1,
+          id: 7,
           projectName: '项目7',
+          startTime: '2023-08-28',
+          endTime: '2023-10-25',
+          showEndTime: '2023-10-26',
+          projectStatus: '滞后',
+          projectProgress: 0.27,
+          projectRatio: 0.15,
+          projectTotalTime: 2027.5,
+          projectUsedTime: 557,
+          functionName: '测量工具',
+          xmdj: '1',
+          cityName: '佛山',
+          name: '7',
+          projectMap: {},
+          parent: 0,
+          start_date: '2023-06-27 16:00:00.000',
+          end_date: '2023-10-25 16:00:00.000',
+          progress: 0.67,
+        },
+        {
+          id: 8,
+          projectName: '项目8',
+          startTime: '2023-08-28',
+          endTime: '2023-10-25',
+          showEndTime: '2023-10-26',
+          projectStatus: '滞后',
+          projectProgress: 0.27,
+          projectRatio: 0.15,
+          projectTotalTime: 2027.5,
+          projectUsedTime: 557,
+          functionName: '测量工具',
+          xmdj: '1',
+          cityName: '佛山',
+          name: '7',
+          projectMap: {},
+          parent: 0,
+          start_date: '2023-06-27 16:00:00.000',
+          end_date: '2023-10-25 16:00:00.000',
+          progress: 0.67,
+        },
+        {
+          id: 9,
+          projectName: '项目9',
+          startTime: '2023-08-28',
+          endTime: '2023-10-25',
+          showEndTime: '2023-10-26',
+          projectStatus: '滞后',
+          projectProgress: 1,
+          projectRatio: 0.15,
+          projectTotalTime: 2027.5,
+          projectUsedTime: 557,
+          functionName: '测量工具',
+          xmdj: '1',
+          cityName: '佛山',
+          name: '7',
+          projectMap: {},
+          parent: 0,
+          start_date: '2023-06-27 16:00:00.000',
+          end_date: '2023-10-25 16:00:00.000',
+          progress: 0.67,
+        },
+        {
+          id: 10,
+          projectName: '项目10',
           startTime: '2023-08-28',
           endTime: '2023-10-25',
           showEndTime: '2023-10-26',
@@ -215,7 +358,29 @@
       ],
     },
   });
+  const onSearchKeyword = (searchValue: string) => {
+    console.log('searchValue', searchValue);
+    /*     getFormManagerList() */
+  };
+  /**
+   * 打开模态框
+   * @param Modal {IToolbarMethods}
+   */
+  const handleOpenModal = async (
+    // Modal: IToolbarMethods,
+    // id?: string | number | any,
+    // type?: any,
+  ) => {
+    /*     FormStore.updateIsPreview(false)
+    formConfig.value =  await getOneFieldApi({ id: history.state.id, formVersion: history.state.formVersion }) as any;
 
+    const RandomOne = formConfig.value?.schemas.some(
+      (item) => item.component ==='Correlation',
+    );
+    RandomOne&&!type ? RandomOneData.value = await getRandomOneApi() : RandomOne&&type ? RandomOneData.value = recordObj.value.joinValue : null
+    const config = await cloneDeep(formConfig.value);
+    await Modal?.showModal(config, id); */
+  };
   const zoomConfig = {
     levels: [
       {
@@ -305,7 +470,6 @@
 
   //初始化甘特图
   const initGantt = () => {
-    console.log(' gantt', gantt);
     let dateToStr = gantt.date.date_to_str('%Y.%m.%d');
     gantt.config.grid_width = 150;
     gantt.config.add_column = false; //添加符号
@@ -320,7 +484,6 @@
     gantt.config.readonly = true; //是否只读
 
     gantt.templates.task_text = function (start, end, task) {
-      console.log('start, end, task', start, end, task);
       return (
         dayjs(start).format('YYYY-MM-DD') + '~' + dayjs(end).format('YYYY-MM-DD') + task.projectName
       );
@@ -386,7 +549,6 @@
   };
 
   const changeTime = (time) => {
-    console.log('time', time)
     data.timeState = time.code;
     gantt.ext.zoom.setLevel(time.code);
   };
@@ -403,14 +565,23 @@
 <style scoped lang="scss">
   .my-gantt {
     // height: 100%;
-    height: calc(100% - 80px);
+    height: calc(100% - 20px);
+    background: #ffffff;
+    margin: 10px;
+    padding: 10px;
+    .FollowUpType-view {
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
     .time-box {
       text-align: center;
       margin-bottom: 20px;
     }
-    ::v-deep .gantt-container {
+    .gantt-container {
       width: 100%;
       height: 100%;
+      height: calc(100% - 40px);
       .weekend {
         background: #f6f6f6;
         // color: #fff;

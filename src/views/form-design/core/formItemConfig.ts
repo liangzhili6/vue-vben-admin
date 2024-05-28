@@ -7,7 +7,7 @@ import { componentMap as VbenCmp, add } from '@/components/Form/src/componentMap
 import { ComponentType } from '@/components/Form/src/types';
 
 import { uploadApi } from '@/api/sys/upload';
-import { GetAllTDimDeptApi, getOneFieldApi } from '@/api/sys/data';
+import { GetAllTDimDeptApi, getOneFieldApi, GetAllTCenterApi, GetAllUserApi } from '@/api/sys/data';
 import { getAlldynamicFromNameApi } from '@/api/sys/form';
 
 import { componentMap as Cmp } from '../components';
@@ -59,12 +59,13 @@ export const MemberList: MemberFormComponent[] = [
   },
 ]
 
-export const CentreList: CentreFormComponent & Function[] = async () => {
-  const data =  await GetAllTDimDeptApi()
+export const CentreList = async (Getfun) => {
+  const data =  await Getfun()
   return data.map(item=>{
     return {
       ...item,
-      label: item.name,
+      value: item.centerCode,
+      label: item.centerName,
     }
   })
 }
@@ -97,6 +98,34 @@ export const advanced: IVFormComponent[]= [
  * 外部设置的自定义控件
  */
 export const customComponents: IVFormComponent[] = [
+  {
+    component: 'CentreSelect',
+    label: '中心',
+    icon: 'gg:select',
+    field: '',
+    colProps: { span: 24 },
+    componentProps: {
+      api: GetAllTCenterApi,
+      // options: CentreList(GetAllTCenterApi)
+    },
+  },{                               
+    component: 'MemberSelect',
+    label: '成员',
+    icon: 'gg:select',
+    field: '',
+    colProps: { span: 24 },
+    componentProps: {
+      api: GetAllUserApi,
+      // options: CentreList(GetAllTCenterApi)
+      /* options: (await GetAllTCenterApi()).map((item: any) => {
+        return {
+          ...item,
+          value: item.centerCode,
+          label: item.centerName,
+        };
+      }) */
+    },
+  },
 /*{
   component: 'MemberSelect',
   label: '成员',

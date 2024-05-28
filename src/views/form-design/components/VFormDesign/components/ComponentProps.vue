@@ -48,8 +48,14 @@
             :min="120"
           />
         </FormItem>
-        <FormItem label="中心" v-if="['CentreSelect'].includes(formConfig.currentItem.component)">
-        </FormItem>
+        <!-- <FormItem label="中心" v-if="['CentreSelect'].includes(formConfig.currentItem.component)">
+          <Select
+            mode="multiple"
+            v-model:value="formConfig.currentItem['CentreSelectShowKey']"
+            :options="CentreSelectShowKeyList"
+            @change="handleShowKey"
+          />
+        </FormItem> -->
         <FormItem label="成员" v-if="['MemberSelect'].includes(formConfig.currentItem.component)">
         </FormItem>
         <FormItem label="图文内容" v-if="['ImageText'].includes(formConfig.currentItem.component)">
@@ -191,6 +197,7 @@
       // 让compuated属性自动更新
       const CorrelationOptionsList = ref([]);
       const CorrelationShowKeyList = ref([]);
+      // const CentreSelectShowKeyList = ref([]);
       const { prefixCls } = useDesign('basic-title');
       const allOptions = ref([] as Omit<IBaseFormAttrs, 'tag'>[]);
       const showControlAttrs = (includes: string[] | undefined) => {
@@ -215,6 +222,20 @@
             });
         },
       );
+      
+/*       const handleCentreSelectShowKeyList = async () =>{
+        console.log('CentreSelectShowKeyList', formConfig.value.currentItem)
+        CentreSelectShowKeyList.value = (
+          await formConfig.value.currentItem!.componentProps!.api()
+        ).map((item: any) => {
+          return {
+            ...item,
+            value: item.centerCode,
+            label: item.centerName,
+          };
+        });
+        formConfig.value.currentItem!.componentProps.options = CentreSelectShowKeyList.value
+      } */
    /**
        * 关联记录
        * @param fromId 自己的表单id--编辑表单使用
@@ -277,6 +298,11 @@
             if(_newValue === 'Correlation'){
               CorrelationOptions(history.state.id ? history.state.id : 0);
             }
+           /*  if(_newValue === 'CentreSelect'){
+              console.log('_newValue', _newValue)
+              handleCentreSelectShowKeyList();
+            } */
+            
         },
         {
           immediate: true,
@@ -371,6 +397,8 @@
         CorrelationOptionsList,
         changeCorrelationShowKey,
         CorrelationShowKeyList,
+        // CentreSelectShowKeyList,
+        // handleCentreSelectShowKeyList,
         handleShowKey,
         changeJournalNumber,
         prefixCls,

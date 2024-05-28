@@ -227,7 +227,27 @@
    * 单击控件时添加到面板中
    * @param item {IVFormComponent} 当前点击的组件
    */
-  const handleListPush = (item: IVFormComponent) => {
+  const handleListPush = async (item: IVFormComponent) => {
+    if(item.component === 'CentreSelect'){
+      let options = (await item.componentProps.api()).map((item: any) => {
+        return {
+          ...item,
+          value: item.centerCode,
+          label: item.centerName,
+        };
+      })
+      item.componentProps.options = options
+    }
+    if(item.component === 'MemberSelect'){
+      let options = (await item.componentProps.api()).records.map((item: any) => {
+        return {
+          ...item,
+          value: item.userCode,
+          label: item.userName,
+        };
+      })
+      item.componentProps.options = options
+    }
     const formItem = cloneDeep(item);
     setGlobalConfigState(formItem);
     generateKey(formItem);

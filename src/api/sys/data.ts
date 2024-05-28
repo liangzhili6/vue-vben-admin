@@ -16,6 +16,8 @@ enum Api {
    * 中心相关
    */
   GetAllTDimDept = "/dynamicFormsService/api/v1/dynamicForms/dept/getAllTDimDept",
+  GetAllTCenter = "/dynamicFormsService/api/v1/opt/center/getAllTCenter",
+  GetAllUser = "/dynamicFormsService/api/v1/u4a/users/pagination"
 }
 
 /**
@@ -121,6 +123,41 @@ export function GetAllTDimDeptApi( mode: ErrorMessageMode = 'none') {
   return defHttp.get(
     {
       url: Api.GetAllTDimDept,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+/**
+ * @description: 查询所有中心
+ */
+export function GetAllTCenterApi(mode: ErrorMessageMode = 'none') {
+  return defHttp.get(
+    {
+      url: Api.GetAllTCenter,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+/**
+ * @description: 查询所有中心
+ */
+export function GetAllUserApi( params: {
+  "current"?: number | string,
+  "size"?: string | number,
+}, mode: ErrorMessageMode = 'none') {
+  return defHttp.get(
+    {
+      url: Api.GetAllUser,
+      params: {
+        current:1,
+        size: 999,
+      },
     },
     {
       errorMessageMode: mode,

@@ -18,8 +18,8 @@ export default defineApplicationConfig({
     server: {
       proxy: {
         '/basic-api': {
-          target: 'http://119.96.117.48:18630/',
-          // target: 'http://192.168.0.6:8085/',
+          // target: 'http://119.96.117.48:18630/',
+          target: 'http://192.168.0.6:8085/',
           // target: 'http://localhost:3000/',
           changeOrigin: true,
           ws: true,

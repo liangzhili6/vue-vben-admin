@@ -38,7 +38,7 @@ import { CropperAvatar } from '@/components/Cropper';
 
 import { Tinymce } from '@/components/Tinymce';
 import { Signature } from '@/components/Signature';
-import { MemberSelect } from '@/components/MemberSelect';
+// import { MemberSelect } from '@/components/MemberSelect';
 import { Correlation } from '@/components/Correlation';
 import { JournalNumber } from '@/components/JournalNumber';
 
@@ -86,7 +86,7 @@ componentMap.set('Divider', Divider);
 componentMap.set('CropperAvatar', CropperAvatar);
 componentMap.set('Signature', Signature);
 componentMap.set('Tinymce', Tinymce);
-componentMap.set('MemberSelect', MemberSelect);
+componentMap.set('MemberSelect', Select);
 componentMap.set('CentreSelect', Select);
 componentMap.set('Correlation', Correlation);
 componentMap.set('BasicTitle', BasicTitle);
