@@ -6,6 +6,7 @@ const permission: AppRouteModule = {
   path: '/form-designer',
   name: 'Form-designer',
   component: LAYOUT,
+  redirect: '/form-designer/design',
   meta: {
     orderNo: 10000,
     icon: 'ion:build-outline',

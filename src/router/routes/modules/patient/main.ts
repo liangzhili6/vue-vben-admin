@@ -6,6 +6,7 @@ const data: AppRouteModule = {
   path: '/patient',
   name: 'Patient',
   component: LAYOUT,
+  redirect: '/patient/patient-list',
   meta: {
     orderNo: 10000,
     icon: 'ion:build-outline',

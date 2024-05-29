@@ -6,6 +6,7 @@ const data: AppRouteModule = {
   path: '/data-administration',
   name: 'Data-administration',
   component: LAYOUT,
+  redirect: '/data-administration/data-list',
   meta: {
     orderNo: 10000,
     icon: 'ion:build-outline',

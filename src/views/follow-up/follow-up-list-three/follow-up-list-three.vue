@@ -8,11 +8,11 @@
           <RadioButton :value="'已随访'">已随访</RadioButton>
         </RadioGroup>
 
-        <Button type="primary" @click="handleOpenModal" :icon="h(PlusOutlined)">
+        <!-- <Button type="primary" @click="handleOpenModal" :icon="h(PlusOutlined)">
           {{ '新增' }}
         </Button>
         <Button type="link" :icon="h(UploadOutlined)"> 导入 </Button>
-        <Button type="link" :icon="h(DownloadOutlined)"> 导出 </Button>
+        <Button type="link" :icon="h(DownloadOutlined)"> 导出 </Button> -->
       </Space>
       <Space>
         <Pagination
@@ -505,7 +505,7 @@
     };
     await handleBasicColumns((res:any)=>{
       let arr = []
-      arr = res.schemas.filter((el:any)=> el.label === '患者编号' || el.label === '访视二备注'|| el.label === '访视三备注'|| el.label === '访视四备注')
+      arr = res.schemas.filter((el:any)=> el.label === '患者编号' || el.label === '访视三备注')
       gantt.config.columns = arr.map((item: any) => {
         return {
             ...item,

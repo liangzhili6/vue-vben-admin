@@ -23,7 +23,7 @@ enum Api {
 /**
  * @description: 数据列表 - 获取表头
  */
-export function getOneFieldApi(params: {id: string | number, formVersion?: string }, mode: ErrorMessageMode = 'none') {
+export function getOneFieldApi(params: {id: string | number, formVersion?: string, formName?: string }, mode: ErrorMessageMode = 'none') {
   return defHttp.get(
     {
       url: Api.getOneField,
@@ -145,7 +145,7 @@ export function GetAllTCenterApi(mode: ErrorMessageMode = 'none') {
 }
 
 /**
- * @description: 查询所有中心
+ * @description: 查询所有用户、成员
  */
 export function GetAllUserApi( params: {
   "current"?: number | string,

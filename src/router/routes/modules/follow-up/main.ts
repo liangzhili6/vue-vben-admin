@@ -10,6 +10,7 @@ const data: AppRouteModule = {
   path: '/follow-up',
   name: 'FollowUp',
   component: LAYOUT,
+  redirect: '/follow-up/follow-up-list-two',
   meta: {
     orderNo: 10000,
     icon: 'ion:build-outline',
@@ -17,12 +18,28 @@ const data: AppRouteModule = {
   },
   children: [
     {
-      path: 'follow-up-list',
-      name: 'FollowUpList',
+      path: 'follow-up-list-two',
+      name: 'FollowUpListTwo',
       meta: {
-        title: '随访',
+        title: '随访二',
       },
-      component: () => import('@/views/follow-up/follow-up-list/follow-up-list.vue'),
+      component: () => import('@/views/follow-up/follow-up-list-two/follow-up-list-two.vue'),
+    },
+    {
+      path: 'follow-up-list-three',
+      name: 'FollowUpListThree',
+      meta: {
+        title: '随访三',
+      },
+      component: () => import('@/views/follow-up/follow-up-list-three/follow-up-list-three.vue'),
+    },
+    {
+      path: 'follow-up-list-four',
+      name: 'FollowUpListFour',
+      meta: {
+        title: '随访四',
+      },
+      component: () => import('@/views/follow-up/follow-up-list-four/follow-up-list-four.vue'),
     },
   ],
 };
