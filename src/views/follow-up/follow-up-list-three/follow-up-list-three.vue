@@ -60,7 +60,7 @@
         </Dropdown>
       </Space>
     </Space>
-    <div id="gantt_here" class="gantt-container"></div>
+    <div id="gantt_herethree" class="gantt-container"></div>
   </div>
 </template>
 
@@ -143,200 +143,7 @@
     timeState: 'day',
     demoData: {
       data: [
-        {
-          id: 520,
-          _journal_number_49035263951: '111',
-          projectName: '项目1',
-          startTime: '2023-09-25',
-          endTime: '2023-10-31',
-          showEndTime: '2023-11-01',
-          projectStatus: '暂无任务',
-          projectProgress: 1,
-          projectRatio: '',
-          projectTotalTime: 0,
-          projectUsedTime: 0,
-          functionName: '',
-          xmdj: '2',
-          cityName: '成都',
-          name: '1',
-          projectMap: {},
-          parent: 0,
-          start_date: '2023-01-01 16:00:00.000',
-          end_date: '2024-10-31 16:00:00.000',
-          progress: 1,
-          duration: 37,
-        },
-        {
-          id: 517,
-          projectName: '项目2',
-          startTime: '2023-09-18',
-          endTime: '2023-10-23',
-          showEndTime: '2023-10-24',
-          projectStatus: '暂无任务',
-          projectProgress: 0,
-          projectRatio: '',
-          projectTotalTime: 0,
-          projectUsedTime: 0,
-          functionName: '',
-          xmdj: '0',
-          cityName: '深圳',
-          name: '2',
-          projectMap: {},
-          parent: 0,
-          start_date: '2023-09-17 16:00:00.000',
-          end_date: '2023-10-23 16:00:00.000',
-          progress: 0.2,
-        },
-        {
-          id: 505,
-          projectName: '项目3',
-          startTime: '2023-09-04',
-          endTime: '2023-09-30',
-          showEndTime: '2023-10-01',
-          projectStatus: '滞后',
-          projectProgress: 0.76,
-          projectRatio: 0.12,
-          projectTotalTime: 3267.6,
-          projectUsedTime: 2477.7,
-          functionName: '现状还原',
-          xmdj: '3',
-          cityName: '成都',
-          name: '3',
-          projectMap: {},
-          parent: 0,
-          start_date: '2023-09-03 16:00:00.000',
-          end_date: '2023-09-30 16:00:00.000',
-          progress: 0.1,
-        },
-        {
-          id: 508,
-          projectName: '项目4',
-          startTime: '2023-09-04',
-          endTime: '2023-10-20',
-          showEndTime: '2023-10-21',
-          projectStatus: '滞后',
-          projectProgress: 0.57,
-          projectRatio: 0.04,
-          projectTotalTime: 3582.5,
-          projectUsedTime: 2033.2,
-          functionName: '生活圈',
-          xmdj: '1',
-          cityName: '成都',
-          name: '4',
-          projectMap: {},
-          parent: 0,
-          start_date: '2023-09-03 16:00:00.000',
-          end_date: '2023-10-20 16:00:00.000',
-          progress: 0.15,
-        },
-        {
-          id: 511,
-          projectName: '项目5',
-          startTime: '2023-09-01',
-          endTime: '2023-10-31',
-          showEndTime: '2023-11-01',
-          projectStatus: '滞后',
-          projectProgress: 0.07,
-          projectRatio: 0.03,
-          projectTotalTime: 2150.5,
-          projectUsedTime: 140,
-          functionName: '悬浮球',
-          xmdj: '1',
-          cityName: '成都',
-          name: '5',
-          projectMap: {},
-          parent: 0,
-          start_date: '2023-07-31 16:00:00.000',
-          end_date: '2023-10-31 16:00:00.000',
-          progress: 0.28,
-        },
-        {
-          id: 507,
-          projectName: '项目6',
-          startTime: '2023-08-28',
-          endTime: '2023-10-01',
-          showEndTime: '2023-10-02',
-          projectStatus: '滞后',
-          projectProgress: 0.48,
-          projectRatio: 0.21,
-          projectTotalTime: 4957,
-          projectUsedTime: 2367,
-          functionName: '产品原型图',
-          xmdj: '1',
-          cityName: '三亚',
-          name: '6',
-          projectMap: {
-            美术: 1,
-          },
-          parent: 0,
-          start_date: '2023-07-27 16:00:00.000',
-          end_date: '2023-10-01 16:00:00.000',
-          progress: 0.33,
-        },
-        {
-          id: 7,
-          projectName: '项目7',
-          startTime: '2023-08-28',
-          endTime: '2023-10-25',
-          showEndTime: '2023-10-26',
-          projectStatus: '滞后',
-          projectProgress: 0.27,
-          projectRatio: 0.15,
-          projectTotalTime: 2027.5,
-          projectUsedTime: 557,
-          functionName: '测量工具',
-          xmdj: '1',
-          cityName: '佛山',
-          name: '7',
-          projectMap: {},
-          parent: 0,
-          start_date: '2023-06-27 16:00:00.000',
-          end_date: '2023-10-25 16:00:00.000',
-          progress: 0.67,
-        },
-        {
-          id: 8,
-          projectName: '项目8',
-          startTime: '2023-08-28',
-          endTime: '2023-10-25',
-          showEndTime: '2023-10-26',
-          projectStatus: '滞后',
-          projectProgress: 0.27,
-          projectRatio: 0.15,
-          projectTotalTime: 2027.5,
-          projectUsedTime: 557,
-          functionName: '测量工具',
-          xmdj: '1',
-          cityName: '佛山',
-          name: '7',
-          projectMap: {},
-          parent: 0,
-          start_date: '2023-06-27 16:00:00.000',
-          end_date: '2023-10-25 16:00:00.000',
-          progress: 0.67,
-        },
-        {
-          id: 9,
-          projectName: '项目9',
-          startTime: '2023-08-28',
-          endTime: '2023-10-25',
-          showEndTime: '2023-10-26',
-          projectStatus: '滞后',
-          projectProgress: 1,
-          projectRatio: 0.15,
-          projectTotalTime: 2027.5,
-          projectUsedTime: 557,
-          functionName: '测量工具',
-          xmdj: '1',
-          cityName: '佛山',
-          name: '7',
-          projectMap: {},
-          parent: 0,
-          start_date: '2023-06-27 16:00:00.000',
-          end_date: '2023-10-25 16:00:00.000',
-          progress: 0.67,
-        },
-        {
+       /*  {
           id: 10,
           projectName: '项目10',
           startTime: '2023-08-28',
@@ -345,6 +152,9 @@
           projectStatus: '滞后',
           projectProgress: 0.27,
           projectRatio: 0.15,
+          parent: 0,
+          progress: 0.67,
+          parent: 0,
           projectTotalTime: 2027.5,
           projectUsedTime: 557,
           functionName: '测量工具',
@@ -352,11 +162,9 @@
           cityName: '佛山',
           name: '7',
           projectMap: {},
-          parent: 0,
           start_date: '2023-06-27 16:00:00.000',
           end_date: '2023-10-25 16:00:00.000',
-          progress: 0.67,
-        },
+        }, */
       ],
     },
   });
@@ -469,6 +277,25 @@
       },
     ],
   };
+  const BasicTableData = reactive({
+    list:[],
+    versionList: [],
+    columns: [],
+    current: 1,
+    size: 10,
+  });
+  const handleAllDynamicValueApi = async (callback) => {
+    try{
+      const data = await getAllDynamicValueApi({current: BasicTableData.current, size: BasicTableData.size, fromId: 0, sortType: 0, param: keyword.value, fromName: "随访记录", followUpStatus: 3, conditions:[{"id": "","op": "","value": ""}]});
+      BasicTableData.list = data.records
+      total.value = data.total
+      if(callback){
+        callback(data)
+      }
+    }catch(e){
+    }
+    return BasicTableData.list
+  }
   const handleBasicColumns = async (callback) =>{
     await getOneFieldApi({
       id: 0,
@@ -476,7 +303,6 @@
       formName: '随访记录',
     }).then(res=>{
       if(res&&res.schemas&&res.schemas.length){
-        console.log('res', res)
         if(callback){
           callback(res)
         }
@@ -517,7 +343,6 @@
           }
       })
     })
-    console.log('gantt.config.columns', gantt.config.columns)
     /* gantt.config.columns = [
       {
         name: 'projectName',
@@ -560,18 +385,67 @@
     ]; */
 
     gantt.i18n.setLocale('cn'); //设置语言
-    gantt.init('gantt_here'); //初始化
-    gantt.parse(data.demoData); //填充数据
-    scrollInit();
+    gantt.init('gantt_herethree'); //初始化
+    let arr = []
+    await handleAllDynamicValueApi((data:any)=>{
+      arr = data?.records?.map((items:any)=>{
+        return {
+          ...items,
+          id: items.id,
+          projectName: items._journal_number_34973387723,
+          startTime: '2023-08-28',
+          endTime: '2023-10-25',
+          showEndTime: '2023-10-26',
+          functionName: items._input_text_area_937637118210,
+          start_date: items._date_picker_51823313086,
+          end_date: items._date_picker_02245669357,
+          /* start_date: '2023-10-15 00:00:00.000',
+          end_date: '2023-10-15 23:00:00.000', */
+          projectProgress: 0.27,
+          projectRatio: 0.15,
+          parent: 0,
+          progress: 0.67,
+          projectTotalTime: 2027.5,
+          projectUsedTime: 557,
+
+         /*  projectProgress: 1,
+          projectRatio: 1,
+          parent: 1,
+          progress: 1, */
+        }
+      })
+    });
+    var calendar1 = gantt.createCalendar();
+    gantt.addCalendar(calendar1);
+    data.demoData.data = arr
+    console.log('data.demoData.data448', data.demoData.data, arr)
+    await gantt.parse(data.demoData); //填充数据
+    gantt.attachEvent("onTaskClick", function(id, e){
+      // 在这里添加点击事件的处理逻辑
+      console.log("点击了行号为" + id + "的条目");
+    });
+    // 刷新数据
+    await gantt.refreshData();
+    await scrollInit();
+        // 添加今日的Marker
+  gantt.plugins({
+     marker: true
+   });
+   gantt.addMarker({
+     start_date: new Date(),
+     text: '今日'
+   });
     await gantt.ext.zoom.init(zoomConfig); //配置初始化扩展
     gantt.ext.zoom.setLevel('day'); //切换到指定的缩放级别
+    
+    gantt.init('gantt_herethree'); //初始化
   };
 
   //拖拽滚动视图
   const scrollInit = () => {
     const nav = document.querySelectorAll('.gantt_task')[0];
     const parNav = document.querySelectorAll('.gantt_hor_scroll')[0];
-    parNav.scrollLeft = 0;
+    // parNav?parNav.scrollLeft = 0: null
     let flag;
     let downX;
     let scrollLeft;
@@ -601,10 +475,12 @@
     data.timeState = time.code;
     gantt.ext.zoom.setLevel(time.code);
   };
-
-  onBeforeMount(() => {});
-  onMounted(() => {
-    initGantt();
+  onBeforeMount(() => {
+    console.log('gantt', gantt, gantt.parse)
+    gantt.clearAll()
+  });
+  onMounted(async () => {
+    await initGantt();
   });
   watchEffect(() => {});
   defineExpose({

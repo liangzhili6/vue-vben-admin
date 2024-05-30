@@ -1,6 +1,7 @@
 import { defHttp } from '@/utils/http/axios';
 
 import { ErrorMessageMode } from '#/axios';
+import { NumberFormatProps } from 'vue-i18n';
 
 enum Api {
   /**
@@ -53,7 +54,7 @@ export function getOneDynamicValueApi(params: {valueId: string | number}, mode: 
 /**
  * @description: 数据列表
  */
-export function getAllDynamicValueApi(params: {current: number | string, size: number | string, fromId: number | string, sortType: number, param?: string | number, conditions?: any}, mode: ErrorMessageMode = 'none') {
+export function getAllDynamicValueApi(params: {current: number | string, size: number | string, fromId: number | string, sortType: number, param?: string | number, conditions?: any, fromName?: string, followUpStatus?: string | Number}, mode: ErrorMessageMode = 'none') {
   return defHttp.post(
     {
       url: Api.getAllDynamicValue,
@@ -86,7 +87,6 @@ export function AddDynamicValueApi(params: {fieldValueJson: string, fromId: stri
  * 	type 0撤回 1删除
  */
 export function DeleTeDynamicValueApi(params: { fromId: any, id: any, type: any}, mode: ErrorMessageMode = 'modal') {
-  console.log('params', params)
   return defHttp.post(
     {
       url: Api.DeleTeDynamicValue,
