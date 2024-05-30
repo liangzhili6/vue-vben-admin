@@ -22,7 +22,7 @@
         <SettingButton v-if="(getShowFold && getIsUnFold) || !getShowHeader" />
         <TabRedo v-if="getShowRedo" />
         <TabContent isExtra :tabItem="$route" v-if="getShowQuick" />
-        <FoldButton v-if="getShowFold" />
+        <!-- <FoldButton v-if="getShowFold" /> -->
       </template>
     </Tabs>
   </div>

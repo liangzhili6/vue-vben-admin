@@ -123,16 +123,15 @@ export const routerTransitionOptions = [
 
 export const menuTypeListEnum = [
   {
-    title: t('layout.setting.menuTypeSidebar'),
-    mode: MenuModeEnum.INLINE,
-    type: MenuTypeEnum.SIDEBAR,
-  },
-  {
     title: t('layout.setting.menuTypeMix'),
     mode: MenuModeEnum.INLINE,
     type: MenuTypeEnum.MIX,
   },
-
+  {
+    title: t('layout.setting.menuTypeSidebar'),
+    mode: MenuModeEnum.INLINE,
+    type: MenuTypeEnum.SIDEBAR,
+  },
   {
     title: t('layout.setting.menuTypeTopMenu'),
     mode: MenuModeEnum.HORIZONTAL,

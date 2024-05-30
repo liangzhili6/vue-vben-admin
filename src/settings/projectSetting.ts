@@ -18,7 +18,7 @@ import {
 // ! You need to clear the browser cache after the change
 const setting: ProjectConfig = {
   // Whether to show the configuration button
-  showSettingButton: true,
+  showSettingButton: false,
 
   // Whether to show the theme switch button
   showDarkModeToggle: true,
@@ -71,12 +71,12 @@ const setting: ProjectConfig = {
     // Whether to show the full screen button
     showFullScreen: true,
     // Whether to show the document button
-    showDoc: true,
+    showDoc: false,
     // Whether to show the notification button
-    showNotice: true,
+    showNotice: false,
     // Whether to display the menu search
-    showSearch: true,
-    showApi: true,
+    showSearch: false,
+    showApi: false,
   },
 
   // Menu configuration
@@ -103,15 +103,15 @@ const setting: ProjectConfig = {
     // Menu mode
     mode: MenuModeEnum.INLINE,
     // Menu type
-    type: MenuTypeEnum.SIDEBAR,
+    type: MenuTypeEnum.MIX,
     // Menu theme
     theme: ThemeEnum.DARK,
     // Split menu
-    split: false,
+    split: true,
     // Top menu layout
     topMenuAlign: 'center',
     // Fold trigger position
-    trigger: TriggerEnum.HEADER,
+    trigger: TriggerEnum.NONE,//菜单折叠按钮//折叠触发器位置
     // Turn on accordion mode, only show a menu
     accordion: true,
     // Switch page to close menu
@@ -134,7 +134,7 @@ const setting: ProjectConfig = {
     // Whether to show the refresh button
     showRedo: true,
     // Whether to show the collapse button
-    showFold: true,
+    showFold: false,
     // Auto collapsed
     autoCollapse: false,
   },

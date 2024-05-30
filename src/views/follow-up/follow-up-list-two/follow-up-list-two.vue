@@ -8,9 +8,9 @@
           <RadioButton :value="'已随访'">已随访</RadioButton>
         </RadioGroup>
 
-        <Button type="primary" @click="handleOpenModal" :icon="h(PlusOutlined)" v-if="FollowUpType==='已随访'">
+        <!-- <Button type="primary" @click="handleOpenModal" :icon="h(PlusOutlined)" v-if="FollowUpType==='已随访'">
           {{ '新增' }}
-        </Button>
+        </Button> -->
         <Button type="link" :icon="h(UploadOutlined)" v-if="FollowUpType==='已随访'"> 导入 </Button>
         <Button type="link" :icon="h(DownloadOutlined)" v-if="FollowUpType==='已随访'"> 导出 </Button>
       </Space>
