@@ -103,7 +103,7 @@
       );
       fApi.value = methods;
       const handleChange = (_event) => {
-        console.log('handleChange_event', _event)
+        console.log('handleChange_event', _event, linkOn)
         const { schema, value } = _event;
         const { field } = unref(schema);
 // ---------------------

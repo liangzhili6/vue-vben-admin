@@ -1,9 +1,9 @@
 <template>
   <div class="p-4 my-gantt">
-  <!-- follow-up-list 随访 -->
-    <Space  direction="horizontal" class="FollowUpType-view">
+    <!-- follow-up-list 随访 -->
+    <Space direction="horizontal" class="FollowUpType-view">
       <Space>
-        <RadioGroup v-model:value="FollowUpType">
+        <RadioGroup v-model:value="FollowUpType" @change="changeFollowUpFinish">
           <RadioButton :value="'待随访'">待随访</RadioButton>
           <RadioButton :value="'已随访'">已随访</RadioButton>
         </RadioGroup>
@@ -13,17 +13,22 @@
         </Button>
         <Button type="link" :icon="h(UploadOutlined)"> 导入 </Button>
         <Button type="link" :icon="h(DownloadOutlined)"> 导出 </Button> -->
+        <Button type="link" :icon="h(DownloadOutlined)" @click="openDownloadOutlined = true">
+          导出
+        </Button>
       </Space>
       <Space>
         <Pagination
-          v-model:current="current"
-          v-model:page-size="pageSizeRef"
-          :page-size-options="pageSizeOptions"
-          :total="total"
+          v-model:current="BasicTableData.current"
+          v-model:page-size="BasicTableData.size"
+          :page-size-options="BasicTableData.pageSizeOptions"
+          :total="BasicTableData.total"
+          :defaultCurrent="1"
           show-size-changer
           show-less-items
           show-quick-jumper
           @showSizeChange="onShowSizeChange"
+          @change="changePagination"
         >
           <template #buildOptionText="props">
             <span>{{ props.value }}条/页</span>
@@ -38,8 +43,25 @@
           class="keywordView"
           @pressEnter="onSearchKeyword"
         />
-        <Button type="link" :icon="h(FunnelPlotOutlined)"> 筛选 </Button>
-        <Button type="link" @click="handleOpenModal" :icon="h(RedoOutlined)">
+        <!-- <Button type="link" :icon="h(FunnelPlotOutlined)"> 筛选 </Button> -->
+        <Popover trigger="click" placement="bottom" style="z-index: 9999">
+          <template #content>
+            <FilterDropdown
+              ref="FilterDropdownRef"
+              :BasicTableData="BasicTableData"
+              :column="[]"
+              :handleSearch="handleSearch"
+            ></FilterDropdown>
+          </template>
+          <template #Footer>
+            <Button type="primary" class="FilterDropdownButton" @click="props.handleSearch">
+              筛选
+            </Button>
+            <span>Footer</span>
+          </template>
+          <Button type="link" :icon="h(FunnelPlotOutlined)"> 筛选 </Button>
+        </Popover>
+        <Button type="link" @click="initGantt" :icon="h(RedoOutlined)">
           {{ '刷新' }}
         </Button>
         <Dropdown placement="bottom" :arrow="{ pointAtCenter: true }">
@@ -60,11 +82,49 @@
         </Dropdown>
       </Space>
     </Space>
+    <Modal v-model:open="openDownloadOutlined" title="导出" @ok="handleOk">
+      <Divider style="height: 1px" />
+
+      <Form
+        ref="formRef"
+        :model="formState"
+        :label-col="labelCol"
+        :wrapper-col="wrapperCol"
+      >
+        <!-- 
+
+     @finish="handleFinish"
+    @validate="handleValidate"
+    @finishFailed="handleFinishFailed"
+   -->
+        <FormItem label="数据选择" name="region">
+          <Select v-model:value="formState.type" placeholder="please select your zone">
+            <SelectOption value="全部数据">全部数据</SelectOption>
+            <SelectOption value="选中的数据">选中的数据</SelectOption>
+            <SelectOption value="筛选排序后的数据">筛选排序后的数据</SelectOption>
+          </Select>
+        </FormItem>
+        <FormItem label="字段选择" name="region">
+          <Select v-model:value="formState.key" placeholder="please select your zone">
+            <SelectOption value="shanghai">全部字段</SelectOption>
+            <SelectOption value="beijing">列设置中的字段</SelectOption>
+          </Select>
+        </FormItem>
+      </Form>
+    </Modal>
     <div id="gantt_herefour" class="gantt-container"></div>
+    <VFormAddValue
+      ref="eFormAddValue"
+      :key="formConfig.title"
+      :formConfig="formConfig"
+      :handleGetDatas="handleGetDatas"
+      :updateDynamicValue="updateDynamicValue"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
+  import { FilterDropdown } from '@/components/FilterDropdown';
   import {
     reactive,
     toRefs,
@@ -87,6 +147,7 @@
     FunnelPlotOutlined,
     RedoOutlined,
   } from '@ant-design/icons-vue';
+  import VFormAddValue from '@/views/form-design/components/VFormAddValue/index.vue';
   import {
     Button,
     Input,
@@ -101,29 +162,112 @@
     MenuItem,
     Pagination,
     Space,
+    Popover,
+    Modal,
+    Form,
+    FormItem,
+    SelectOption,
+    Select,
+    Divider,
   } from 'ant-design-vue';
   import dayjs from 'dayjs';
-  import { getOneFieldApi, getAllDynamicValueApi, AddDynamicValueApi, getOneDynamicValueApi, UpdataDynamicValueApi, DeleTeDynamicValueApi } from '@/api/sys/data';
-
+  import {
+    getOneFieldApi,
+    getAllDynamicValueApi,
+    AddDynamicValueApi,
+    getOneDynamicValueApi,
+    UpdataDynamicValueApi,
+    DeleTeDynamicValueApi,
+  } from '@/api/sys/data';
+  import type { UnwrapRef } from 'vue';
+  import type { Rule } from 'ant-design-vue/es/form';
+  import { IFormConfig } from '@/views/form-design/typings/v-form-component';
+  import { cloneDeep } from 'lodash-es';
   import { gantt } from 'dhtmlx-gantt';
   import 'dhtmlx-gantt/codebase/dhtmlxgantt.css';
+  import { useFormStore } from '@/store/modules/form';
+  import { IToolbarMethods } from '@/views/form-design/typings/form-type';
+  import { useMessage } from '@/hooks/web/useMessage';
+  import { Dayjs } from 'dayjs';
+  import {
+    downloadByUrl,
+    downloadByData,
+    downloadByBase64,
+    downloadByOnlineUrl,
+  } from '@/utils/file/download';
+  const { notification } = useMessage();
+  interface FormState {
+    type: string;
+    key: string;
+  }
+  const formRef = ref();
+  const labelCol = { span: 5 };
+  const wrapperCol = { span: 13 };
+  const formState: UnwrapRef<FormState> = reactive({
+    type: '全部数据',
+    key: '全部字段',
+  });
+  const FormStore = useFormStore();
+  const eFormAddValue = ref<null | IToolbarMethods | any>(null);
+  const RandomOneData = ref<any>(null);
+  const recordValue = ref<any>(null);
+  const openDownloadOutlined = ref<boolean>(false);
+  const handleOk = () => {
+    //导出
+    console.log('handleOk', formRef.value, formState);
+    downloadByData('text content', 'testName.txt');
+  };
+  const formConfig = ref<IFormConfig>({
+    title: '新增表单',
+    submitFormTemplateTxt: '保存数据',
+    // 表单配置
+    schemas: [],
+    layout: 'horizontal',
+    labelLayout: 'flex',
+    labelWidth: 100,
+    labelCol: {},
+    wrapperCol: {},
+    currentItem: {
+      component: '',
+      componentProps: {},
+    },
+    activeKey: 1,
+  });
   const keyword = ref<any>('');
   const keywordRef = ref<any>(true);
   const FollowUpType = ref<any>('待随访');
-  const pageSizeOptions = ref<any>(['20', '50', '100']);
-  const current = ref(1);
-  const pageSizeRef = ref(20);
-  const total = ref(50);
+  const FilterDropdownRef = ref<any>(null);
   const onShowSizeChange = (current: any, pageSize: any) => {
-    pageSizeRef.value = pageSize;
+    console.log('current---175', current, 'pageSize', pageSize);
+    BasicTableData.size = pageSize;
+    BasicTableData.current = current;
+  };
+  const changePagination = (current: any, pageSize: any) => {
+    console.log('current', current, 'pageSize', pageSize);
+    BasicTableData.size = pageSize;
+    BasicTableData.current = current;
   };
   const BasicTableData = reactive({
-    list:[],
+    list: [],
     versionList: [],
     columns: [],
     current: 1,
-    size: 10,
+    size: 20,
+    total: 0,
+    pageSizeOptions: ['20', '50', '100'],
+    followUpFinish: 1,
+    conditions: [],
   });
+  const handleSearch = async () => {
+    BasicTableData.conditions = FilterDropdownRef.value.searchList.conditions.filter(
+      (el) => el.id && el.op && el.value,
+    );
+    await initGantt();
+  };
+  const changeFollowUpFinish = (val) => {
+    BasicTableData.followUpFinish = val.target.value === '待随访' ? 1 : 2;
+    initGantt();
+  };
   const data = reactive({
     timeList: [
       {
@@ -177,28 +321,9 @@
     },
   });
   const onSearchKeyword = (searchValue: string) => {
-    console.log('searchValue', searchValue);
-    /*     getFormManagerList() */
+    initGantt();
   };
-  /**
-   * 打开模态框
-   * @param Modal {IToolbarMethods}
-   */
-  const handleOpenModal = async (
-    // Modal: IToolbarMethods,
-    // id?: string | number | any,
-    // type?: any,
-  ) => {
-    /*     FormStore.updateIsPreview(false)
-    formConfig.value =  await getOneFieldApi({ id: history.state.id, formVersion: history.state.formVersion }) as any;
 
-    const RandomOne = formConfig.value?.schemas.some(
-      (item) => item.component ==='Correlation',
-    );
-    RandomOne&&!type ? RandomOneData.value = await getRandomOneApi() : RandomOne&&type ? RandomOneData.value = recordObj.value.joinValue : null
-    const config = await cloneDeep(formConfig.value);
-    await Modal?.showModal(config, id); */
-  };
   const zoomConfig = {
     levels: [
       {
@@ -285,33 +410,107 @@
       },
     ],
   };
+  const handleGetDatas = async (_data, id) => {
+    /* const data = await AddDynamicValueApi({fieldValueJson: JSON.stringify(_data), fromId: id,joinValue: RandomOneData.value})
+    notification.success({
+      message: data,
+      duration: 3,
+    });
+    getFormManagerList();
+    handleBasicColumns();
+    FormStore.updateIsPreview(true)
+    // isEdit.value = false
+    if(FormStore.childrenSubmit.text === '子表单提交'){
+      FormStore.updateChildrenSubmit('')
+    } */
+  };
+  const updateDynamicValue = async (_data, fromId) => {
+    /*  const data = await UpdataDynamicValueApi({fieldValueJson: JSON.stringify(_data), fromId: fromId, id: recordObj.value.id,joinValue: RandomOneData.value })
+    notification.success({
+      message: data,
+      duration: 3,
+    }); */
+    /*  getFormManagerList();
+    handleBasicColumns(); */
+    // FormStore.updateIsPreview(true)
+    // isEdit.value = false
+    /* if(FormStore.childrenSubmit.text === '子表单提交'){
+      FormStore.updateChildrenSubmit('')
+    } */
+  };
   const handleAllDynamicValueApi = async (callback) => {
-    try{
-      const data = await getAllDynamicValueApi({current: BasicTableData.current, size: BasicTableData.size, fromId: 0, sortType: 0, param: keyword.value, fromName: "随访记录", followUpStatus: 4, conditions:[{"id": "","op": "","value": ""}]});
-      BasicTableData.list = data.records
-      total.value = data.total
-      if(callback){
-        callback(data)
+    try {
+      const data = await getAllDynamicValueApi({
+        current: BasicTableData.current,
+        size: BasicTableData.size,
+        fromId: 0,
+        sortType: 0,
+        param: keyword.value,
+        fromName: '随访记录',
+        followUpStatus: 4,
+        conditions: BasicTableData.conditions,
+        followUpFinish: BasicTableData.followUpFinish,
+      });
+      BasicTableData.list = data.records;
+      BasicTableData.total = data.total;
+      if (callback) {
+        callback(data);
       }
-    }catch(e){
-    }
-    return BasicTableData.list
-  }
-  const handleBasicColumns = async (callback) =>{
+    } catch (e) {}
+    return BasicTableData.list;
+  };
+  const handleBasicColumns = async (callback) => {
     await getOneFieldApi({
       id: 0,
       // formVersion: history.state.formVersion,
       formName: '随访记录',
-    }).then(res=>{
-      if(res&&res.schemas&&res.schemas.length){
-        if(callback){
-          callback(res)
+    })
+      .then((res) => {
+        if (res && res.schemas && res.schemas.length) {
+          formConfig.value = res as any;
+          if (callback) {
+            callback(res);
+          }
+          let arr1 = res.schemas.map((item) => {
+            return {
+              title: item.label,
+              dataIndex: item.key,
+            };
+          });
+          BasicTableData.columns = [
+            ...arr1,
+            { title: '提交者', dataIndex: 'createBy' },
+            { title: '提交时间', dataIndex: 'createTime' },
+            { title: '更新者', dataIndex: 'modifiedBy' },
+            { title: '更新时间', dataIndex: 'modifiedAt' },
+          ].map((el: any) => {
+            return {
+              ...el,
+              value: el.dataIndex,
+              label: el.title,
+              sorter: true,
+              customFilterDropdown: true,
+              onFilter: (value, record) => {
+                return record.formName.toString().toLowerCase().includes(value.toLowerCase());
+              },
+              onFilterDropdownOpenChange: (visible) => {
+                if (visible) {
+                  setTimeout(() => {
+                    FilterDropdownRef.value.addSearchItem(el.dataIndex);
+                  }, 100);
+                }
+              },
+            };
+          });
         }
-      }
-    }).catch(e=>{console.log('e', e)})
-  }
+      })
+      .catch((e) => {
+        console.log('e', e);
+      });
+  };
   //初始化甘特图
   const initGantt = async () => {
+    gantt.clearAll();
     let dateToStr = gantt.date.date_to_str('%Y.%m.%d');
     gantt.config.grid_width = 150;
     gantt.config.add_column = false; //添加符号
@@ -328,27 +527,28 @@
     gantt.templates.task_text = function (start, end, task) {
       return (
         dayjs(start).format('YYYY-MM-DD') + '~' + dayjs(end).format('YYYY-MM-DD')
+        // dayjs(start).format('YYYY-MM-DD hh:mm:ss') + '~' + dayjs(end).format('YYYY-MM-DD hh:mm:ss')
       );
     };
-    await handleBasicColumns((res:any)=>{
-      let arr = []
-      arr = res.schemas.filter((el:any)=> el.label === '患者编号' || el.label === '访视四备注' )
+    await handleBasicColumns((res: any) => {
+      let arr = [];
+      arr = res.schemas.filter((el: any) => el.label === '患者编号' || el.label === '访视四备注');
       gantt.config.columns = arr.map((item: any) => {
         return {
-            ...item,
-            name: item.key,
-            label: item.label,
-            align: 'center',
-            // tree: true,
-            width: 120,
-          }
-      })
-    })
+          ...item,
+          name: item.key,
+          label: item.label,
+          align: 'center',
+          // tree: true,
+          width: 120,
+        };
+      });
+    });
     gantt.i18n.setLocale('cn'); //设置语言
     gantt.init('gantt_herefour'); //初始化
-    let arr = []
-    await handleAllDynamicValueApi((data:any)=>{
-      arr = data?.records?.map((items:any)=>{
+    let arr = [];
+    await handleAllDynamicValueApi((data: any) => {
+      arr = data?.records?.map((items: any) => {
         return {
           ...items,
           id: items.id,
@@ -358,37 +558,43 @@
           showEndTime: '2023-10-26',
           functionName: items._input_text_area_937637118210,
           start_date: items._date_picker_51823313086,
-          // start_date: '2023-10-15',
+          // start_date: '2023-10-15 00:00:00:',
           end_date: items._date_picker_02245669357,
-      /*     projectProgress: 1,
+          // end_date: '2023-10-16 23:00:00:',
+          /*     projectProgress: 1,
           projectRatio: 1,
           parent: 1,
           progress: 1, */
-        }
-      })
+        };
+      });
     });
-    data.demoData.data = arr
-    console.log('data.demoData.data448', data.demoData.data, arr)
+    data.demoData.data = arr;
     var calendar1 = gantt.createCalendar();
     gantt.addCalendar(calendar1);
     await gantt.parse(data.demoData); //填充数据
     // 刷新数据
-        // 添加今日的Marker
-  gantt.plugins({
-     marker: true
-   });
-   gantt.addMarker({
-     start_date: new Date(),
-     text: '今日'
-   });
+    // 添加今日的Marker
+    gantt.plugins({
+      marker: true,
+    });
+    gantt.addMarker({
+      start_date: new Date(),
+      text: '今日',
+    });
     await gantt.refreshData();
-    gantt.attachEvent("onTaskClick", function(id, e){
+    gantt.attachEvent('onTaskClick', async function (id) {
       // 在这里添加点击事件的处理逻辑
-      console.log("点击了行号为" + id + "的条目");
+      // console.log('点击了行号为' + id + '的条目');
+      if (FollowUpType.value === '待随访') {
+        FormStore.updateIsPreview(false);
+        recordValue.value = await getOneDynamicValueApi({ valueId: id });
+        const config = await cloneDeep(formConfig.value);
+        eFormAddValue!.value!.setFormModelfun(recordValue.value, true, config);
+      }
     });
     await scrollInit();
     await gantt.ext.zoom.init(zoomConfig); //配置初始化扩展
-    gantt.ext.zoom.setLevel('day'); //切换到指定的缩放级别
+    gantt.ext.zoom.setLevel(data.timeState); //切换到指定的缩放级别
   };
 
   //拖拽滚动视图
@@ -426,8 +632,7 @@
     gantt.ext.zoom.setLevel(time.code);
   };
   onBeforeMount(() => {
-    console.log('gantt', gantt, gantt.parse)
-    gantt.clearAll()
+    gantt.clearAll();
   });
   onMounted(async () => {
     await initGantt();
@@ -463,6 +668,7 @@
       }
     }
   }
+
   /* .gantt_container {
   border-color: transparent !important;
   .gantt_right {
@@ -781,11 +987,37 @@
 </style>
 
 <style>
+  .gantt_bars_area .gantt_task_content {
+    color: #000000 !important;
+    width: 160px !important;
+    /* top: -10px; */
+    overflow: visible;
+  }
 
-.gantt_bars_area .gantt_task_content{
-  color: #000000 !important;
-  width: 160px !important;
-  /* top: -10px; */
-  overflow: visible;
-}
+  .FilterDropdown-view {
+    padding: 8px;
+  }
+  .FilterDropdownLi {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+  .FilterDropdownInput {
+    width: 188px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .FilterDropdownButton {
+    width: 90px;
+  }
+  .FilterDropdownBtn {
+    display: flex;
+    flex: 1;
+    justify-content: end;
+  }
+  .FilterDropdownButtonTwo {
+    width: 90px;
+    margin-right: 8px;
+  }
 </style>

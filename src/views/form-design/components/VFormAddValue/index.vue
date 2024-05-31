@@ -32,7 +32,7 @@
   import { IFormConfig } from '../../typings/v-form-component';
   import { IAnyObject } from '../../typings/base-type';
   import VFormCreate from '../VFormCreate/index.vue';
-  
+
   // import { useFormModelState } from '../../hooks/useFormDesignState';
   // const { setFormModel } = useFormModelState();
   import { formatRules } from '../../utils';
@@ -42,7 +42,7 @@
   import { Modal } from 'ant-design-vue';
   // import { AddDynamicValueApi } from '@/api/sys/data';
   // import { useMessage } from '@/hooks/web/useMessage';
-  import { useFormStore } from '@/store/modules/form';  
+  import { useFormStore } from '@/store/modules/form';
   const FormStore = useFormStore();
   // const { notification } = useMessage();
   export default defineComponent({
@@ -52,7 +52,7 @@
       VFormCreate,
       Modal,
     },
-    
+
     props: {
       /**
        * Specified role is visible
@@ -60,21 +60,21 @@
        * When the permission mode is background, the value value can pass the code permission value
        * @default ''
        */
-       handleGetDatas: {
+      handleGetDatas: {
         type: Function,
-        default: ()=>{},
+        default: () => {},
       },
       updateDynamicValue: {
         type: Function,
-        default: ()=>{},
+        default: () => {},
       },
       changeIsEdit: {
         type: Function,
-        default: ()=>{},
+        default: () => {},
       },
     },
     setup(props, { slots }) {
-      console.log('slots',slots)
+      console.log('slots', slots);
       const jsonModal = ref<IToolbarMethods | null>(null);
       const state = reactive<{
         formModel: IAnyObject;
@@ -89,23 +89,36 @@
         fApi: {} as IVFormMethods,
         isEdit: false,
       });
-      const setFormModelfun = async (data, isEdit) =>{
-        console.log('data, isEdit', data, isEdit)
-        state.formModel = data
+      const setFormModelfun = async (data: any, isEdit: boolean, config?: IFormConfig) => {
+        state.formModel = data;
+        if (config) {
+          formatRules(config.schemas);
+          state.formConfig = config as any;
+          let arr: string[] = [];
+          state.formConfig.schemas!.forEach((item: any) => {
+            if (item.flag) {
+              arr = [...arr, ...item.flag.keyList];
+            }
+            arr.length &&
+              arr.forEach((val: any) => {
+                if (item.key === val) {
+                  item.hidden = false;
+                  item.hiddenView.hidden = false;
+                }
+              });
+          });
+          state.visible = true;
+        }
         state.isEdit = isEdit;
-      }
+      };
       /**
        * 显示Json数据弹框
        * @param jsonData
        */
-      const showModal = (jsonData: IFormConfig, id?: string | number | any) => {
-        console.log('jsonData', jsonData, 'id', id)
+      const showModal = (jsonData: IFormConfig) => {
         formatRules(jsonData.schemas);
-        console.log('formatRules(jsonData.schemas)', formatRules(jsonData.schemas))
         state.formConfig = jsonData as any;
-        console.log('state.formConfig', state.formConfig)
         state.visible = true;
-        console.log('state.visible', state.visible)
       };
 
       /**
@@ -114,34 +127,41 @@
        */
       const handleCancel = async () => {
         state.visible = false;
-        props.changeIsEdit(false)
+        props.changeIsEdit(false);
         state.formModel = {};
-        if(FormStore.childrenSubmit.text === '打开子表单1'){
-          await FormStore.updateChildrenSubmit('')
+        if (FormStore.childrenSubmit.text === '打开子表单1') {
+          await FormStore.updateChildrenSubmit('');
         }
       };
       const handleGetData = async () => {
-        console.log('FormStore.childrenSubmit', FormStore.childrenSubmit)
-        if(FormStore.childrenSubmit.text === '打开子表单1'){
-          await FormStore.updateChildrenSubmit('子表单提交')
+        console.log('FormStore.childrenSubmit', FormStore.childrenSubmit);
+        if (FormStore.childrenSubmit.text === '打开子表单1') {
+          await FormStore.updateChildrenSubmit('子表单提交');
         }
         let _data = await state.fApi.submit?.();
-        state.formConfig.schemas.forEach((val)=>{
-          if(val.component === 'JournalNumber'){
-            _data = {..._data, [val.field]: val.format}
+        state.formConfig.schemas.forEach((val) => {
+          if (val.component === 'JournalNumber') {
+            _data = { ..._data, [val.field]: val.format };
           }
-        })
-        console.log('FormStore.childrenSubmit--134', FormStore.childrenSubmit, FormStore.childrenSubmit.text)
-        let fromId = (FormStore.childrenSubmit.text === '子表单提交' ? FormStore.getAddChildrenData: history.state.id ) || 242
-        if(state.isEdit){
-          await props.updateDynamicValue(_data, fromId)
-        }else{
-          await props.handleGetDatas(_data, fromId)
+        });
+        console.log(
+          'FormStore.childrenSubmit--134',
+          FormStore.childrenSubmit,
+          FormStore.childrenSubmit.text,
+        );
+        let fromId =
+          (FormStore.childrenSubmit.text === '子表单提交'
+            ? FormStore.getAddChildrenData
+            : history.state.id) || 242;
+        if (state.isEdit) {
+          await props.updateDynamicValue(_data, fromId);
+        } else {
+          await props.handleGetDatas(_data, fromId);
         }
-        nextTick(()=>{
+        nextTick(() => {
           handleCancel();
-          FormStore.updateIsPreview(true)
-        })
+          FormStore.updateIsPreview(true);
+        });
       };
 
       const onSubmit = (_data: IAnyObject) => {

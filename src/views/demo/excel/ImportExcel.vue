@@ -4,7 +4,7 @@
       <a-button class="m-3"> 导入Excel </a-button>
     </ImpExcel>
     <BasicTable
-      v-for="(table, index) in tableListRef"
+      v-for="(table, index) in tableListRef" 
       :key="index"
       :title="table.title"
       :columns="table.columns"
