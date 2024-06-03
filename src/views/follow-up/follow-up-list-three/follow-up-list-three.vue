@@ -114,8 +114,9 @@
   const current = ref(1);
   const pageSizeRef = ref(20);
   const total = ref(50);
-  const onShowSizeChange = (current: any, pageSize: any) => {
+  const onShowSizeChange = (currents: any, pageSize: any) => {
     pageSizeRef.value = pageSize;
+    current.value = currents;
   };
   const data = reactive({
     timeList: [

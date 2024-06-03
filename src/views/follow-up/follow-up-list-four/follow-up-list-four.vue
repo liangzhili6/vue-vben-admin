@@ -13,7 +13,7 @@
         </Button>
         <Button type="link" :icon="h(UploadOutlined)"> 导入 </Button>
         <Button type="link" :icon="h(DownloadOutlined)"> 导出 </Button> -->
-        <Button type="link" :icon="h(DownloadOutlined)" @click="openDownloadOutlined = true">
+        <Button type="link" :icon="h(DownloadOutlined)" @click="openDownloadOutlined">
           导出
         </Button>
       </Space>
@@ -82,21 +82,10 @@
         </Dropdown>
       </Space>
     </Space>
-    <Modal v-model:open="openDownloadOutlined" title="导出" @ok="handleOk">
+    <!--     <Modal v-model:open="openDownloadOutlined" title="导出" @ok="handleOk">
       <Divider style="height: 1px" />
 
-      <Form
-        ref="formRef"
-        :model="formState"
-        :label-col="labelCol"
-        :wrapper-col="wrapperCol"
-      >
-        <!-- 
-
-     @finish="handleFinish"
-    @validate="handleValidate"
-    @finishFailed="handleFinishFailed"
-   -->
+      <Form ref="formRef" :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
         <FormItem label="数据选择" name="region">
           <Select v-model:value="formState.type" placeholder="please select your zone">
             <SelectOption value="全部数据">全部数据</SelectOption>
@@ -111,7 +100,7 @@
           </Select>
         </FormItem>
       </Form>
-    </Modal>
+    </Modal> -->
     <div id="gantt_herefour" class="gantt-container"></div>
     <VFormAddValue
       ref="eFormAddValue"
@@ -120,11 +109,17 @@
       :handleGetDatas="handleGetDatas"
       :updateDynamicValue="updateDynamicValue"
     />
+    <ExportData
+      ref="DownloadOutlinedRef"
+      :keyList="JSON.stringify(BasicTableData.columns)"
+    ></ExportData>
   </div>
 </template>
 
 <script lang="ts" setup>
   import { FilterDropdown } from '@/components/FilterDropdown';
+  import ExportData from '@/views/follow-up/components/export-data.vue';
+
   import {
     reactive,
     toRefs,
@@ -211,7 +206,11 @@
   const eFormAddValue = ref<null | IToolbarMethods | any>(null);
   const RandomOneData = ref<any>(null);
   const recordValue = ref<any>(null);
-  const openDownloadOutlined = ref<boolean>(false);
+  const DownloadOutlinedRef = ref<any>(null);
+  const openDownloadOutlined = () => {
+    DownloadOutlinedRef.value.openDownloadOutlined = true;
+    console.log('openDownloadOutlined', DownloadOutlinedRef.value);
+  };
   const handleOk = () => {
     //导出
     console.log('handleOk', formRef.value, formState);

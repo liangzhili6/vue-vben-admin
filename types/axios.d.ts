@@ -28,6 +28,7 @@ export interface RequestOptions {
   withToken?: boolean;
   // 请求重试机制
   retryRequest?: RetryRequest;
+  isDownLoadFile?: Boolean;
 }
 
 export interface RetryRequest {

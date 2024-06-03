@@ -18,7 +18,8 @@ enum Api {
    */
   GetAllTDimDept = "/dynamicFormsService/api/v1/dynamicForms/dept/getAllTDimDept",
   GetAllTCenter = "/dynamicFormsService/api/v1/opt/center/getAllTCenter",
-  GetAllUser = "/dynamicFormsService/api/v1/u4a/users/pagination"
+  GetAllUser = "/dynamicFormsService/api/v1/u4a/users/pagination",
+  ExportExcel = "/dynamicFormsService/api/v1/dynamicForms/value/exportDynamicValue"
 }
 
 /**
@@ -164,3 +165,21 @@ export function GetAllUserApi( params: {
     },
   );
 }
+
+  /**
+   * 导出 Excel
+   * @param {*} data 
+   * @returns 
+   */
+  export function ExportExcelApi( params: {
+    conditions?: any,
+    fieldJson?: string | number,
+    formInfo?:any,
+    param?: string | number,
+  }, mode: ErrorMessageMode = 'none') {
+    return defHttp.post({
+      url: Api.ExportExcel,
+      params,
+      isDownLoadFile:true,
+    })
+   }
