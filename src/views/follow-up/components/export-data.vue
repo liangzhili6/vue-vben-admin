@@ -122,19 +122,30 @@
       ],
       param: '',
     });
-    /* let link = document.createElement("a");
+/*   const blob = new Blob(content, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8" });
+  const blobURL = window.URL.createObjectURL(blob);
+ */
+/*   let blobURL = window.URL.createObjectURL(
+      new Blob([content], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+          //   type: httpType
+      })
+  );
+    let link = document.createElement("a");
+    console.log('link', link)
     link.style.display = "none";
-    link.href = content;
+    link.href = blobURL;
     let excelName = "随访记录.xlsx";
     link.setAttribute("download", excelName);
     document.body.appendChild(link);
     //模拟点击事件
     link.click();
     //导出成功后删除这个标签并释放blob对象
-    link.remove(); */
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(blobURL); */
     // console.log('props.keyList', props.keyList);
     // console.log('content', content);
-    await downloadByData(content, '随访记录.xlsx');
+    await downloadByData(content, '随访记录.xls');
   };
 
   defineExpose({ handleOk, openDownloadOutlined, formState });

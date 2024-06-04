@@ -105,6 +105,7 @@ export function DeleTeDynamicValueApi(params: { fromId: any, id: any, type: any}
 export function UpdataDynamicValueApi(params: {
   "fieldValueJson"?: JSON | string,
   "fromId"?: string | number,
+  formName?: string,
   "id": string | number, joinValue?: number
 }, mode: ErrorMessageMode = 'modal') {
   return defHttp.post(
