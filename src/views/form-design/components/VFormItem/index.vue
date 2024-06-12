@@ -3,6 +3,7 @@
 -->
 <template>
   <Col v-bind="colPropsComputed">
+    <!-- <VueDragResize  :isActive="true" :w="200" :h="200" v-on:resizing="resize" v-on:dragging="resize" :isDraggable="true"> -->
     <FormItem v-bind="{ ...formItemProps }">
       <template
         #label
@@ -50,13 +51,16 @@
       <div v-if="['ImageText'].includes(schema.component)">
         <div v-html="schema.defaultValue?schema.defaultValue: '图文内容'"></div>
       </div>
+        
       <!-- <span v-if="['Button'].includes(schema.component)">{{ schema.label }}</span> -->
     </FormItem>
+      <!-- </VueDragResize> -->
   </Col>
 </template>
 <script lang="ts">
 import { JournalNumber } from '@/components/JournalNumber';
 
+import VueDragResize from "vue-drag-resize/src";
   import { type Recordable } from '@vben/types';
   import { defineComponent, reactive, toRefs, computed, PropType, unref } from 'vue';
   import { componentMap } from '../../core/formItemConfig';
@@ -85,6 +89,7 @@ import { JournalNumber } from '@/components/JournalNumber';
       Tinymce,
       Signature,
       JournalNumber,
+      VueDragResize,
     },
 
     props: {
@@ -105,6 +110,10 @@ import { JournalNumber } from '@/components/JournalNumber';
     setup(props, { emit }) {
       const state = reactive({
         componentMap,
+        width: 200,
+        height: 200,
+        top: 200,
+        left: 200
       });
       const { formModel: formData1, setFormModel } = useFormModelState();
       const colPropsComputed = computed(() => {
@@ -113,6 +122,13 @@ import { JournalNumber } from '@/components/JournalNumber';
         return colProps;
       });
 
+      const resize = (newRect) => {
+        console.log('resize', newRect)
+                state.width = newRect.width;
+                state.height = newRect.height;
+                state.top = newRect.top;
+                state.left = newRect.left;
+            }
       const formItemProps = computed(() => {
         const { formConfig } = unref(props);
         let { field, required, rules, labelCol, wrapperCol } = unref(props.schema);
@@ -234,6 +250,7 @@ import { JournalNumber } from '@/components/JournalNumber';
         cmpProps,
         handleChange,
         colPropsComputed,
+        resize
       };
     },
   });

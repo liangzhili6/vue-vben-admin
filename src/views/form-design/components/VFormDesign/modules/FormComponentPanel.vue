@@ -54,11 +54,12 @@
 <script lang="ts">
   import draggable from 'vuedraggable';
   import LayoutItem from '../components/LayoutItem.vue';
-  import { defineComponent, computed } from 'vue';
+  import { defineComponent, computed, reactive, toRefs } from 'vue';
   import { cloneDeep } from 'lodash-es';
   import { useFormDesignState } from '../../../hooks/useFormDesignState';
   import { Form, Empty, Button, TypographyTitle } from 'ant-design-vue';
 
+  import VueDragResize from "vue-drag-resize/src";
   export default defineComponent({
     name: 'FormComponentPanel',
     components: {
@@ -68,6 +69,7 @@
       Empty,
       Button,
       TypographyTitle,
+      VueDragResize
     },
     emits: ['handleSetSelectItem'],
     setup(_, { emit }) {
@@ -101,13 +103,28 @@
       const layoutTag = computed(() => {
         return formConfig.value.layout === 'horizontal' ? 'Col' : 'div';
       });
-
+      const styleObj = reactive({
+        width: 0,
+        height: 0,
+        top: 200,
+        left: 200
+      });
+      const resize = (newRect) => {
+        console.log('resize', newRect)
+                styleObj.width = newRect.width;
+                styleObj.height = newRect.height;
+                /* styleObj.top = newRect.top;
+                styleObj.left = newRect.left; */
+            }
       return {
+        ...toRefs(styleObj),
+        styleObj,
         addItem,
         handleDragStart,
         formConfig,
         layoutTag,
         submitFormTemplate,
+        resize,
       };
     },
   });

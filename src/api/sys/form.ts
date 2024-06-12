@@ -16,6 +16,22 @@ enum Api {
   DeleteFrom = "/dynamicFormsService/api/v1/dynamicForms/from/deleteFrom",//删除表单
   getAlldynamicFromName = "/dynamicFormsService/api/v1/dynamicForms/from/getAlldynamicFromName",//关联记录下拉
   getRandomOne = "/dynamicFormsService/api/v1/dynamicForms/value/random",//关联记录下拉
+  getBaseline = "/dynamicFormsService/api/v1/dynamicForms/from/getBaseline",//关联记录下拉
+}
+
+/**
+ * @description: 新建表单
+ */
+export function GetBaselineApi(params: {status: number, formName: string}, mode: ErrorMessageMode = 'modal') {
+  return defHttp.get(
+    {
+      url: Api.getBaseline,
+      params,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
 }
 /**
  * @description: 新建表单

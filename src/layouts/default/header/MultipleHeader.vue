@@ -5,8 +5,8 @@
     v-if="getIsShowPlaceholderDom"
   ></div>
   <div :style="getWrapStyle" :class="getClass">
-    <LayoutHeader v-if="getShowInsetHeaderRef" />
-    <MultipleTabs v-if="getShowTabs" :key="tabStore.getLastDragEndIndex" />
+    <LayoutHeader v-if="getShowInsetHeaderRef&&path!== 'MobileExample'" />
+    <MultipleTabs v-if="getShowTabs&&path!== 'MobileExample'" :key="tabStore.getLastDragEndIndex" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -23,7 +23,11 @@
   import { useDesign } from '@/hooks/web/useDesign';
   import { useLayoutHeight } from '../content/useContentViewHeight';
   import { useMultipleTabStore } from '@/store/modules/multipleTab';
+  import { useRouter } from 'vue-router';
 
+  const { currentRoute } = useRouter();
+  const path = ( unref(currentRoute)).meta?.currentActiveMenu || unref(currentRoute ).name;
+  console.log('path', path)
   const HEADER_HEIGHT = 48;
 
   const TABS_HEIGHT = 32;

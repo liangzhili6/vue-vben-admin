@@ -4,7 +4,7 @@
     <div :class="`${prefixCls}-left`">
       <!-- logo -->
       <AppLogo
-        v-if="getShowHeaderLogo || getIsMobile"
+        v-if="(getShowHeaderLogo || getIsMobile) &&path!== 'MobileExample'"
         :class="`${prefixCls}-logo`"
         :theme="getHeaderTheme"
         :style="getLogoWidth"
@@ -16,12 +16,12 @@
         :theme="getHeaderTheme"
         :sider="false"
       />
-      <LayoutBreadcrumb v-if="getShowContent && getShowBread" :theme="getHeaderTheme" />
+      <LayoutBreadcrumb v-if="getShowContent && getShowBread && path!== 'MobileExample'" :theme="getHeaderTheme" />
     </div>
     <!-- left end -->
 
     <!-- menu start -->
-    <div v-if="getShowTopMenu && !getIsMobile" :class="`${prefixCls}-menu`">
+    <div v-if="getShowTopMenu && !getIsMobile && path!== 'MobileExample'" :class="`${prefixCls}-menu`">
       <LayoutMenu
         :isHorizontal="true"
         :theme="getHeaderTheme"
@@ -39,7 +39,7 @@
 
       <!-- <Notify v-if="getShowNotice" :class="`${prefixCls}-action__item notify-item`" /> -->
 
-      <FullScreen v-if="getShowFullScreen" :class="`${prefixCls}-action__item fullscreen-item`" />
+      <FullScreen v-if="getShowFullScreen&&path!== 'MobileExample'" :class="`${prefixCls}-action__item fullscreen-item`" />
 
       <!-- <AppLocalePicker
         v-if="getShowLocalePicker"
@@ -48,7 +48,7 @@
         :class="`${prefixCls}-action__item`"
       /> -->
 
-      <UserDropDown :theme="getHeaderTheme" />
+      <UserDropDown v-if="path!== 'MobileExample'" :theme="getHeaderTheme" />
 
       <!-- <SettingDrawer v-if="getShowSetting" :class="`${prefixCls}-action__item`" /> -->
     </div>
@@ -70,10 +70,16 @@
   import { createAsyncComponent } from '@/utils/factory/createAsyncComponent';
   import { propTypes } from '@/utils/propTypes';
 
+  import { useRouter } from 'vue-router';
   import LayoutMenu from '../menu/index.vue';
   import LayoutTrigger from '../trigger/index.vue';
   import { ErrorAction, FullScreen, LayoutBreadcrumb,  UserDropDown } from './components';
 
+  const { currentRoute } = useRouter();
+  const path = ( unref(currentRoute)).meta?.currentActiveMenu || unref(currentRoute ).name;
+  console.log('path', path)
+  // '/form-designer/mobile_example'
+  //"MobileExample"
   const SettingDrawer = createAsyncComponent(() => import('@/layouts/default/setting/index.vue'), {
     loading: true,
   });

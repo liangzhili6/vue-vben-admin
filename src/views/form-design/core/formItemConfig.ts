@@ -82,6 +82,7 @@ export const advanced: IVFormComponent[]= [
     componentProps: {
       api: [getAlldynamicFromNameApi, getOneFieldApi],
     },
+    position: { left: 25, top: 4, width: 800, height: 60 },
   },
   {
     component: 'JournalNumber',
@@ -92,6 +93,7 @@ export const advanced: IVFormComponent[]= [
     format: "{YYYY}{MM}{DD}{#2/D}",
     componentProps: {
     },
+    position: { left: 25, top: 4, width: 800, height: 60 },
   },
 ]
 /**
@@ -108,6 +110,7 @@ export const customComponents: IVFormComponent[] = [
       api: GetAllTCenterApi,
       // options: CentreList(GetAllTCenterApi)
     },
+    position: { left: 25, top: 4, width: 800, height: 60 },
   },{                               
     component: 'MemberSelect',
     label: '成员',
@@ -125,6 +128,7 @@ export const customComponents: IVFormComponent[] = [
         };
       }) */
     },
+    position: { left: 25, top: 4, width: 800, height: 60 },
   },
 /*{
   component: 'MemberSelect',
@@ -205,6 +209,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'bi:input-cursor-text',
     field: '',
     colProps: { span: 24 },
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       type: 'text',
     },
@@ -216,6 +221,7 @@ export const baseComponents: IVFormComponent[] = [
     field: '',
     colProps: { span: 24 },
     componentProps: {},
+    position: { left: 25, top: 4, width: 800, height: 80 },
   },
   {
     component: 'InputNumber',
@@ -223,7 +229,8 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'ant-design:field-number-outlined',
     field: '',
     colProps: { span: 24 },
-    componentProps: { style: 'width:200px' },
+    // componentProps: { style: 'width:800px;height: 60px;' },
+    position: { left: 25, top: 4, width: 800, height: 60 },
   },
   {
     component: 'DatePicker',
@@ -235,6 +242,7 @@ export const baseComponents: IVFormComponent[] = [
       format: "YYYY-MM-DD",
       valueFormat: "YYYY-MM-DD"
     },
+    position: { left: 25, top: 4, width: 800, height: 60 },
   },
   {
     component: 'RangePicker',
@@ -242,6 +250,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'healthicons:i-schedule-school-date-time-outline',
     field: '',
     colProps: { span: 24 },
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       placeholder: ['开始日期', '结束日期'],
       format: 'YYYY-MM-DD HH:mm:ss',
@@ -253,7 +262,8 @@ export const baseComponents: IVFormComponent[] = [
     label: '月份选择',
     icon: 'healthicons:i-schedule-school-date-time-outline',
     field: '',
-    colProps: { span: 24 },
+    // colProps: { span: 24 },
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       placeholder: '请选择月份',
       format: "YYYY-MM",
@@ -265,7 +275,8 @@ export const baseComponents: IVFormComponent[] = [
     label: '时间选择',
     icon: 'healthicons:i-schedule-school-date-time',
     field: '',
-    colProps: { span: 24 },
+    // colProps: { span: 24 },
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       format: "HH:mm:ss",
       valueFormat: "HH:mm:ss"
@@ -277,6 +288,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'carbon:radio-button-checked',
     field: '',
     colProps: { span: 24 },
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       options: [
         {
@@ -296,6 +308,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'ant-design:check-circle-filled',
     field: '',
     colProps: { span: 24 },
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       options: [
         {
@@ -315,6 +328,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'gg:select',
     field: '',
     colProps: { span: 24 },
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       options: [
         {
@@ -334,6 +348,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'ant-design:upload-outlined',
     field: '',
     colProps: { span: 24 },
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       api: uploadApi,
     },
@@ -360,6 +375,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'radix-icons:divider-horizontal',
     colProps: { span: 24 },
     field: '',
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       orientation: 'center',
       dashed: true,
@@ -372,6 +388,7 @@ export const baseComponents: IVFormComponent[] = [
     field: '',
     colProps: { span: 24 },
     componentProps: {},
+    position: { left: 25, top: 4, width: 800, height: 60 },
   },
   {
     component: 'Rate',
@@ -380,6 +397,7 @@ export const baseComponents: IVFormComponent[] = [
     field: '',
     colProps: { span: 24 },
     componentProps: {},
+    position: { left: 25, top: 4, width: 800, height: 60 },
   },
   
   /* {
@@ -390,6 +408,7 @@ export const baseComponents: IVFormComponent[] = [
     colProps: { span: 24 },
     hiddenLabel: true,
     componentProps: {},
+    position: { left: 25, top: 4, width: 800, height: 60 },
   }, */
   {
     component: 'IconPicker',
@@ -398,6 +417,7 @@ export const baseComponents: IVFormComponent[] = [
     colProps: { span: 24 },
     field: '',
     componentProps: {},
+    position: { left: 25, top: 4, width: 800, height: 60 },
   },
   {
     component: 'ImageUpload',
@@ -405,6 +425,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'line-md:iconify2',
     colProps: { span: 24 },
     field: '',
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       api: uploadApi,
     },
@@ -414,6 +435,7 @@ export const baseComponents: IVFormComponent[] = [
     // component: 'ImageText',
     label: '图文',
     component: 'ImageText',
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       api: uploadApi,
       rules: [{ required: true }],
@@ -431,6 +453,7 @@ export const baseComponents: IVFormComponent[] = [
     field: 'tinymce',
     component: 'Tinymce',
     label: 'HTML',
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       api: uploadApi,
       rules: [{ required: true }],
@@ -460,6 +483,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'ant-design:check-circle-outlined',
     colProps: { span: 24 },
     field: '',
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       render: ({ model, field }) => {
         return h(Tinymce, {
@@ -667,6 +691,7 @@ export const layoutComponents: IVFormComponent[] = [
     label: '栅格布局',
     icon: 'icon-grid',
     componentProps: {},
+    position: { left: 25, top: 4, width: 800, height: 60 },
     columns: [
       {
         span: 12,

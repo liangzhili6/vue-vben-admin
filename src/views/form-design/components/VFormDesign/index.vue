@@ -171,6 +171,7 @@
       item.colProps = item.colProps || { span: 24 };
       item.componentProps = item.componentProps || {};
       item.itemProps = item.itemProps || {};
+      item.position = { left: 25, top: 4, width: 200, height: 60 };
     });
     formConfig.value = config as any;
   };
@@ -205,8 +206,12 @@
   };
 
   const setGlobalConfigState = (formItem: IVFormComponent) => {
+    console.log('formItem', formItem)
     formItem.colProps = formItem.colProps || {};
     formItem.colProps.span = globalConfigState.span;
+    // formItem.position = { left: formItem.position.left, top: formItem.position.top, width: formItem.position.width, height: formItem.position.height };
+    // formItem.componentProps.style = `width:${formItem.position.width};height:${formItem.position.height};`
+
   };
 
   /**

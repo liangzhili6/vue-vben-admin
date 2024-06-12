@@ -10,9 +10,9 @@
     <div class="form-item-box">
       <VFormItem :formConfig="formConfig" :schema="schema" />
     </div>
-    <div class="show-key-box">
+    <!-- <div class="show-key-box">
       {{ schema.label + (schema.field ? '/' + schema.field : '') }}
-    </div>
+    </div> -->
     <FormNodeOperate :schema="schema" :currentItem="formConfig.currentItem" />
   </div>
 </template>

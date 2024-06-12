@@ -12,6 +12,7 @@ const data: AppRouteModule = {
     icon: 'ion:build-outline',
     title: '数据管理',
     hideMenu: true,
+    hideTab: true,
   },
   children: [
     {
@@ -20,6 +21,7 @@ const data: AppRouteModule = {
       meta: {
         title: '数据管理',
         hideMenu: true,
+        hideTab: true,
       },
       component: () => import('@/views/data-administration/data-list/data-list.vue'),
     },

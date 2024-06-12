@@ -53,6 +53,18 @@
             placeholder="请输入必选提示"
           />
         </FormItem>
+        <FormItem label="是否必选" >
+          <div>
+            行{{ formConfig.currentItem.position.left }}  
+            列{{ formConfig.currentItem.position.top }}  
+            宽{{ formConfig.currentItem.position.width }}  
+            高{{ formConfig.currentItem.position.height }}  
+          </div>
+          /* <Input
+            v-model:value="formConfig.currentItem.itemProps['message']"
+            placeholder="请输入必选提示"
+          /> */
+        </FormItem>
         <FormItem
           v-if="['CheckboxGroup', 'RadioGroup', 'RadioButtonGroup', 'Select'].includes(formConfig.currentItem.component)"
           label=""

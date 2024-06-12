@@ -54,7 +54,7 @@ declare type Value = [number, number] | number;
   // 提示信息
   helpMessage?: string;
   // 传给给组件的属性，默认会吧所有的props都传递给控件
-  componentProps?: IAnyObject;
+  componentProps?: IAnyObject&any;
   // 监听组件事件对象，以v-on方式传递给控件
   on?: IAnyObject<(...any: []) => void>;
   // 组件选项
@@ -87,6 +87,7 @@ declare type Value = [number, number] | number;
   flag?:any;
   render?: (value: any, formItem: IVFormComponent, fApi: IVFormMethods) => void;
   defaultValue?:string;
+  position?: any & { "left": 25, "top": 4, "width": 200, "height": 60 };
 }
 
 declare type namesType = string | string[];

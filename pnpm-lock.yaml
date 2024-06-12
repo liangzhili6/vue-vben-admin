@@ -50,6 +50,9 @@ importers:
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
+      dhtmlx-gantt:
+        specifier: ^8.0.7
+        version: 8.0.8
       driver.js:
         specifier: ^1.3.1
         version: 1.3.1
@@ -107,6 +110,12 @@ importers:
       vue:
         specifier: ^3.4.19
         version: 3.4.19(typescript@5.3.3)
+      vue-drag-resize:
+        specifier: ^1.5.4
+        version: 1.5.4
+      vue-draggable-resizable-gorkys:
+        specifier: ^2.4.8
+        version: 2.4.8
       vue-i18n:
         specifier: ^9.9.1
         version: 9.9.1(vue@3.4.19)
@@ -4347,6 +4356,12 @@ packages:
     resolution: {integrity: sha512-3DdaFaU/Zf1AnpLiFDeNCD4TOWe3Zl2RZaTzUvWiIk5ERzcCodOE20Vqq4fzCbNoHURFHT4/us/Lfq+S2zyY4w==}
     dev: false
 
+  /core-js@2.6.12:
+    resolution: {integrity: sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==}
+    deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
+    requiresBuild: true
+    dev: false
+
   /core-js@3.36.0:
     resolution: {integrity: sha512-mt7+TUBbTFg5+GngsAxeKBTl5/VS0guFeJacYge9OmHb+m058UwwIm41SE9T4Den7ClatV57B6TYTuJ0CX1MAw==}
     requiresBuild: true
@@ -4843,6 +4858,10 @@ packages:
     dependencies:
       asap: 2.0.6
       wrappy: 1.0.2
+    dev: false
+
+  /dhtmlx-gantt@8.0.8:
+    resolution: {integrity: sha512-Ay2L4FgnOWdc+gqI1N8eelzjvrB+gUcYXTgGQI5xtUIixcZzmBmUKhsXIv8vyORcTJ5P/GxlxpKoLzv24wLHOg==}
     dev: false
 
   /diff-match-patch@1.0.5:
@@ -11985,6 +12004,18 @@ packages:
         optional: true
     dependencies:
       vue: 3.4.19(typescript@5.3.3)
+    dev: false
+
+  /vue-drag-resize@1.5.4:
+    resolution: {integrity: sha512-SR3U7n6TAZEBgP7zw7bR9mjtAlYBjqIoaWTDPz5HXN/nYhOxKSA31aD7p71fmq1jtyt9reAnCx62valNL9ZAcg==}
+    engines: {node: '>= 4.0.0', npm: '>= 3.0.0'}
+    dev: false
+
+  /vue-draggable-resizable-gorkys@2.4.8:
+    resolution: {integrity: sha512-DjhelFtRN1cy/AVpYbxlhmTTC5KwLvU490nUZzKp05kMddhzu5TBrBEeYo/9rhmdsrSkxjQguyRvF6IYumw9yw==}
+    engines: {node: '>= 4.0.0', npm: '>= 3.0.0'}
+    dependencies:
+      core-js: 2.6.12
     dev: false
 
   /vue-eslint-parser@9.4.2(eslint@8.56.0):
