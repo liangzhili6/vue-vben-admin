@@ -118,6 +118,7 @@
 
   const sliderSpan = computed(() => {
     if (formConfig.value.labelLayout) {
+      console.log('formConfig.value.labelLayout', formConfig.value.labelLayout, formConfig.value.labelCol)
       return Number(formConfig.value.labelCol!.span);
     }
     return 0;

@@ -8,14 +8,8 @@
       <template
         #label
         v-if="
-          !formItemProps.hiddenLabel &&
-          schema.component !== 'Divider' &&
-          !formItemProps.hiddenLabel &&
-          schema.component !== 'Tinymce' &&
-          !formItemProps.hiddenLabel &&
-          schema.component !== 'ImageText' &&
-          !formItemProps.hiddenLabel &&
-          schema.component !== 'Correlation'
+          !(['Divider', 'Tinymce', 'ImageText', 'Correlation'].includes(schema.component))&&
+          !formItemProps.hiddenLabel 
         "
       >
         <Tooltip>
@@ -137,9 +131,9 @@ import VueDragResize from "vue-drag-resize/src";
         const { itemProps } = unref(props.schema);
         formConfig.schemas.forEach(items=>{
           
-        if(items!.component === "Upload" || items!.component === "ImageUpload" ){
+        /* if(items!.component === "Upload" || items!.component === "ImageUpload" ){
           items!.componentProps = { api: uploadApi}
-        }
+        } */
         })
     
 

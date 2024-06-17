@@ -108,6 +108,7 @@
     "vue-json-pretty": "^2.3.0",
     "vue-router": "^4.2.5",
     "vue-types": "^5.1.1",
+    "vue3-draggable-resizable": "^1.6.5",
     "vuedraggable": "^4.1.0",
     "vxe-table": "^4.5.18",
     "vxe-table-plugin-export-xlsx": "^4.0.1",

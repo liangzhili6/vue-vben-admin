@@ -17,8 +17,22 @@ enum Api {
   getAlldynamicFromName = "/dynamicFormsService/api/v1/dynamicForms/from/getAlldynamicFromName",//关联记录下拉
   getRandomOne = "/dynamicFormsService/api/v1/dynamicForms/value/random",//关联记录下拉
   getBaseline = "/dynamicFormsService/api/v1/dynamicForms/from/getBaseline",//关联记录下拉
+  updateBaseline = "/dynamicFormsService/api/v1/dynamicForms/value/updateBaseline",//关联记录下拉
 }
-
+/**
+ * @description: 新建表单
+ */
+export function updateBaselineApi(params: {status?: number, formName?: string, jsonData?: any, userCode?: any, id?: any}, mode: ErrorMessageMode = 'modal') {
+  return defHttp.get(
+    {
+      url: Api.updateBaseline,
+      params,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
 /**
  * @description: 新建表单
  */

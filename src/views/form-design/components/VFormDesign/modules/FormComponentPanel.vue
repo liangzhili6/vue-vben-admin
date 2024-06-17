@@ -168,7 +168,7 @@
 
     .draggable-box {
       height: calc(100vh - 120px);
-      // width: 100%;
+      width: 100%;
       overflow: auto;
       .drag-move {
         min-height: 62px;

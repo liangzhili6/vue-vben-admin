@@ -37,6 +37,7 @@
   import { uploadContainerProps } from '../props';
   import { isImgTypeByName } from '../helper';
   import { UploadResultStatus } from '@/components/Upload/src/types/typing';
+  import { uploadApi } from '@/api/sys/upload';
   import { get,omit } from 'lodash-es';
   defineOptions({ name: 'ImageUpload' });
 
@@ -162,7 +163,8 @@
       return warn('upload api must exist and be a function');
     }
     try {
-      const res = await props.api?.({
+      console.log('uploadApi', props.api, uploadApi)
+      const res = await uploadApi?.({
         data: {
           ...(props.uploadParams || {}),
           fromId: 1,

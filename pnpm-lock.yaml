@@ -128,6 +128,9 @@ importers:
       vue-types:
         specifier: ^5.1.1
         version: 5.1.1(vue@3.4.19)
+      vue3-draggable-resizable:
+        specifier: ^1.6.5
+        version: 1.6.5
       vuedraggable:
         specifier: ^4.1.0
         version: 4.1.0(vue@3.4.19)
@@ -12105,6 +12108,10 @@ packages:
     dependencies:
       is-plain-object: 5.0.0
       vue: 3.4.19(typescript@5.3.3)
+    dev: false
+
+  /vue3-draggable-resizable@1.6.5:
+    resolution: {integrity: sha512-31142E31fGNnq3HKqvmFLSsqIbhck7TyGuQWhUKrDw6DOcGAuRx4ddRjaxvT6fe7dgeKH53qAh+i0ZlWtPLl2g==}
     dev: false
 
   /vue@3.4.19(typescript@5.3.3):

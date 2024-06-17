@@ -24,7 +24,7 @@
               class="w-1/2 -mt-16 -enter-x"
             />
             <div class="mt-10 font-medium text-white -enter-x">
-              <span class="inline-block mt-4 text-3xl"> {{ 'UAT - 急性脑梗死溶栓评估' }}</span>
+              <span class="inline-block mt-4 text-3xl"> {{ '随访管理系统' }}</span>
             </div>
             <!-- <div class="mt-5 font-normal text-white dark:text-gray-500 -enter-x">
               {{ t('sys.login.signInDesc') }}

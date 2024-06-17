@@ -49,6 +49,7 @@ declare type Value = [number, number] | number;
   width?: number | string;
   // 是否必选
   required?: boolean;
+  active?: boolean;
   // 必选提示
   message?: string;
   // 提示信息
