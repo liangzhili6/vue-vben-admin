@@ -3,7 +3,7 @@
 -->
 <template>
   <div class="v-form-container">
-    <Form class="v-form-model" ref="eFormModel" :model="formModel" v-bind="formModelProps">
+    <Form class="v-form-model" ref="eFormModel" :model="formModel" v-bind="formModelProps" style="position: relative;height: 500px;overflow: hidden;overflow-y: scroll;">
       <Row>
         <FormRender
           v-for="(schema, index) of noHiddenList"
@@ -15,6 +15,7 @@
           :setFormModel="setFormModel"
           @submit="handleSubmit"
           @reset="resetFields"
+          :style="[{ position: 'absolute'}, {width: schema.position.width+ 'px', height: schema.position.height+ 'px', left: schema.position.left+ 'px', top: schema.position.top+ 20+ 'px'}]"
         >
           <template v-if="schema && schema.componentProps" #[`schema.componentProps!.slotName`]>
             <slot

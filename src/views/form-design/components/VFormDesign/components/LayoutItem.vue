@@ -4,21 +4,24 @@
 -->
 
 <template>
-   <DraggableContainer :adsorbRows="[10,20,30]"  :referenceLineVisible="false">
+ <!-- <DraggableContainer> -->
   <!-- 拖拽组件
       v-model:active="dragData.active"-->
   <Vue3DraggableResizable
       classNameDraggable="draggable"
       :initW="schema.position.width"
       :initH="schema.position.height"
+      :initX="schema.position.left"
+      :initY="schema.position.top"
       v-model:x="schema.position.left"
       v-model:y="schema.position.top"
       v-model:w="schema.position.width"
       v-model:h="schema.position.height"
-      :active="schema.key === currentItem.key"
+      v-model:active="schema.active"
       :draggable="true"
       :resizable="true"
       :parent="true"
+      :prevent_drag_overlapping="true"
       @activated="print('activated')"
       @deactivated="print('deactivated')"
       @drag-start="print('drag-start')"
@@ -29,8 +32,8 @@
       @resize-end="print('resize-end')"
   >
   
-  <!-- {{schema.key === currentItem.key}} 
-    <Col v-bind="colPropsComputed" > -->
+  <!-- {{schema.key === currentItem.key}}  -->
+    <Col v-bind="colPropsComputed" >
     <div class="canvas">
     <!-- <VueDragResize
       contentClass="box-currentItem"
@@ -96,9 +99,9 @@
 
     <!-- </VueDragResize> -->
   </div>
-  <!-- </Col> -->
+  </Col>
 </Vue3DraggableResizable>
-</DraggableContainer>
+<!-- </DraggableContainer> -->
 </template>
 <script lang="ts">
   import { computed, defineComponent, PropType, reactive, toRefs } from 'vue';
@@ -114,12 +117,10 @@
 // 那么你这里就不需要再引入了，因为DraggableContainer这个已经被全局注册了，你可以直接使用
 import { DraggableContainer } from 'vue3-draggable-resizable'
   import VueDragResize from 'vue-drag-resize/src';
-  import VueDraggableResizable from 'vue-draggable-resizable-gorkys/src';
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
 //需引入默认样式
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 // 导入默认样式
-import 'vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css'
   export default defineComponent({
     name: 'LayoutItem',
     components: {
@@ -129,7 +130,6 @@ import 'vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css'
       Row,
       Col,
       VueDragResize,
-      VueDraggableResizable,
       Vue3DraggableResizable,
       DraggableContainer,
     },
@@ -247,7 +247,7 @@ import 'vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css'
       }
 } */
 .drag-move{
-  width: unset !important;
-  position: unset !important;
+/*   width: unset !important;
+  position: unset !important; */
 }
 </style>

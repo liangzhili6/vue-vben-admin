@@ -93,7 +93,7 @@ export const advanced: IVFormComponent[]= [
     format: "{YYYY}{MM}{DD}{#2/D}",
     componentProps: {
     },
-    position: { left: 25, top: 114, width: 800, height: 60 },
+    position: { left: 25, top: 4, width: 800, height: 60 },
   },
 ]
 /**
@@ -110,7 +110,7 @@ export const customComponents: IVFormComponent[] = [
       api: GetAllTCenterApi,
       // options: CentreList(GetAllTCenterApi)
     },
-    position: { left: 25, top: 224, width: 800, height: 60 },
+    position: { left: 25, top: 4, width: 800, height: 60 },
   },{                               
     component: 'MemberSelect',
     label: '成员',
@@ -223,7 +223,7 @@ export const baseComponents: IVFormComponent[] = [
     field: '',
     colProps: { span: 24 },
     componentProps: {},
-    position: { left: 25, top: 44, width: 800, height: 120 },
+    position: { left: 25,top: 4, width: 800, height: 80 },
   },
   {
     component: 'InputNumber',
@@ -232,7 +232,7 @@ export const baseComponents: IVFormComponent[] = [
     field: '',
     colProps: { span: 24 },
     // componentProps: { style: 'width:800px;height: 60px;' },
-    position: { left: 25, top: 84, width: 800, height: 60 },
+    position: { left: 25, top: 4, width: 800, height: 60 },
   },
   {
     component: 'DatePicker',
@@ -244,7 +244,7 @@ export const baseComponents: IVFormComponent[] = [
       format: "YYYY-MM-DD",
       valueFormat: "YYYY-MM-DD"
     },
-    position: { left: 25, top: 124, width: 800, height: 60 },
+    position: { left: 25, top: 4, width: 800, height: 60 },
   },
   {
     component: 'RangePicker',
@@ -252,7 +252,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'healthicons:i-schedule-school-date-time-outline',
     field: '',
     colProps: { span: 24 },
-    position: { left: 25, top: 164, width: 800, height: 60 },
+    position: { left: 25, top: 4, width: 800, height: 60 },
     componentProps: {
       placeholder: ['开始日期', '结束日期'],
       format: 'YYYY-MM-DD HH:mm:ss',

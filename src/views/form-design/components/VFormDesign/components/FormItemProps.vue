@@ -54,16 +54,33 @@
           />
         </FormItem>
         <FormItem label="是否必选" >
-          <div>
-            行{{ formConfig.currentItem.position.left }}  
-            列{{ formConfig.currentItem.position.top }}  
-            宽{{ formConfig.currentItem.position.width }}  
-            高{{ formConfig.currentItem.position.height }}  
+          <div style="display: flex;">
+            行列宽高
           </div>
-          /* <Input
-            v-model:value="formConfig.currentItem.itemProps['message']"
-            placeholder="请输入必选提示"
-          /> */
+          <InputNumber
+              :style="{ width: '25%' }"
+              v-model:value="formConfig.currentItem.position.left"
+              :min="0"
+              :step="1"
+            />
+          <InputNumber
+              :style="{ width: '25%' }"
+              v-model:value="formConfig.currentItem.position.top"
+              :min="0"
+              :step="1"
+            />
+          <InputNumber
+              :style="{ width: '25%' }"
+              v-model:value="formConfig.currentItem.position.width"
+              :min="0"
+              :step="1"
+            />
+          <InputNumber
+              :style="{ width: '25%' }"
+              v-model:value="formConfig.currentItem.position.height"
+              :min="0"
+              :step="1"
+            />
         </FormItem>
         <FormItem
           v-if="['CheckboxGroup', 'RadioGroup', 'RadioButtonGroup', 'Select'].includes(formConfig.currentItem.component)"
@@ -92,7 +109,7 @@
     advanceFormItemColProps,
   } from '../../VFormDesign/config/formItemPropsConfig';
 
-  import { Empty, Input, Form, FormItem, Switch, Checkbox, Col } from 'ant-design-vue';
+  import { Empty, Input, Form, FormItem, Switch, Checkbox, Col, InputNumber } from 'ant-design-vue';
   import RuleProps from './RuleProps.vue';
   import HiddProps from './HiddProps.vue';
   import { useFormDesignState } from '../../../hooks/useFormDesignState';

@@ -9,11 +9,14 @@
       v-show="formConfig.schemas.length === 0"
       description="从左侧选择控件添加"
     />
-    <Form v-bind="formConfig">
-      <div class="draggable-box">
+    <Form v-bind="formConfig" style="height: 100%;">
+      <!-- <div class="draggable-box" :style="[formConfig.schemas.length?{height: (formConfig.schemas[formConfig.schemas.length-1])?.position?.height +(formConfig.schemas[formConfig.schemas.length-1])?.position?.top+200+'px'}:{height: 'calc(100vh - 120px)'}]"> -->
+      <div class="draggable-box" >
           <TypographyTitle style="display: flex; justify-content: center;" :level="4">{{
           formConfig.title
         }}</TypographyTitle>
+        <div style="height: calc(100% - 120px);">
+        <DraggableContainer  :prevent_drag_overlapping="true">
         <draggable
           class="list-main ant-row"
           group="form-draggable"
@@ -35,7 +38,8 @@
             />
           </template>
         </draggable>
-
+      </DraggableContainer>
+    </div>
         <div
           style="
             display: flex;
@@ -59,6 +63,10 @@
   import { useFormDesignState } from '../../../hooks/useFormDesignState';
   import { Form, Empty, Button, TypographyTitle } from 'ant-design-vue';
 
+// 这个组件不是默认导出的，
+// 如果你之前是通过“app.use(Vue3DraggableResizable)”注册的，
+// 那么你这里就不需要再引入了，因为DraggableContainer这个已经被全局注册了，你可以直接使用
+import { DraggableContainer } from 'vue3-draggable-resizable'
   import VueDragResize from "vue-drag-resize/src";
   export default defineComponent({
     name: 'FormComponentPanel',
@@ -69,7 +77,8 @@
       Empty,
       Button,
       TypographyTitle,
-      VueDragResize
+      VueDragResize,
+      DraggableContainer
     },
     emits: ['handleSetSelectItem'],
     setup(_, { emit }) {
@@ -135,11 +144,14 @@
   @import url('../styles/drag.less');
 
   .v-form-container {
+    height: calc(100vh - 120px);
     // 内联布局样式
     .ant-form-inline {
       .list-main {
         display: flex;
         flex-wrap: wrap;
+        // position: relative;
+        overflow: auto;
         place-content: flex-start flex-start;
 
         .layout-width {
@@ -156,7 +168,8 @@
   .form-panel {
     position: relative;
     height: 100%;
-
+    height: 100vh;
+    height: calc(100vh - 120px);
     .empty-text {
       position: absolute;
       z-index: 100;
@@ -167,16 +180,19 @@
     }
 
     .draggable-box {
-      height: calc(100vh - 120px);
+      height: 100%;
+      // height: calc(100vh - 120px);
       width: 100%;
-      overflow: auto;
+      // overflow: auto;
       .drag-move {
         min-height: 62px;
         cursor: move;
       }
 
       .list-main {
-        min-height: calc(100% - 120px);
+        min-height: 100%;
+        // position: relative;
+        overflow: auto;
         // 列表动画
         .list-enter-active {
           transition: all 0.5s;
