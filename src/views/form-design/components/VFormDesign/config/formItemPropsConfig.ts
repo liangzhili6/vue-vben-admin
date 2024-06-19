@@ -220,7 +220,7 @@ export const baseFormItemProps: IBaseFormAttrs[] = [
     },
     exclude: ['Grid'],
   },
-  {
+  /* {
     name: 'helpMessage',
     label: 'helpMessage',
     component: Correlation,
@@ -228,7 +228,7 @@ export const baseFormItemProps: IBaseFormAttrs[] = [
       placeholder: '请选择关联表单',
     },
     exclude: ['Correlation'],
-  },
+  }, */
 ];
 
 // 控件属性面板的配置项

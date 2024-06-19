@@ -207,20 +207,20 @@
   });
   const selectedArr = ref<any>([])
   const onChange = (selectedRowKeys: (string | number)[], selectedRows: any) => {
-    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
     selectedArr.value = selectedRows
   }
   const onSelect = (record: any, selected: boolean, selectedRows: any[]) => {
-    console.log(record, selected, selectedRows);
+    // console.log(record, selected, selectedRows);
   };
   const onSelectAll = (selected: boolean, selectedRows: any[], changeRows: any[]) => {
-    console.log(selected, selectedRows, changeRows);
+    // console.log(selected, selectedRows, changeRows);
   };
   const confirm = async () => {
     if(selectedArr.value&&selectedArr.value.length){
       const ids = selectedArr.value.map((IdItem:any)=> IdItem.id)
       const data = await DeleTeDynamicValueApi({fromId: history.state.id, id:  ids,type: 1})
-      console.log('data', data)
+      // console.log('data', data)
       notification.success({
         message: data,
         duration: 3,
@@ -236,11 +236,11 @@
     setTimeout(hide, 1000);
   };
   const filterDropdown = () => {
-    console.log('filterDropdown')
+    // console.log('filterDropdown')
   }
   const { go } = useRouter();
   const onSearchKeyword = (searchValue: string) => {
-    console.log('searchValue',searchValue)
+    // console.log('searchValue',searchValue)
     getFormManagerList()
   }
   const goBack = () =>{
@@ -267,7 +267,7 @@
   watch(
     () => FormStore.addchildrenData,
     async (value:any) => {
-      console.log('value', value)
+      // console.log('value', value)
       /* if(value){
         // 
         const config = cloneDeep(formConfig.value.childrenData[value]);
@@ -367,7 +367,7 @@
         }
         arr =  [ ...res.schemas, ...arr]
         BasicTableData.columns = arr.map((item, index)=>{
-          console.log('index',index)
+          // console.log('index',index)
           return {
             title: item.label,
             dataIndex: item.key,
@@ -423,7 +423,7 @@
     isEdit.value = true
   }
   function handleColumnChange(data: ColumnChangeParam[]) {
-    console.log('data',data)
+    // console.log('data',data)
   }
   onMounted(() => {
     getFormManagerList();

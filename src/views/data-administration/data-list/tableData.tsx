@@ -5,7 +5,7 @@ import { ref } from 'vue';
 import { Input } from 'ant-design-vue';
 
 export function getBasicColumns(searchInput): BasicColumn[] {
-  console.log('searchInput', searchInput)
+  // console.log('searchInput', searchInput)
   return [
     {
       title: 'ID',

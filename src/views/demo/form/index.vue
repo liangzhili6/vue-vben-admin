@@ -162,8 +162,8 @@
       // componentProps:{},
       // can func
       componentProps: ({ schema, formModel }) => {
-        console.log('form:', schema);
-        console.log('formModel:', formModel);
+        /* console.log('form:', schema);
+        console.log('formModel:', formModel); */
         return {
           placeholder: '自定义placeholder',
           onChange: (e: any) => {

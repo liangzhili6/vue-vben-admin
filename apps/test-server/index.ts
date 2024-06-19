@@ -32,7 +32,7 @@ app.ws.use(
         });
         ctx.websocket.send(data);
       }
-      console.log(message);
+      // console.log(message);
     });
   }),
 );

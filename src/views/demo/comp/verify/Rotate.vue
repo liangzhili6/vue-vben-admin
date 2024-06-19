@@ -13,6 +13,6 @@
   import { PageWrapper } from '@/components/Page';
 
   function handleSuccess() {
-    console.log('success!');
+    // console.log('success!');
   }
 </script>

@@ -184,7 +184,7 @@
   });
 
   function onAdvancedChange(isAdvanced: boolean) {
-    console.log('isAdvanced: ' + isAdvanced);
+    // console.log('isAdvanced: ' + isAdvanced);
     if (isAdvanced) {
       // do something
     } else {

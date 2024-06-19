@@ -78,9 +78,9 @@
       const CorrelationForm = async (Modal: IToolbarMethods) => {
         FormStore.updateIsPreview(false)
         await FormStore.updateChildrenSubmit( '打开子表单', itemProp.Correlation)
-        console.log('CorrelationForm', itemProp)
+        /* console.log('CorrelationForm', itemProp)
         console.log('FormStore.childrenSubmit', FormStore.childrenSubmit)
-        console.log('FormStore.isPreview', FormStore.isPreview)
+        console.log('FormStore.isPreview', FormStore.isPreview) */
         if(FormStore.isPreview){
           if (itemProp.Correlation) {
             const data = await GetOneFormApi({id: itemProp.Correlation});
@@ -90,19 +90,19 @@
             // replace({ name: 'Example2', state: { id: itemProp.Correlation } });
             }
         }else{
-          console.log('itemProp.Correlation', itemProp.Correlation)
+          // console.log('itemProp.Correlation', itemProp.Correlation)
           // const RandomOneData = await getRandomOneApi();
           // await FormStore.updateRandomOneData(RandomOneData)
           await FormStore.updateAddChildrenData(itemProp.Correlation)
           if(FormStore.childrenSubmit.text === '打开子表单'){
             await FormStore.updateChildrenSubmit('打开子表单1', itemProp.Correlation)
-            console.log('FormStore.childrenSubmit.text--99', FormStore.childrenSubmit.text)
+            // console.log('FormStore.childrenSubmit.text--99', FormStore.childrenSubmit.text)
             const data = await GetOneFormApi({id: itemProp.Correlation});
             childrenDataProp.value = JSON.parse(data.fieldJson)
             const config = cloneDeep(childrenDataProp.value);
             Modal?.showModal(config);
           }
-          console.log('addchildrenData', FormStore.addchildrenData, FormStore.RandomOneData)
+          // console.log('addchildrenData', FormStore.addchildrenData, FormStore.RandomOneData)
         }
       };
       const formItemProps = computed(() => {

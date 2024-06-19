@@ -104,7 +104,7 @@
       /* const componentItem = computed(() => componentMap.get(props.schema.component as string)); */
 
       const handleClick = (schema: IVFormComponent) => {
-      console.log('component handleClick---schema:', schema);
+      // console.log('component handleClick---schema:', schema);
         if (schema.component === 'Button' && schema.componentProps?.handle)
           emit(schema.componentProps?.handle);
       };

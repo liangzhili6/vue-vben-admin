@@ -318,7 +318,7 @@ const delSearchItem = (val, index) => {
    */
    const handleOpenModal = async (Modal: IToolbarMethods, id?: string |number | any, type?: any) => {
     FormStore.updateIsPreview(false)
-    formConfig.value =  await getOneFieldApi({ id: 242, formVersion: history.state.formVersion }) as any;
+    formConfig.value =  await getOneFieldApi({ id: 242, formName: '病例报告表', formVersion: history.state.formVersion }) as any;
 
     const RandomOne = formConfig.value?.schemas.some(
       (item) => item.component ==='Correlation',
@@ -420,6 +420,7 @@ const delSearchItem = (val, index) => {
   const handleBasicColumns = () =>{
     getOneFieldApi({
       id: 242,
+      formName: '病例报告表',
       formVersion: history.state.formVersion
     }).then(res=>{
       if(res&&res.schemas&&res.schemas.length){

@@ -155,16 +155,16 @@ const props = defineProps({
   })
   
 const cancel = (e: MouseEvent) => {
-  console.log('val', e)
+  // console.log('val', e)
 }  
 const confirm = (e: MouseEvent) => {
-  console.log('val', e)
+  // console.log('val', e)
 }  
 const closeOld = (e: MouseEvent) => {
-  console.log('val', e)
+  // console.log('val', e)
 }  
 const save = (val:any) => {
-  console.log('save', val, searchList.filterName, searchList.conditions)
+  // console.log('save', val, searchList.filterName, searchList.conditions)
 }
   const addSearchItem = (val:any) => {
   if(val){
@@ -179,12 +179,12 @@ const save = (val:any) => {
         searchList.id = undefined;
       },100)
     }
-    console.log('addSearchItem', val, searchList.conditions);
+    // console.log('addSearchItem', val, searchList.conditions);
   }
   
 }
 const delSearchItem = (val: any, index: number) => {
-  console.log('delSearchItem', val)
+  // console.log('delSearchItem', val)
   searchList.conditions.splice(index, 1)
 }
 

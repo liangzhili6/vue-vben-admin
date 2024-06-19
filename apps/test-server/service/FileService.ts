@@ -12,7 +12,7 @@ export default class FileService {
     const fileFunc = function (file) {
       fileReader = fs.createReadStream(file.filepath);
       fileResource = filePath + `/${file.originalFilename}`;
-      console.log(fileResource);
+      // console.log(fileResource);
 
       writeStream = fs.createWriteStream(fileResource);
       fileReader.pipe(writeStream);
@@ -38,7 +38,7 @@ export default class FileService {
         };
       }
     };
-    console.log(isMultiple, files.length);
+    // console.log(isMultiple, files.length);
 
     if (isMultiple) {
       for (let i = 0; i < files.length; i++) {

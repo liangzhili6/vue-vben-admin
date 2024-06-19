@@ -15,13 +15,13 @@
           :setFormModel="setFormModel"
           @submit="handleSubmit"
           @reset="resetFields"
-          :style="[{ position: 'absolute'}, {width: schema.position.width+ 'px', height: schema.position.height+ 'px', left: schema.position.left+ 'px', top: schema.position.top+ 20+ 'px'}]"
+          :style="[{ position: 'absolute'}, schema.position?{width: schema.position.width+ 'px', height: schema.position.height+ 'px', left: schema.position.left+ 'px', top: schema.position.top+ 20+ 'px'}:null]"
         >
           <template v-if="schema && schema.componentProps" #[`schema.componentProps!.slotName`]>
             <slot
               :name="schema.componentProps!.slotName"
               v-bind="{ formModel: formModel, field: schema.field, schema }"
-            ></slot>
+           ? ></slot>?
           </template>
         </FormRender>
       </Row>

@@ -617,6 +617,14 @@ const componentAttrs: IBaseComponentProps = {
         ],
       },
     },
+    {
+      name: 'rowShows',
+      label: '每行显示',
+      component: 'Input',
+      componentProps: {
+        placeholder: '请输入每行显示',
+      },
+    },
   ],
   DatePicker: [
     {

@@ -77,7 +77,7 @@
 
   const { currentRoute } = useRouter();
   const path = ( unref(currentRoute)).meta?.currentActiveMenu || unref(currentRoute ).name;
-  console.log('path', path)
+  // console.log('path', path)
   // '/form-designer/mobile_example'
   //"MobileExample"
   const SettingDrawer = createAsyncComponent(() => import('@/layouts/default/setting/index.vue'), {

@@ -156,7 +156,7 @@ import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
         left: 0,
       });
       const resize = (newRect) => {
-        console.log('resize', newRect);
+        // console.log('resize', newRect);
         formConfig.value.currentItem!.position.width = newRect.width;
         formConfig.value.currentItem!.position.height = newRect.height;
         formConfig.value.currentItem!.position.top = newRect.top;
@@ -164,16 +164,16 @@ import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
         // formConfig.value.currentItem!.componentProps.style = `width:${newRect.width};height:${newRect.height};`
       };
       const onActivated = () => {
-        console.log('onActivated')
+        // console.log('onActivated')
       }
       const colPropsComputed = computed(() => {
-        console.log('props.schema', props.schema, props.schema.colProps)
+        // console.log('props.schema', props.schema, props.schema.colProps)
         const { colProps = {} } = props.schema;
         return colProps;
       });
 
       const print = (val) => {
-      console.log(val)
+      // console.log(val)
     }
       const list1 = computed(() => props.schema.columns);
 

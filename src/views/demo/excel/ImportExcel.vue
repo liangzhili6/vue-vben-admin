@@ -29,7 +29,7 @@
 
   function loadDataSuccess(excelDataList: ExcelData[]) {
     tableListRef.value = [];
-    console.log(excelDataList);
+    // console.log(excelDataList);
     for (const excelData of excelDataList) {
       const {
         header,

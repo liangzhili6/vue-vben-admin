@@ -135,7 +135,7 @@
         },
       });
     }
-    console.log('excelData', excelData)
+    // console.log('excelData', excelData)
     return excelData;
   }
 
@@ -192,7 +192,7 @@
       emit('success', rawFile);
       return;
     }
-    console.log('rawFile', rawFile);
+    // console.log('rawFile', rawFile);
     upload(rawFile);
   }
 

@@ -21,7 +21,7 @@ export default [
     method: 'get',
     response: ({ query }) => {
       const { keyword, count } = query;
-      console.log(keyword);
+      // console.log(keyword);
       return resultSuccess(demoList(keyword, count));
     },
   },

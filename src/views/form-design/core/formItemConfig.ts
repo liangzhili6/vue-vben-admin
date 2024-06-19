@@ -302,6 +302,7 @@ export const baseComponents: IVFormComponent[] = [
           value: '2',
         },
       ],
+      rowShows: 1
     },
   },
   {

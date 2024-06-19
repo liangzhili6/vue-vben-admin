@@ -25,7 +25,7 @@ enum Api {
 /**
  * @description: 数据列表 - 获取表头
  */
-export function getOneFieldApi(params: {id: string | number, formVersion?: string, formName?: string }, mode: ErrorMessageMode = 'none') {
+export function getOneFieldApi(params: {id?: string | number, formVersion?: string, formName?: string }, mode: ErrorMessageMode = 'none') {
   return defHttp.get(
     {
       url: Api.getOneField,

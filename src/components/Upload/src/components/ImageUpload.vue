@@ -163,7 +163,7 @@
       return warn('upload api must exist and be a function');
     }
     try {
-      console.log('uploadApi', props.api, uploadApi)
+      // console.log('uploadApi', props.api, uploadApi)
       const res = await uploadApi?.({
         data: {
           ...(props.uploadParams || {}),
@@ -187,7 +187,7 @@
       emit('update:value', value);
       emit('change', value);
     } catch (e: any) {
-      console.log(e);
+      // console.log(e);
       info.onError!(e);
     }
   }
@@ -196,14 +196,14 @@
     const list = (fileList.value || [])
       .filter((item) => item?.status === UploadResultStatus.DONE)
       .map((item: any) => {
-        console.log('item', item)
+        /* console.log('item', item)
         console.log('props.resultField', props.resultField)
-        console.log('fileList.value', fileList.value)
+        console.log('fileList.value', fileList.value) */
         let obj2 = {...fileList.value}
-        console.log('obj2[0].thumbUrl', obj2, obj2[0])
+        // console.log('obj2[0].thumbUrl', obj2, obj2[0])
 
         if(props.resultField){
-        console.log('get(item?.response, props.resultField)',get(item?.response, props.resultField))
+        // console.log('get(item?.response, props.resultField)',get(item?.response, props.resultField))
           return get(item?.response, props.resultField)
         }
         // console.log('item?.url',item?.url, 'item?.response?.url', item?.response?.url)

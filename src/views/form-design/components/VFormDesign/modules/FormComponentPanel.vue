@@ -58,7 +58,7 @@
 <script lang="ts">
   import draggable from 'vuedraggable';
   import LayoutItem from '../components/LayoutItem.vue';
-  import { defineComponent, computed, reactive, toRefs } from 'vue';
+  import { defineComponent, computed } from 'vue';
   import { cloneDeep } from 'lodash-es';
   import { useFormDesignState } from '../../../hooks/useFormDesignState';
   import { Form, Empty, Button, TypographyTitle } from 'ant-design-vue';
@@ -67,7 +67,6 @@
 // 如果你之前是通过“app.use(Vue3DraggableResizable)”注册的，
 // 那么你这里就不需要再引入了，因为DraggableContainer这个已经被全局注册了，你可以直接使用
 import { DraggableContainer } from 'vue3-draggable-resizable'
-  import VueDragResize from "vue-drag-resize/src";
   export default defineComponent({
     name: 'FormComponentPanel',
     components: {
@@ -77,7 +76,6 @@ import { DraggableContainer } from 'vue3-draggable-resizable'
       Empty,
       Button,
       TypographyTitle,
-      VueDragResize,
       DraggableContainer
     },
     emits: ['handleSetSelectItem'],
@@ -112,28 +110,12 @@ import { DraggableContainer } from 'vue3-draggable-resizable'
       const layoutTag = computed(() => {
         return formConfig.value.layout === 'horizontal' ? 'Col' : 'div';
       });
-      const styleObj = reactive({
-        width: 0,
-        height: 0,
-        top: 200,
-        left: 200
-      });
-      const resize = (newRect) => {
-        console.log('resize', newRect)
-                styleObj.width = newRect.width;
-                styleObj.height = newRect.height;
-                /* styleObj.top = newRect.top;
-                styleObj.left = newRect.left; */
-            }
       return {
-        ...toRefs(styleObj),
-        styleObj,
         addItem,
         handleDragStart,
         formConfig,
         layoutTag,
         submitFormTemplate,
-        resize,
       };
     },
   });

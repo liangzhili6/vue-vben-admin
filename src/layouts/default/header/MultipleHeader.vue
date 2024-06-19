@@ -27,7 +27,7 @@
 
   const { currentRoute } = useRouter();
   const path = ( unref(currentRoute)).meta?.currentActiveMenu || unref(currentRoute ).name;
-  console.log('path', path)
+  // console.log('path', path)
   const HEADER_HEIGHT = 48;
 
   const TABS_HEIGHT = 32;

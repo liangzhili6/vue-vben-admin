@@ -119,7 +119,7 @@
           customRender: ({ record })=>{
             return createVNode(Button,{
               onclick:()=>{
-                console.log(record)
+                // console.log(record)
                 createMessage.success(`请到控制台查看该行输出结果`);
               }
             },"点我")
@@ -173,9 +173,9 @@
     submitFunc:()=>{
       return new Promise((resolve)=>{
         validate().then((e)=>{
-          console.log('e',e)
+          // console.log('e',e)
           resolve()
-          console.log(getFieldsValueValiate())
+          // console.log(getFieldsValueValiate())
           createMessage.success(`请到控制台查看结果`);
         }).catch(()=>{
           createMessage.error(`请输入必填项`);
@@ -193,7 +193,7 @@
     },
     submitFunc:()=>{
       return new Promise((resolve)=>{
-        console.log(getFieldsValueCustom())
+        // console.log(getFieldsValueCustom())
         resolve()
         createMessage.success(`请到控制台查看结果`);
       })
@@ -209,7 +209,7 @@
     },
     submitFunc:()=>{
       return new Promise((resolve)=>{
-        console.log(getFieldsValuePreview())
+        // console.log(getFieldsValuePreview())
         resolve()
         createMessage.success(`请到控制台查看结果`);
       })

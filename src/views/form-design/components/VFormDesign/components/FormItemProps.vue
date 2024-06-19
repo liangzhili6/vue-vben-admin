@@ -53,10 +53,7 @@
             placeholder="请输入必选提示"
           />
         </FormItem>
-        <FormItem label="是否必选" >
-          <div style="display: flex;">
-            行列宽高
-          </div>
+        <FormItem label="行列宽高" >
           <InputNumber
               :style="{ width: '25%' }"
               v-model:value="formConfig.currentItem.position.left"
@@ -116,8 +113,6 @@
   import { isArray } from 'lodash-es';
 
   const { formConfig } = useFormDesignState();
-console.log('formConfig90-----', formConfig);
-console.log('formConfig', formConfig.value.currentItem.component)
   watch(
     () => formConfig.value,
     () => {

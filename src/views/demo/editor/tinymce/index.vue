@@ -10,7 +10,7 @@
   const emit = defineEmits(['change']);
   const value = ref('hello world!');
   function handleChange(value: string) {
-    console.log(value);
+    // console.log(value);
     nextTick(() => {
         emit('change', value);
       });

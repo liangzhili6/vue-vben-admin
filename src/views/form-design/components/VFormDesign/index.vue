@@ -58,7 +58,7 @@
       <FormComponentPanel
         :current-item="formConfig.currentItem"
         :data="formConfig"
-        :schema="formConfig.schema"
+        :schema="formConfig.schemas"
         @handle-set-select-item="handleSetSelectItem"
       />
     </LayoutContent>
@@ -72,10 +72,10 @@
       breakpoint="lg"
     >
       <PropsPanel ref="propsPanel" :activeKey="formConfig.activeKey" >
-        <template v-for="item of formConfig.schemas" #[`${item.component}Props`]="data">
+        <template v-for="item of formConfig.schemas" #[`${item.component}Props`]="data" :key="`${item.field}Props`">
           <slot
             :name="`${item.component}Props`"
-            :schema="formConfig.schema"
+            :schema="formConfig.schemas"
             v-bind="{ formItem: data, props: data.componentProps }"
           ></slot>
         </template>
@@ -171,7 +171,7 @@
       item.colProps = item.colProps || { span: 24 };
       item.componentProps = item.componentProps || {};
       item.itemProps = item.itemProps || {};
-      item.position = { left: 25, top: 4, width: 200, height: 60 };
+      // item.position = { left: 25, top: 4, width: 200, height: 60 };
     });
     formConfig.value = config as any;
   };
@@ -241,12 +241,9 @@
    */
   const handleListPush = async (item: IVFormComponent) => {
     let lengthNum = formConfig.value.schemas.length;
-    console.log('item.position.top', item.position.top)
     if(lengthNum){
-      console.log('lengthNum', lengthNum)
       item.position.top =  item.position.top + (formConfig.value.schemas[lengthNum-1]).position.top+(formConfig.value.schemas[lengthNum-1]).position.height
     }
-    console.log('item.position.top', item.position.top)
     if(item.component === 'CentreSelect'){
       let options = (await item.componentProps.api()).map((item: any) => {
         return {
@@ -268,8 +265,8 @@
       item.componentProps.options = options
     }
     const formItem = cloneDeep(item);
+    await generateKey(formItem);
     setGlobalConfigState(formItem);
-    generateKey(formItem);
     if (!formConfig.value.currentItem?.key) {
       handleSetSelectItem(formItem);
       formConfig.value.schemas && formConfig.value.schemas.push(formItem as any);

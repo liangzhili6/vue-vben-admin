@@ -15,19 +15,19 @@
         </div>
       </TabPane>
       <TabPane :key="3" tab="栅格">
-        <div class="formConfigViewItem">
+        <div class="formConfigViewItem">  
           <ComponentColumnProps />
         </div>
       </TabPane>
-      <TabPane :key="4" tab="组件">
-        <slot v-if="slotProps && slotProps.component !== 'MemberSelect' && slotProps.component !== 'CentreSelect' && slotProps.component !== 'Correlation'" :name="slotProps.component + 'Props'"></slot>
+      <TabPane :key="4" tab="组件 ">
+        <slot v-if="slotProps" :name="slotProps.component + 'Props'"></slot>
         <ComponentProps v-else />
       </TabPane>
     </Tabs>
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent } from 'vue';
+  import { computed, defineComponent, watch } from 'vue';
   import FormProps from '../components/FormProps.vue';
   import FormItemProps from '../components/FormItemProps.vue';
   import ComponentProps from '../components/ComponentProps.vue';
@@ -57,6 +57,12 @@
           (item) => item.component === formConfig.value.currentItem?.component,
         );
       });
+      watch(
+        () => formConfig.value.activeKey,
+        (newValue, oldValue) => {
+          console.log('newValue, oldValue', newValue, oldValue)
+        },
+      );
       return { formConfig, customComponents, slotProps };
     },
   });

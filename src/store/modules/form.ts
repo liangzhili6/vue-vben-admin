@@ -29,7 +29,7 @@ export const  useFormStore = defineStore({
     updateChildrenSubmit(val: any, id?:'') {
       this.childrenSubmit.text = val;
       this.childrenSubmit.id = id;
-      console.log('this.childrenSubmit', this.childrenSubmit)
+      // console.log('this.childrenSubmit', this.childrenSubmit)
     },
   },
   getters: {
