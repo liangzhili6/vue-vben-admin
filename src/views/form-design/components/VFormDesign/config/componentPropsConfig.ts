@@ -628,6 +628,14 @@ const componentAttrs: IBaseComponentProps = {
   ],
   DatePicker: [
     {
+      name: 'defaultValue',
+      label: '默认值',
+      component: 'DatePicker',
+      componentProps: {
+        placeholder: '请输入默认值',
+      },
+    },
+    {
       name: 'format',
       label: '展示格式（format）',
       component: 'Input',
@@ -645,6 +653,14 @@ const componentAttrs: IBaseComponentProps = {
     },
   ],
   RangePicker: [
+    {
+      name: 'defaultValue',
+      label: '默认值',
+      component: 'RangePicker',
+      componentProps: {
+        placeholder: '请输入默认值',
+      },
+    },
     {
       name: 'placeholder',
       label: '占位符',
@@ -680,6 +696,14 @@ const componentAttrs: IBaseComponentProps = {
   ],
   MonthPicker: [
     {
+      name: 'defaultValue',
+      label: '默认值',
+      component: 'MonthPicker',
+      componentProps: {
+        placeholder: '请输入默认值',
+      },
+    },
+    {
       name: 'format',
       label: '展示格式（format）',
       component: 'Input',
@@ -697,6 +721,14 @@ const componentAttrs: IBaseComponentProps = {
     },
   ],
   TimePicker: [
+    {
+      name: 'defaultValue',
+      label: '默认值',
+      component: 'TimePicker',
+      componentProps: {
+        placeholder: '请输入默认值',
+      },
+    },
     {
       name: 'format',
       label: '展示格式（format）',

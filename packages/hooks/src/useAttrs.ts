@@ -33,7 +33,6 @@ function useAttrs(options: UseAttrsOptions = {}): Recordable<any> {
 
       return acm;
     }, {} as Recordable<any>);
-
     attrs.value = res;
   });
 

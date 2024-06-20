@@ -144,6 +144,10 @@
     RadioGroup,
     Col,
     Row,
+    DatePicker,
+    RangePicker,
+    MonthPicker,
+    TimePicker,
     Select as MemberSelect,
     Select as CentreSelect,
   } from 'ant-design-vue';
@@ -189,6 +193,10 @@
       CentreSelect,
       Correlation,
       BasicHelp,
+      DatePicker,
+      RangePicker,
+      MonthPicker,
+      TimePicker
     },
     emits: ['change', 'update:value', 'delete'],
     setup(props, {emit}) {

@@ -25,6 +25,7 @@ import {
   Transfer,
 } from 'ant-design-vue';
 
+import ApiRadioGroup from '@/components/Form/src/components/ApiRadioGroup.vue';
 //ant-desing本身的Form控件库
 
 const componentMap = new Map<string, Component>();
@@ -42,7 +43,9 @@ componentMap.set('AutoComplete', AutoComplete);
 componentMap.set('Select', Select);
 componentMap.set('TreeSelect', TreeSelect);
 componentMap.set('Switch', Switch);
-componentMap.set('RadioGroup', Radio.Group);
+// componentMap.set('RadioGroup', Radio.Group);
+componentMap.set('RadioGroup', ApiRadioGroup);
+// componentMap.set('RadioGroup', Radio.Group);
 componentMap.set('Checkbox', Checkbox);
 componentMap.set('CheckboxGroup', Checkbox.Group);
 componentMap.set('Cascader', Cascader);

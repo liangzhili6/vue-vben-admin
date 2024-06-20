@@ -10,6 +10,7 @@ import { uploadApi } from '@/api/sys/upload';
 import { GetAllTDimDeptApi, getOneFieldApi, GetAllTCenterApi, GetAllUserApi } from '@/api/sys/data';
 import { getAlldynamicFromNameApi } from '@/api/sys/form';
 
+import dayjs from 'dayjs';
 import { componentMap as Cmp } from '../components';
 import { Component, h } from 'vue';
 import { Tinymce } from '@/components/Tinymce';
@@ -242,7 +243,8 @@ export const baseComponents: IVFormComponent[] = [
     colProps: { span: 24 },
     componentProps: {
       format: "YYYY-MM-DD",
-      valueFormat: "YYYY-MM-DD"
+      valueFormat: "YYYY-MM-DD",
+      // defaultValue: dayjs(new Date()).format('YYYY-MM-DD'),
     },
     position: { left: 25, top: 4, width: 800, height: 60 },
   },
@@ -302,7 +304,8 @@ export const baseComponents: IVFormComponent[] = [
           value: '2',
         },
       ],
-      rowShows: 1
+      rowShows: 1,
+      optionType: 'default'
     },
   },
   {

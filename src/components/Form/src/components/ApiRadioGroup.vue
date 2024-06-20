@@ -2,7 +2,29 @@
  * @Description:It is troublesome to implement radio button group in the form. So it is extracted independently as a separate component
 -->
 <template>
-  <Radio.Group v-bind="attrs" v-model:value="state" button-style="solid">
+<div>
+  <div v-if="attrs.optionType === 'default'">
+  <Row>
+    <RadioGroup  v-model:value="state" size="large" style="width: 100%;display: flex;flex-direction: row;flex-wrap: wrap;">
+      <template v-for="item in attrs.options" :key="`${item.value}`">
+        <Col :span="24 / attrs.rowShows">
+          <Radio
+            v-if="props.isBtn"
+            :value="item.value"
+            :disabled="item.disabled"
+            @click="handleClick(item)"
+          >
+            {{ item.label }}
+          </Radio>
+          <Radio v-else :value="item.value" :disabled="item.disabled" @click="handleClick(item)">
+            {{ item.label }}
+          </Radio>
+        </Col>
+      </template>
+    </RadioGroup>
+      </Row>
+  </div>
+  <Radio.Group v-bind="attrs" v-model:value="state" button-style="solid" layout="horizontal" v-else>
     <template v-for="item in getOptions" :key="`${item.value}`">
       <Radio.Button
         v-if="props.isBtn"
@@ -17,10 +39,11 @@
       </Radio>
     </template>
   </Radio.Group>
+</div>
 </template>
 <script lang="ts" setup>
   import { type PropType, ref, computed, unref, watch } from 'vue';
-  import { Radio } from 'ant-design-vue';
+  import { Radio, RadioGroup, Col, Row } from 'ant-design-vue';
   import { isFunction } from '@/utils/is';
   import { useRuleFormItem } from '@/hooks/component/useFormItem';
   import { useAttrs } from '@vben/hooks';
@@ -84,7 +107,6 @@
       return prev;
     }, [] as OptionsItem[]);
   });
-
   watch(
     () => props.params,
     (value, oldValue) => {
