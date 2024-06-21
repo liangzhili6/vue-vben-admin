@@ -18,6 +18,14 @@ const data: AppRouteModule = {
   },
   children: [
     {
+      path: 'follow-up-rules',
+      name: 'FollowUpRules',
+      meta: {
+        title: '随访规则',
+      },
+      component: () => import('@/views/follow-up/follow-up-rules/follow-up-rules.vue'),
+    },
+    {
       path: 'follow-up-list-two',
       name: 'FollowUpListTwo',
       meta: {

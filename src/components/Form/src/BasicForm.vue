@@ -91,6 +91,7 @@
 
   // Get the basic configuration of the form
   const getProps = computed(() => {
+    console.log('props', props);
     return { ...props, ...unref(propsRef) } as FormProps;
   });
 
