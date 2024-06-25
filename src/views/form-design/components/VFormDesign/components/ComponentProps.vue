@@ -100,13 +100,13 @@
             </Col>
           </FormItem>
         </div>
-        <FormItem label="关联字段">
+        <!-- <FormItem label="关联字段">
           <Select
             mode="multiple"
             v-model:value="formConfig.currentItem['link']"
             :options="linkOptions"
           />
-        </FormItem>
+        </FormItem> -->
 
         <FormItem
           label="选项"

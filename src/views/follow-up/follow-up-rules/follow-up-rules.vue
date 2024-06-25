@@ -46,14 +46,14 @@
     <Modal v-model:open="addModal" :title="title" @ok="handleOk" :width="'60%'" >
       <!-- height="80%" style="overflow: hidden;overflow-y: scroll;" -->
       <template #footer>
-        <a-button key="back" @click="handleCancel">Return</a-button>
-        <a-button key="submit" type="primary" :loading="loading" @click="handleOk">Submit</a-button>
+        <a-button key="back" @click="handleCancel">取消</a-button>
+        <a-button key="submit" type="primary" :loading="loading" @click="handleOk">提交</a-button>
       </template>
       <!-- <div> -->
       <!-- <template #body> -->
         <BasicForm @register="register" >
         <template #add="{ field }">
-          <Table :dataSource="formConfig.dataSource" :columns="formConfig.TableColumns" :pagination="false">
+          <Table :dataSource="formConfig.dataSource" :columns="formConfig.TableColumns" :pagination="false" :border="true">
             <template #bodyCell="{ column, text, record }">
               <!--   {{ text }} {{ record }} {{field}} -->
               <template v-if="column.dataIndex === 'AssociatedDate'">
@@ -129,14 +129,14 @@
               </template>
             </template>
             <template #summary>
-            <a-table-summary :fixed="'bottom'" :border="true" >
+            <a-table-summary-cell  :col-span="24" :fixed="'bottom'" :border="true" v-if="formConfig.dataSource.length<5">
               <!-- <a-table-summary-row> -->
                 <!-- <a-table-summary-cell :index="2" :col-span="24"> -->
                   <plus-outlined class="editable-cell-icon" style="margin-left: 10px" @click="handleAdd()" />
                   <span>添加</span>
                 <!-- </a-table-summary-cell> -->
               <!-- </a-table-summary-row> -->
-            </a-table-summary>
+            </a-table-summary-cell>
           </template>
           </Table>
           <!-- <a-button v-if="Number(field) === 0" @click="add">+</a-button>
@@ -390,7 +390,7 @@ const loading = ref<boolean>(false);
         component: 'RadioGroup',
         label: '是否启用短信随访(患者)',
         colProps: {
-          span:  12,
+          span:  8,
         },
         defaultValue: '1',
         componentProps: {
@@ -413,20 +413,20 @@ const loading = ref<boolean>(false);
         component: 'TimePicker',
         label: '短信随访任务开始执行时间',
         colProps: {
-          span:  12,
+          span:  16,
         },
         defaultValue: '1',
         componentProps: {
-          format: "HH:mm:ss",
-          valueFormat: "HH:mm:ss"
+          format: "HH:mm",
+          valueFormat: "HH:mm"
         },
       },
       {
-        field: 'field5',
+        field: 'field7',
         component: 'RadioGroup',
         label: '是否启用短信随访(患者)',
         colProps: {
-          span:  12,
+          span:  8,
         },
         defaultValue: '1',
         componentProps: {
@@ -442,6 +442,101 @@ const loading = ref<boolean>(false);
               key: '2',
             },
           ],
+        },
+      },
+      {
+        field: 'field8',
+        component: 'Select',
+        label: '短信随访任务开始执行时间',
+        colProps: {
+          span:  8,
+        },
+        defaultValue: '1',
+        componentProps: {
+          options: [
+            {
+              label: '是',
+              value: '1',
+              key: '1',
+            },
+            {
+              label: '否',
+              value: '2',
+              key: '2',
+            },
+          ],
+        },
+      },
+      {
+        field: 'field9',
+        component: 'TimePicker',
+        label: '短信随访任务开始执行时间',
+        colProps: {
+          span:  8,
+        },
+        defaultValue: '1',
+        componentProps: {
+          format: "HH:mm",
+          valueFormat: "HH:mm"
+        },
+      },
+      {
+        field: 'field10',
+        component: 'RadioGroup',
+        label: '是否启用短信随访(患者)',
+        colProps: {
+          span:  8,
+        },
+        defaultValue: '1',
+        componentProps: {
+          options: [
+            {
+              label: '是',
+              value: '1',
+              key: '1',
+            },
+            {
+              label: '否',
+              value: '2',
+              key: '2',
+            },
+          ],
+        },
+      },
+      {
+        field: 'field11',
+        component: 'Select',
+        label: '短信随访任务开始执行时间',
+        colProps: {
+          span:  8,
+        },
+        defaultValue: '1',
+        componentProps: {
+          options: [
+            {
+              label: '是',
+              value: '1',
+              key: '1',
+            },
+            {
+              label: '否',
+              value: '2',
+              key: '2',
+            },
+          ],
+        },
+      },
+      {
+        field: 'field12',
+        component: 'TimePicker',
+        label: '短信随访任务开始执行时间',
+        colProps: {
+          span:  8,
+        },
+        defaultValue: '1',
+        componentProps: {
+          format: "HH:mm",
+          valueFormat: "HH:mm"
         },
       },
     ];

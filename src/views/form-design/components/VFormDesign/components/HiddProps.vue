@@ -10,8 +10,12 @@
       @ok="handleOk"
       @cancel="cancel"
     >
+      <template #footer>
+        <a-button key="back" @click="cancel">取消</a-button>
+        <a-button key="submit" type="primary" @click="handleOk">提交</a-button>
+      </template>
       <p>{{ modal.Text }}</p>
-      <div>
+      <div style="margin-bottom: 40px">
         <Row :gutter="0">
           <Col :span="10">
             <div style="height: 400px">
@@ -58,7 +62,6 @@
           </Col>
         </Row>
       </div>
-      <template #footer></template>
     </Modal>
 
     <a @click="addRules">
@@ -101,8 +104,8 @@
       if (formConfig?.value?.currentItem?.key != val.key && i >= index && index) {
         arr.push(val);
       }
-      currentItemOptions.value = formConfig?.value?.currentItem?.flag?.value
-      schemasComponent.value = formConfig?.value?.currentItem?.flag?.keyList
+      currentItemOptions.value = formConfig?.value?.currentItem?.flag?.value;
+      schemasComponent.value = formConfig?.value?.currentItem?.flag?.keyList;
     });
     modal.schemasList = arr;
     open.value = true;
@@ -110,27 +113,47 @@
   const cancel = () => {
     schemasComponent.value = [];
     currentItemOptions.value = '';
+    open.value = false;
   };
   const fun = (schemasComponentVal, currentItemOptionsVal) => {
     if (schemasComponentVal && schemasComponentVal.length && currentItemOptionsVal) {
       formConfig?.value?.schemas?.forEach((res, i) => {
         schemasComponentVal.forEach((val) => {
           if (res.key === val) {
+            console.log('formConfig.value.schemas[i]', formConfig.value.schemas[i]);
             formConfig.value.schemas[i].hidden = true;
-            formConfig.value.schemas[i].hiddenView = {
-              hidden: true,
-              key: formConfig?.value?.currentItem?.key,
-              [formConfig?.value?.currentItem?.key]: currentItemOptionsVal,
-              value: currentItemOptionsVal,
-            };
+            console.log('formConfig.value.schemas[i].hiddenView', formConfig.value.schemas[i].hiddenView);
+// ---------------------需要去重
+
+            if(formConfig.value.schemas[i]&&formConfig.value.schemas[i].hiddenView){
+               formConfig.value.schemas[i]?.hiddenView?.push({
+                [formConfig?.value?.currentItem?.key + '#*' + currentItemOptionsVal]: {
+                  hidden: true,
+                  key: formConfig?.value?.currentItem?.key,
+                  [formConfig?.value?.currentItem?.key]: currentItemOptionsVal,
+                  value: currentItemOptionsVal,
+                },
+              })
+            }else{
+              formConfig.value.schemas[i].hiddenView = [{
+                [formConfig?.value?.currentItem?.key + '#*' + currentItemOptionsVal]: {
+                  hidden: true,
+                  key: formConfig?.value?.currentItem?.key,
+                  [formConfig?.value?.currentItem?.key]: currentItemOptionsVal,
+                  value: currentItemOptionsVal,
+                },
+              }]
+            }
+// ---------------------
+
             // arr.push({ key: formConfig?.value?.currentItem?.key });
           }
         });
-        if(formConfig?.value?.currentItem?.key === res.key){
+        if (formConfig?.value?.currentItem?.key === res.key) {
           formConfig.value.schemas[i].flag = {
             value: currentItemOptionsVal,
-            keyList: schemasComponentVal
-          } 
+            keyList: schemasComponentVal,
+          };
         }
       });
     }
@@ -145,6 +168,8 @@
   watch(
     () => currentItemOptions.value,
     (newVal) => {
+      console.log('schemasComponent.value, newVal', schemasComponent.value, newVal);
+
       fun(schemasComponent.value, newVal);
       /* newVal?.value?.forEach((val) => {
         formConfig?.value?.schemas?.forEach((res, i) => {
@@ -166,6 +191,7 @@
   watch(
     () => schemasComponent.value,
     (newVal) => {
+      console.log('newVal, currentItemOptions.value', newVal, currentItemOptions.value);
       fun(newVal, currentItemOptions.value);
       /* newVal?.value?.forEach((val) => {
         formConfig?.value?.schemas?.forEach((res, i) => {

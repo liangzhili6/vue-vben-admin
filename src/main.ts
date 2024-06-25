@@ -5,8 +5,8 @@ import '@/components/VxeTable/src/css/index.scss';
 // Register icon sprite
 import 'virtual:svg-icons-register';
 
+import gridLayout  from 'vue-grid-layout' 
 import { createApp } from 'vue';
-
 import { registerGlobComp } from '@/components/registerGlobComp';
 import { setupGlobDirectives } from '@/directives';
 import { setupI18n } from '@/locales/setupI18n';
@@ -56,6 +56,7 @@ async function bootstrap() {
   setupErrorHandle(app);
 
   // await router.isReady();
+  app.use(gridLayout);
 
   app.mount('#app');
 }

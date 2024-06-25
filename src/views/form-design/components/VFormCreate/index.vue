@@ -110,6 +110,7 @@
 // ---------------------
         Object.values(linkOn).forEach((item) => {
           item.forEach((itemValue) => {
+            console.log('itemValue', itemValue, 'item', item)
             // const isHidden = itemValue?.hidden;
             if (itemValue.hidden === true) {
               const hiddenKey = itemValue?.hiddenView?.key;
