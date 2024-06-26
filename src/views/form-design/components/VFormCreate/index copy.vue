@@ -111,38 +111,77 @@
 // console.log('Object.values(linkOn)', Object.values(linkOn))
         Object.values(linkOn).forEach((item) => {
           item.forEach((itemValue) => {
-            // console.log('itemValue', itemValue, 'item', item, 'value', value)
-            /* if (itemValue.hidden === true) {
+            console.log('itemValue', itemValue, 'item', item, 'value', value)
+            // const isHidden = itemValue?.hidden;
+            let handler = {
+                  get: function(target, prop) {
+                      // console.log(`Getting value for ${prop}`);
+                      return prop;
+                  }
+              };
+            if (itemValue.hidden === true) {
+               
               itemValue?.hiddenView.forEach((re, i)=>{
-                console.log('itemValue', itemValue)
-                let obj = Object.keys(re)[0]
-                // console.log('value', value, 'field', field, 'obj', obj, Object.keys(re))
-                console.log("(field+'__'+value) == obj====",field,value, (field+'__'+value) == obj)
-                if ((field+'__'+value) === obj) {
+              let proxy = new Proxy(re, handler);
+                // console.log('itemValue.key', itemValue.key)
+                // console.log('value', value)
+                // console.log("itemValue.key+'__'+value", itemValue.key + "__" + value)
+                let str = itemValue.key + "__" + value
+                let obj = proxy[str]
+                console.log('re-----', re, obj,  re[obj], "(field+'__'+value) == obj", (field+'__'+value) === obj)
+                const hiddenKey = re[obj]?.key;
+                const hiddenValue = re[obj]?.value;
+                // console.log('hiddenKey-----', hiddenKey)
+                console.log('hiddenValue-----', hiddenValue)
+                console.log('field-----', field)
+                console.log('hiddenKey-----', hiddenKey)
+                console.log('value.includes(hiddenValue)-----', value.includes(hiddenValue))
+
+                console.log('11111111111111-----', field === hiddenKey && value.includes(hiddenValue))
+                if ((field+'__'+value) == obj) {
                   console.log('关联组件显隐命中-操作显隐逻辑', itemValue.hidden);
                   itemValue.hidden = false
                   itemValue.hiddenView[i][obj].hidden = false
                 }
               })
-            }else if(itemValue.hidden === false){ */
-            if(itemValue.hiddenView&& itemValue?.hiddenView.length){
+              /* const hiddenKey = itemValue?.hiddenView?.key;
+              const hiddenValue = itemValue?.hiddenView?.value;
+              if (field === hiddenKey && value.includes(hiddenValue)) {
+                console.log('关联组件显隐命中-操作显隐逻辑', itemValue.hidden);
+                itemValue.hidden = false
+                itemValue.hiddenView.hidden = false
+              } */
+            }else if(itemValue.hidden === false){
               itemValue?.hiddenView.forEach((re, i)=>{
-                console.log('itemValue', itemValue)
-                let obj = Object.keys(re)[0]
-                // console.log('value', value, 'field', field, 'obj', obj, Object.keys(re))
-                console.log("(field+'__'+value) !== obj====",field,value, (field+'__'+value) !== obj)
-                if ((field+'__'+value) !== obj) {
-                  console.log('1关联组件显隐命中-操作隐藏逻辑', itemValue.hidden);
-                  // itemValue.hidden = true
-                  // itemValue.hiddenView[i][obj].hidden = true
-                }else{
-                  console.log('2关联组件显隐命中-操作显隐逻辑', itemValue.hidden);
-                  itemValue.hidden = false
+                let proxy = new Proxy(re, handler);
+                // console.log('itemValue.key', itemValue.key)
+                // console.log('value', value)
+                // console.log("itemValue.key+'__'+value", itemValue.key + "__" + value)
+                let str = itemValue.key + "__" + value
+                let obj = proxy[str]
+                console.log('re++++++++', re, obj, re[obj], "(field+'__'+value) == obj", (field+'__'+value) === obj)
+
+                const hiddenKey = re[obj]?.key;
+                const hiddenValue = re[obj]?.value;
+                // console.log('hiddenKey++++++++', hiddenKey)
+                console.log('hiddenValue++++++++', hiddenValue)
+                console.log('field-----', field)
+                console.log('hiddenKey-----', hiddenKey)
+                console.log('value.includes(hiddenValue)-----', value.includes(hiddenValue))
+                if ((field+'__'+value) != obj) {
+                  console.log('关联组件显隐命中-操作显隐逻辑', itemValue.hidden);
+                  itemValue.hidden = true
                   itemValue.hiddenView[i][obj].hidden = false
                 }
               })
+              /* const hiddenKey = itemValue?.hiddenView?.key;
+              const hiddenValue = itemValue?.hiddenView?.value;
+              if (field === hiddenKey && !value.includes(hiddenValue)) {
+                console.log('关联组件显隐命中-操作显隐逻辑 yingcang', item);
+                itemValue.hidden = true
+                itemValue.hiddenView.hidden = true
+              } */
             }
-            // }
           });
         });
         console.log('itemValue', linkOn)

@@ -21,14 +21,14 @@
             <div style="height: 400px">
               <div>当前选择项：</div>
               <ScrollContainer style="border: 1px solid #cccccc">
-                <RadioGroup v-model:value="currentItemOptions" style="width: 100%">
+                <RadioGroup v-model:value="currentItemOptions" style="width: 100%" @change="changeCurrentItemOptions">
                   <ul style="width: 100%">
                     <template
-                      v-for="(val, index) in formConfig?.currentItem?.componentProps?.options"
+                      v-for="(val, index) in ItemOptions.optionsList"
                       :key="index"
                     >
                       <li class="p-2" :style="{ border: '1px solid #eee', width: '100%' }">
-                        <Radio :value="val.value" style="width: 100%">
+                        <Radio :value="val.value" style="width: 100%" :id="val.key" :tabindex="val.key">
                           {{ val.label }}
                         </Radio>
                       </li>
@@ -39,16 +39,18 @@
             </div>
           </Col>
           <Col :span="1"></Col>
-          <Col :span="13" style="height: 400px">
+          <Col :span="13" style="height: 400px" v-for="(item, index) in ItemOptions.optionsList" :key="index" v-show="item.value === currentItemOptions">
             <div>则显示以下字段：</div>
             <ScrollContainer style="border: 1px solid #cccccc">
-              <CheckboxGroup v-model:value="schemasComponent" style="width: 100%">
+              <CheckboxGroup v-model:value="item.hiddenList" style="width: 100%" @change="changeSchemasComponent">
                 <ul style="width: 100%">
-                  <template v-for="(val, index) in modal?.schemasList" :key="index">
+                  <template v-for="(val, index) in item?.schemasList" :key="index">
                     <li class="p-2" :style="{ border: '1px solid #eee', width: '100%' }">
                       <Checkbox
                         :value="val.key"
                         style="width: 100%"
+                        :id="val.key"
+                        :tabindex="val.key"
                         :disabled="!currentItemOptions"
                       >
                         <!-- :disabled="!currentItemOptions || val.hiddenView" -->
@@ -71,28 +73,69 @@
   </div>
 </template>
 <script lang="ts" setup name="HiddProps">
-  import { ref, reactive, onMounted, watch } from 'vue';
+  import { ref, reactive, onMounted, watch, onBeforeMount } from 'vue';
   import { CheckboxGroup, Checkbox, Col, Row, Modal, RadioGroup, Radio } from 'ant-design-vue';
   import Icon from '@/components/Icon/Icon.vue';
   import { useFormDesignState } from '../../../hooks/useFormDesignState';
   import { ScrollContainer } from '@/components/Container';
+  import { uniq, cloneDeep } from 'lodash-es';
 
   const { formConfig } = useFormDesignState();
   const open = ref<boolean>(false);
   const confirmLoading = ref<boolean>(false);
   const schemasComponent = ref([]); //控制的题目
   const currentItemOptions = ref(''); //显隐选项
+  const ItemOptions = reactive({
+    optionsList: [],
+    schemasList: []
+  })
   const modal = reactive({
     Text: '',
     schemasList: [],
   });
   const handleOk = () => {
-    modal.Text = 'The modal will be closed after two seconds';
-    confirmLoading.value = true;
-    setTimeout(() => {
-      open.value = false;
-      confirmLoading.value = false;
-    }, 2000);
+    /* modal.Text = 'The modal will be closed after two seconds';
+    confirmLoading.value = true; */
+   /*  setTimeout(() => {
+      open.value = false; */
+    // }, 2000);
+    formConfig?.value?.schemas.forEach((val, i) => {
+      if(val.key === formConfig?.value?.currentItem?.key){
+        val.flag = ItemOptions;//-------------------待补充数据
+      }
+      ItemOptions.optionsList.forEach((el: any)=>{
+        if (el&&el.hiddenList&& el.hiddenList.length) {
+          el?.hiddenList?.forEach(res=>{
+            if(val.key === res){
+              console.log('res', res, val, el)
+              formConfig.value.schemas[i].hidden = true;
+              if(val.hiddenView){
+                val.hiddenView = [...val.hiddenView, {[formConfig?.value?.currentItem?.key + '__' + el.value]: {
+                  hidden: true,
+                  key: formConfig?.value?.currentItem?.key,
+                  [formConfig.value.currentItem.key]: el.value,
+                  value: el.value,
+                }}]
+              }else{
+                val.hiddenView = [{[formConfig?.value?.currentItem?.key + '__' + el.value]: {
+                  hidden: true,
+                  key: formConfig?.value?.currentItem?.key,
+                  [formConfig.value.currentItem.key]: el.value,
+                  value: el.value,
+                }}]
+              }
+            }
+          })
+        }
+      })
+    })
+    formConfig?.value?.schemas.forEach((val, i) => {
+      val.hiddenView = cloneDeep(uniq(val?.hiddenView))
+    })
+    // formConfig.value.currentItem.flag = ItemOptions;
+    confirmLoading.value = false;
+    open.value = false;
+    console.log('handleOk', ItemOptions, currentItemOptions)
   };
   const addRules = () => {
     var index = 0;
@@ -113,8 +156,15 @@
   const cancel = () => {
     schemasComponent.value = [];
     currentItemOptions.value = '';
+    // console.log('cancel', ItemOptions, currentItemOptions)
     open.value = false;
   };
+  const changeCurrentItemOptions = (val) =>{
+    // console.log('changeCurrentItemOptions', val, ItemOptions, currentItemOptions)
+  }
+  const changeSchemasComponent = (val) =>{
+    // console.log('changeSchemasComponent', val, ItemOptions, currentItemOptions)
+  }
   const fun = (schemasComponentVal, currentItemOptionsVal) => {
     if (schemasComponentVal && schemasComponentVal.length && currentItemOptionsVal) {
       formConfig?.value?.schemas?.forEach((res, i) => {
@@ -127,7 +177,7 @@
 
             if(formConfig.value.schemas[i]&&formConfig.value.schemas[i].hiddenView){
                formConfig.value.schemas[i]?.hiddenView?.push({
-                [formConfig?.value?.currentItem?.key + '#*' + currentItemOptionsVal]: {
+                [formConfig?.value?.currentItem?.key + '__' + currentItemOptionsVal]: {
                   hidden: true,
                   key: formConfig?.value?.currentItem?.key,
                   [formConfig?.value?.currentItem?.key]: currentItemOptionsVal,
@@ -136,7 +186,7 @@
               })
             }else{
               formConfig.value.schemas[i].hiddenView = [{
-                [formConfig?.value?.currentItem?.key + '#*' + currentItemOptionsVal]: {
+                [formConfig?.value?.currentItem?.key + '__' + currentItemOptionsVal]: {
                   hidden: true,
                   key: formConfig?.value?.currentItem?.key,
                   [formConfig?.value?.currentItem?.key]: currentItemOptionsVal,
@@ -144,6 +194,8 @@
                 },
               }]
             }
+            formConfig.value.schemas[i].hiddenView = cloneDeep(uniq(formConfig.value.schemas[i]?.hiddenView))
+            console.log('formConfig.value.schemas[i].hiddenView', formConfig.value.schemas[i].hiddenView)
 // ---------------------
 
             // arr.push({ key: formConfig?.value?.currentItem?.key });
@@ -161,6 +213,7 @@
   watch(
     () => formConfig.value,
     (newVal, oldVal) => {
+      
       // console.log('newVal, oldVal',newVal, oldVal)
     },
     { deep: true, immediate: true },
@@ -168,9 +221,11 @@
   watch(
     () => currentItemOptions.value,
     (newVal) => {
-      console.log('schemasComponent.value, newVal', schemasComponent.value, newVal);
+      currentItemOptions.value = currentItemOptions.value?currentItemOptions.value:(formConfig.value?.currentItem?.componentProps?.options[0].value)
 
-      fun(schemasComponent.value, newVal);
+      // console.log('schemasComponent.value, newVal', schemasComponent.value, newVal);
+
+      // fun(schemasComponent.value, newVal);
       /* newVal?.value?.forEach((val) => {
         formConfig?.value?.schemas?.forEach((res, i) => {
           if (res.key === val) {
@@ -191,8 +246,10 @@
   watch(
     () => schemasComponent.value,
     (newVal) => {
-      console.log('newVal, currentItemOptions.value', newVal, currentItemOptions.value);
-      fun(newVal, currentItemOptions.value);
+      currentItemOptions.value = currentItemOptions.value?currentItemOptions.value:(formConfig.value?.currentItem?.componentProps?.options[0].value)
+      // console.log('newVal, currentItemOptions.value', newVal, currentItemOptions.value);
+      // fun(newVal, currentItemOptions.value);
+  
       /* newVal?.value?.forEach((val) => {
         formConfig?.value?.schemas?.forEach((res, i) => {
           if (res.key === val) {
@@ -213,6 +270,19 @@
     },
     { deep: true, immediate: true },
   );
+  
+  onBeforeMount(() => {
+    ItemOptions.schemasList = formConfig.value?.schemas.filter(val=>val.key!== formConfig.value?.currentItem?.key)
+    ItemOptions.optionsList = formConfig.value?.currentItem?.componentProps?.options.map(val=>{
+      return{
+        ...val,
+        schemasList: ItemOptions.schemasList,
+        hiddenList: []
+      }
+    })
+    console.log('ItemOptions', ItemOptions, formConfig.value?.currentItem?.componentProps?.options[0].value)
+    currentItemOptions.value = formConfig.value?.currentItem?.componentProps?.options[0].value
+  });
   onMounted(() => {});
 </script>
 
