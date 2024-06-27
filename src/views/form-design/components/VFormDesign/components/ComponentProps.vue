@@ -18,16 +18,15 @@
               {D}表示日，如果小于10，则不会补齐，如1号显示为1
               {#2/D}表示计数，其中数字表示流水号长度(用0补齐)，字母表示计数周期，可以为D(每天重置)，W(每周重置)，M(每月重置)，Y(每年重置)，不写斜杠以及字母则不会重置，一直递增"
           />
-          <Input
-            v-model:value="formConfig.currentItem['format']"
-            @change="changeJournalNumber"
-          />
+          <Input v-model:value="formConfig.currentItem['format']" @change="changeJournalNumber" />
         </FormItem>
         <FormItem
           label="数据来源"
           v-if="['Correlation'].includes(formConfig.currentItem.component)"
         >
           <Select
+            show-search
+            :filter-option="filterOption"
             v-model:value="formConfig.currentItem['Correlation']"
             :options="CorrelationOptionsList"
             @change="changeCorrelationShowKey"
@@ -56,8 +55,7 @@
             @change="handleShowKey"
           />
         </FormItem> -->
-        <FormItem label="成员" v-if="['MemberSelect'].includes(formConfig.currentItem.component)">
-        </FormItem>
+        <FormItem label="成员" v-if="['MemberSelect'].includes(formConfig.currentItem.component)" />
         <FormItem label="图文内容" v-if="['ImageText'].includes(formConfig.currentItem.component)">
           <Tinymce
             :schema="{ ...formConfig, defaultValue: '图文内容' }"
@@ -150,12 +148,13 @@
     TimePicker,
     Select as MemberSelect,
     Select as CentreSelect,
+    notification,
   } from 'ant-design-vue';
   // import { Select  as MemberSelect } from 'ant-design-vue';
   import RadioButtonGroup from '@/components/Form/src/components/RadioButtonGroup.vue';
 
   import BasicHelp from '@/components/Basic/src/BasicHelp.vue';
-  import { computed, defineComponent, ref, watch  } from 'vue';
+  import { computed, defineComponent, ref, watch } from 'vue';
   import { useDesign } from '@/hooks/web/useDesign';
   import { useFormDesignState } from '../../../hooks/useFormDesignState';
   import {
@@ -169,7 +168,6 @@
   import { IBaseFormAttrs } from '../config/formItemPropsConfig';
   import { Tinymce } from '@/components/Tinymce';
   import { Correlation } from '@/components/Correlation';
-  import { notification } from 'ant-design-vue';
   // import { useVFormMethods } from '../../../hooks/useVFormMethods';
   // import { IFormConfig } from '../../../typings/v-form-component';
   export default defineComponent({
@@ -196,11 +194,11 @@
       DatePicker,
       RangePicker,
       MonthPicker,
-      TimePicker
+      TimePicker,
     },
     emits: ['change', 'update:value', 'delete'],
-    setup(props, {emit}) {
-      console.log('props', props, emit)
+    setup(props, { emit }) {
+      console.log('props', props, emit);
 
       // 让compuated属性自动更新
       const CorrelationOptionsList = ref([]);
@@ -230,8 +228,8 @@
             });
         },
       );
-      
-/*       const handleCentreSelectShowKeyList = async () =>{
+
+      /*       const handleCentreSelectShowKeyList = async () =>{
         console.log('CentreSelectShowKeyList', formConfig.value.currentItem)
         CentreSelectShowKeyList.value = (
           await formConfig.value.currentItem!.componentProps!.api()
@@ -244,11 +242,11 @@
         });
         formConfig.value.currentItem!.componentProps.options = CentreSelectShowKeyList.value
       } */
-   /**
+      /**
        * 关联记录
        * @param fromId 自己的表单id--编辑表单使用
        */
-       const CorrelationOptions = async (fromId?: any) => {
+      const CorrelationOptions = async (fromId?: any) => {
         CorrelationOptionsList.value = (
           await formConfig.value.currentItem!.componentProps!.api[0]({ fromId })
         ).map((item: any) => {
@@ -259,7 +257,9 @@
           };
         });
       };
-      ['CentreSelect'].includes(formConfig.value.currentItem!.component)? CorrelationOptions(history.state.id ? history.state.id : 0):null
+      ['CentreSelect'].includes(formConfig.value.currentItem!.component)
+        ? CorrelationOptions(history.state.id ? history.state.id : 0)
+        : null;
       watch(
         () => formConfig.value.currentItem && formConfig.value.currentItem.component,
         (_newValue) => {
@@ -303,14 +303,13 @@
                 }
               }
             });
-            if(_newValue === 'Correlation'){
-              CorrelationOptions(history.state.id ? history.state.id : 0);
-            }
-           /*  if(_newValue === 'CentreSelect'){
+          if (_newValue === 'Correlation') {
+            CorrelationOptions(history.state.id ? history.state.id : 0);
+          }
+          /*  if(_newValue === 'CentreSelect'){
               console.log('_newValue', _newValue)
               handleCentreSelectShowKeyList();
             } */
-            
         },
         {
           immediate: true,
@@ -385,14 +384,17 @@
         });
       };
       const changeJournalNumber = async (id) => {
-        console.log('id',id)
+        console.log('id', id);
       };
-   
+
       const handleChange = (val: any) => {
         formConfig.value.schemas.filter((item) => {
           item.defaultValue = val;
           return item.key === formConfig.value.currentItem!.key;
         });
+      };
+      const filterOption = (input: string, option: any) => {
+        return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
       };
       return {
         formConfig,
@@ -410,6 +412,7 @@
         handleShowKey,
         changeJournalNumber,
         prefixCls,
+        filterOption,
       };
     },
   });
