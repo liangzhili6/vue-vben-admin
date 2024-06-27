@@ -106,6 +106,15 @@ export const baseComponentControlAttrs: Omit<IBaseFormAttrs, 'tag'>[] = [
 
 //共用属性
 export const baseComponentCommonAttrs: Omit<IBaseFormAttrs, 'tag'>[] = [
+  /* {
+    name: 'defaultValue',
+    label: '默认值',
+    component: 'Input',
+    componentProps: {
+      type: 'text',
+      placeholder: '请输入默认值',
+    },
+  }, */
   {
     name: 'size',
     label: '尺寸',

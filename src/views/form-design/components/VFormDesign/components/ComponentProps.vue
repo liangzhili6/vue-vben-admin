@@ -67,6 +67,23 @@
         <div v-if="formConfig.currentItem && formConfig.currentItem.componentProps">
           <FormItem v-for="item in inputOptions" :key="item.name" :label="item.label">
             <!--     处理数组属性，placeholder       -->
+        
+        <FormItem label="默认值" v-if="['Input'].includes(formConfig.currentItem.component)">
+          <Select
+            :style="{ width: '40%' }"
+            v-model:value="formConfig.currentItem['CentreSelectShowKey']"
+            :options="[
+              { value: '自定义', label: '自定义' },
+              { value: '公式', label: '公式' },
+            ]"
+            @change="handleShowKey"
+          />
+          <Input
+              :style="{ width: '60%' }"
+            v-model:value="formConfig.currentItem['format']"
+            @change="changeJournalNumber"
+          />
+        </FormItem>
             <div v-if="item.children">
               <template v-for="(child, index) of item.children" :key="index">
                 <component
