@@ -108,44 +108,23 @@
         const { schema, value } = _event;
         const { field } = unref(schema);
 // ---------------------
-// console.log('Object.values(linkOn)', Object.values(linkOn))
         Object.values(linkOn).forEach((item) => {
           item.forEach((itemValue) => {
-            // console.log('itemValue', itemValue, 'item', item, 'value', value)
-            /* if (itemValue.hidden === true) {
-              itemValue?.hiddenView.forEach((re, i)=>{
-                console.log('itemValue', itemValue)
-                let obj = Object.keys(re)[0]
-                // console.log('value', value, 'field', field, 'obj', obj, Object.keys(re))
-                console.log("(field+'__'+value) == obj====",field,value, (field+'__'+value) == obj)
-                if ((field+'__'+value) === obj) {
-                  console.log('关联组件显隐命中-操作显隐逻辑', itemValue.hidden);
-                  itemValue.hidden = false
-                  itemValue.hiddenView[i][obj].hidden = false
-                }
-              })
-            }else if(itemValue.hidden === false){ */
             if(itemValue.hiddenView&& itemValue?.hiddenView.length){
-              itemValue?.hiddenView.forEach((re, i)=>{
-                console.log('itemValue', itemValue)
-                let obj = Object.keys(re)[0]
-                // console.log('value', value, 'field', field, 'obj', obj, Object.keys(re))
-                console.log("(field+'__'+value) !== obj====",field,value, (field+'__'+value) !== obj)
-                if ((field+'__'+value) !== obj) {
-                  console.log('1关联组件显隐命中-操作隐藏逻辑', itemValue.hidden);
-                  // itemValue.hidden = true
-                  // itemValue.hiddenView[i][obj].hidden = true
-                }else{
-                  console.log('2关联组件显隐命中-操作显隐逻辑', itemValue.hidden);
-                  itemValue.hidden = false
-                  itemValue.hiddenView[i][obj].hidden = false
-                }
+              var result = itemValue?.hiddenView.find((re, i)=>{
+                let obj = Object.keys(re)[0];
+                return (field+'__'+value) === obj;
               })
+              if(result){
+                  itemValue.hidden = false;
+                  // itemValue.hiddenView[i][obj].hidden = false;
+              }else{
+                itemValue.hidden = true;
+                  // itemValue.hiddenView[i][obj].hidden = true;
+              }
             }
-            // }
           });
         });
-        console.log('itemValue', linkOn)
 // +++++++++++++++++++++
         linkOn[field!]?.forEach((formItem) => {
           formItem.update?.(value, formItem, fApi.value as IVFormMethods);

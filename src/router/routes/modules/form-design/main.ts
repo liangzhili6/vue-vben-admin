@@ -54,8 +54,8 @@ const permission: AppRouteModule = {
         title: '查看',
         hideMenu: true,
         hideTab: true,
-        // hideBreadcrumb: true,
-        // hideChildrenInMenu: true,
+        /* hideBreadcrumb: true,
+        hideChildrenInMenu: true, */
       },
       component: () => import('@/views/form-design/examples/baseForm.vue'),
     },
@@ -64,10 +64,10 @@ const permission: AppRouteModule = {
       name: 'MobileExample',
       meta: {
         title: '查看',
-        /* hideMenu: true,
+        hideMenu: true,
         hideTab: true,
         hideBreadcrumb: true,
-        hideChildrenInMenu: true, */
+        hideChildrenInMenu: true,
       },
       component: () => import('@/views/form-design/mobile/baseForm.vue'),
     },

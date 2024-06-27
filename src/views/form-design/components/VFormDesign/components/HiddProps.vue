@@ -66,7 +66,7 @@
       </div>
     </Modal>
 
-    <a @click="addRules">
+    <a @click="showModal">
       <Icon icon="ant-design:file-add-outlined" />
       添加显隐逻辑
     </a>
@@ -94,11 +94,6 @@
     schemasList: [],
   });
   const handleOk = () => {
-    /* modal.Text = 'The modal will be closed after two seconds';
-    confirmLoading.value = true; */
-   /*  setTimeout(() => {
-      open.value = false; */
-    // }, 2000);
     formConfig?.value?.schemas.forEach((val, i) => {
       if(val.key === formConfig?.value?.currentItem?.key){
         val.flag = ItemOptions;//-------------------待补充数据
@@ -107,7 +102,6 @@
         if (el&&el.hiddenList&& el.hiddenList.length) {
           el?.hiddenList?.forEach(res=>{
             if(val.key === res){
-              console.log('res', res, val, el)
               formConfig.value.schemas[i].hidden = true;
               if(val.hiddenView){
                 val.hiddenView = [...val.hiddenView, {[formConfig?.value?.currentItem?.key + '__' + el.value]: {
@@ -132,12 +126,13 @@
     formConfig?.value?.schemas.forEach((val, i) => {
       val.hiddenView = cloneDeep(uniq(val?.hiddenView))
     })
-    // formConfig.value.currentItem.flag = ItemOptions;
     confirmLoading.value = false;
     open.value = false;
-    console.log('handleOk', ItemOptions, currentItemOptions)
+    /* ItemOptions.optionsList = [];
+    ItemOptions.schemasList = []; */
+    
   };
-  const addRules = () => {
+  const showModal = () => {
     var index = 0;
     let arr = [];
     formConfig?.value?.schemas.forEach((val, i) => {
@@ -151,70 +146,71 @@
       schemasComponent.value = formConfig?.value?.currentItem?.flag?.keyList;
     });
     modal.schemasList = arr;
+    if(formConfig.value?.currentItem&& formConfig.value?.currentItem.flag&&formConfig.value?.currentItem.flag.schemasList&&formConfig.value?.currentItem.flag.schemasList.length){
+      ItemOptions.schemasList = formConfig.value?.currentItem.flag.schemasList
+    }else{
+      ItemOptions.schemasList = arr
+    }
+    if(formConfig.value?.currentItem&& formConfig.value?.currentItem.flag&&formConfig.value?.currentItem.flag.optionsList&&formConfig.value?.currentItem.flag.optionsList.length){
+      if(formConfig.value?.currentItem?.componentProps?.options.length === formConfig.value?.currentItem.flag.optionsList.length&&formConfig.value?.currentItem.flag.schemasList.length === arr.length){
+        ItemOptions.optionsList = formConfig.value?.currentItem.flag.optionsList
+        ItemOptions.schemasList = formConfig.value?.currentItem.flag.schemasList
+      }else{
+        formConfig.value?.currentItem?.flag.optionsList.forEach(v=>{
+          ItemOptions.optionsList = formConfig.value?.currentItem?.componentProps?.options.map(val=>{
+            if(v.label === val.label && v.val === val.val){
+              return{
+                ...val,
+                schemasList: arr,
+                hiddenList: v.hiddenList
+              }
+            }else{
+              return{
+                ...val,
+                schemasList: arr,
+                hiddenList: []
+              }
+            }
+          })
+        })
+      }
+
+    }else{
+      ItemOptions.optionsList = formConfig.value?.currentItem?.componentProps?.options.map(val=>{
+        return{
+          ...val,
+          schemasList: arr,
+          hiddenList: []
+        }
+      })
+    }
+    currentItemOptions.value = formConfig.value?.currentItem?.componentProps?.options[0].value
     open.value = true;
   };
   const cancel = () => {
+    open.value = false;
     schemasComponent.value = [];
     currentItemOptions.value = '';
-    // console.log('cancel', ItemOptions, currentItemOptions)
-    open.value = false;
+/*     ItemOptions.optionsList = [];
+    ItemOptions.schemasList = []; */
   };
   const changeCurrentItemOptions = (val) =>{
-    // console.log('changeCurrentItemOptions', val, ItemOptions, currentItemOptions)
   }
   const changeSchemasComponent = (val) =>{
-    // console.log('changeSchemasComponent', val, ItemOptions, currentItemOptions)
   }
-  const fun = (schemasComponentVal, currentItemOptionsVal) => {
-    if (schemasComponentVal && schemasComponentVal.length && currentItemOptionsVal) {
-      formConfig?.value?.schemas?.forEach((res, i) => {
-        schemasComponentVal.forEach((val) => {
-          if (res.key === val) {
-            console.log('formConfig.value.schemas[i]', formConfig.value.schemas[i]);
-            formConfig.value.schemas[i].hidden = true;
-            console.log('formConfig.value.schemas[i].hiddenView', formConfig.value.schemas[i].hiddenView);
-// ---------------------需要去重
-
-            if(formConfig.value.schemas[i]&&formConfig.value.schemas[i].hiddenView){
-               formConfig.value.schemas[i]?.hiddenView?.push({
-                [formConfig?.value?.currentItem?.key + '__' + currentItemOptionsVal]: {
-                  hidden: true,
-                  key: formConfig?.value?.currentItem?.key,
-                  [formConfig?.value?.currentItem?.key]: currentItemOptionsVal,
-                  value: currentItemOptionsVal,
-                },
-              })
-            }else{
-              formConfig.value.schemas[i].hiddenView = [{
-                [formConfig?.value?.currentItem?.key + '__' + currentItemOptionsVal]: {
-                  hidden: true,
-                  key: formConfig?.value?.currentItem?.key,
-                  [formConfig?.value?.currentItem?.key]: currentItemOptionsVal,
-                  value: currentItemOptionsVal,
-                },
-              }]
-            }
-            formConfig.value.schemas[i].hiddenView = cloneDeep(uniq(formConfig.value.schemas[i]?.hiddenView))
-            console.log('formConfig.value.schemas[i].hiddenView', formConfig.value.schemas[i].hiddenView)
-// ---------------------
-
-            // arr.push({ key: formConfig?.value?.currentItem?.key });
-          }
-        });
-        if (formConfig?.value?.currentItem?.key === res.key) {
-          formConfig.value.schemas[i].flag = {
-            value: currentItemOptionsVal,
-            keyList: schemasComponentVal,
-          };
-        }
-      });
-    }
-  };
   watch(
     () => formConfig.value,
     (newVal, oldVal) => {
-      
-      // console.log('newVal, oldVal',newVal, oldVal)
+      // console.log('formConfig.value-----newVal, oldVal',newVal, oldVal)
+      /* ItemOptions.schemasList = formConfig.value?.schemas.filter(val=>val.key!== formConfig.value?.currentItem?.key)
+      ItemOptions.optionsList = formConfig.value?.currentItem?.componentProps?.options.map(val=>{
+        return{
+          ...val,
+          schemasList: ItemOptions.schemasList,
+          hiddenList: []
+        }
+      })
+      currentItemOptions.value = formConfig.value?.currentItem?.componentProps?.options[0].value */
     },
     { deep: true, immediate: true },
   );
@@ -223,7 +219,6 @@
     (newVal) => {
       currentItemOptions.value = currentItemOptions.value?currentItemOptions.value:(formConfig.value?.currentItem?.componentProps?.options[0].value)
 
-      // console.log('schemasComponent.value, newVal', schemasComponent.value, newVal);
 
       // fun(schemasComponent.value, newVal);
       /* newVal?.value?.forEach((val) => {
@@ -247,7 +242,6 @@
     () => schemasComponent.value,
     (newVal) => {
       currentItemOptions.value = currentItemOptions.value?currentItemOptions.value:(formConfig.value?.currentItem?.componentProps?.options[0].value)
-      // console.log('newVal, currentItemOptions.value', newVal, currentItemOptions.value);
       // fun(newVal, currentItemOptions.value);
   
       /* newVal?.value?.forEach((val) => {
@@ -272,15 +266,22 @@
   );
   
   onBeforeMount(() => {
-    ItemOptions.schemasList = formConfig.value?.schemas.filter(val=>val.key!== formConfig.value?.currentItem?.key)
-    ItemOptions.optionsList = formConfig.value?.currentItem?.componentProps?.options.map(val=>{
-      return{
-        ...val,
-        schemasList: ItemOptions.schemasList,
-        hiddenList: []
-      }
-    })
-    console.log('ItemOptions', ItemOptions, formConfig.value?.currentItem?.componentProps?.options[0].value)
+    if(formConfig.value?.currentItem&& formConfig.value?.currentItem.flag&&formConfig.value?.currentItem.flag.schemasList&&formConfig.value?.currentItem.flag.schemasList.length){
+      ItemOptions.schemasList = formConfig.value?.currentItem.flag.schemasList
+    }else{
+      ItemOptions.schemasList = formConfig.value?.schemas.filter((val, i)=>val.key!== formConfig.value?.currentItem?.key)
+    }
+    if(formConfig.value?.currentItem&& formConfig.value?.currentItem.flag&&formConfig.value?.currentItem.flag.optionsList&&formConfig.value?.currentItem.flag.optionsList.length){
+      ItemOptions.optionsList = formConfig.value?.currentItem.flag.optionsList
+    }else{
+      ItemOptions.optionsList = formConfig.value?.currentItem?.componentProps?.options.map(val=>{
+        return{
+          ...val,
+          schemasList: ItemOptions.schemasList,
+          hiddenList: []
+        }
+      })
+    }
     currentItemOptions.value = formConfig.value?.currentItem?.componentProps?.options[0].value
   });
   onMounted(() => {});
