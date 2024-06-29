@@ -56,25 +56,25 @@
         <FormItem label="行列宽高" >
           <InputNumber
               :style="{ width: '25%' }"
-              v-model:value="formConfig.currentItem.position.left"
+              v-model:value="formConfig.currentItem.x"
               :min="0"
               :step="1"
             />
           <InputNumber
               :style="{ width: '25%' }"
-              v-model:value="formConfig.currentItem.position.top"
+              v-model:value="formConfig.currentItem.y"
               :min="0"
               :step="1"
             />
           <InputNumber
               :style="{ width: '25%' }"
-              v-model:value="formConfig.currentItem.position.width"
+              v-model:value="formConfig.currentItem.w"
               :min="0"
               :step="1"
             />
           <InputNumber
               :style="{ width: '25%' }"
-              v-model:value="formConfig.currentItem.position.height"
+              v-model:value="formConfig.currentItem.h"
               :min="0"
               :step="1"
             />

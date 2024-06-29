@@ -15,7 +15,7 @@
           :setFormModel="setFormModel"
           @submit="handleSubmit"
           @reset="resetFields"
-          :style="[{ position: 'absolute'}, schema.position?{width: schema.position.width+ 'px', height: schema.position.height+ 'px', left: schema.position.left+ 'px', top: schema.position.top+ 20+ 'px'}:null]"
+          :style="[{ position: 'absolute'}, schema.position?{width: schema.position.w+ '%', height: schema.position.h+ '%', left: schema.position.x+ '%', top: schema.position.y+ '%'}:null]"
         >
           <template v-if="schema && schema.componentProps" #[`schema.componentProps!.slotName`]>
             <slot

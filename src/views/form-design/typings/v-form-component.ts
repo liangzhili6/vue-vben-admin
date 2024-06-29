@@ -88,7 +88,12 @@ declare type Value = [number, number] | number;
   flag?:any;
   render?: (value: any, formItem: IVFormComponent, fApi: IVFormMethods) => void;
   defaultValue?:string;
-  position?: any & { "left": 25, "top": 4, "width": 200, "height": 60 };
+  position?: any & { "x": 25, "y": 4, "w": 200, "h": 60 };
+  x: any,
+  y: any,
+  w: any,
+  h: any,
+  i?: any,
 }
 
 declare type namesType = string | string[];

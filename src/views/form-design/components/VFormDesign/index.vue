@@ -171,7 +171,7 @@
       item.colProps = item.colProps || { span: 24 };
       item.componentProps = item.componentProps || {};
       item.itemProps = item.itemProps || {};
-      // item.position = { left: 25, top: 4, width: 200, height: 60 };
+      // item.position = { x: 25, y: 4, w: 200, h: 60 };
     });
     formConfig.value = config as any;
   };
@@ -202,10 +202,10 @@
     schema.active = true;
     // 按照年龄升序排序
     formConfig.value.schemas.sort(function(a, b) {
-      if(a.position.top - b.position.top === 0){
-        return a.position.left - b.position.left;
+      if(a.y - b.y === 0){
+        return a.x - b.x;
       }
-      return a.position.top - b.position.top;
+      return a.y - b.y;
     });
     formConfig.value.currentItem = schema as any;
     handleChangePropsTabs(
@@ -216,8 +216,8 @@
   const setGlobalConfigState = (formItem: IVFormComponent) => {
     formItem.colProps = formItem.colProps || {};
     formItem.colProps.span = globalConfigState.span;
-    // formItem.position = { left: formItem.position.left, top: formItem.position.top, width: formItem.position.width, height: formItem.position.height };
-    // formItem.componentProps.style = `width:${formItem.position.width};height:${formItem.position.height};`
+    // formItem.position = { x: formItem.x, y: formItem.y, width: formItem.w, height: formItem.h };
+    // formItem.componentProps.style = `width:${formItem.w};height:${formItem.h};`
 
   };
 
@@ -240,10 +240,12 @@
    * @param item {IVFormComponent} 当前点击的组件
    */
   const handleListPush = async (item: IVFormComponent) => {
-    let lengthNum = formConfig.value.schemas.length;
+/*     let lengthNum = formConfig.value.schemas.length;
+    console.log('item', item, lengthNum)
     if(lengthNum){
       item.position.top =  item.position.top + (formConfig.value.schemas[lengthNum-1]).position.top+(formConfig.value.schemas[lengthNum-1]).position.height
-    }
+      // item.y = item.y + (formConfig.value.schemas[lengthNum-1]).y+(formConfig.value.schemas[lengthNum-1]).h
+    } */
     if(item.component === 'CentreSelect'){
       let options = (await item.componentProps.api()).map((item: any) => {
         return {
@@ -266,6 +268,13 @@
     }
     const formItem = cloneDeep(item);
     await generateKey(formItem);
+    let lengthNum = formConfig.value.schemas.length;
+    console.log('item', item, lengthNum)
+    if(lengthNum){
+      formItem.position.top =  formItem.position.top + (formConfig.value.schemas[lengthNum-1]).position.top+(formConfig.value.schemas[lengthNum-1]).position.height
+      formItem.y = formItem.y + (formConfig.value.schemas[lengthNum-1]).y+(formConfig.value.schemas[lengthNum-1]).h
+      formItem.i = formItem.key
+    }
     setGlobalConfigState(formItem);
     if (!formConfig.value.currentItem?.key) {
       handleSetSelectItem(formItem);

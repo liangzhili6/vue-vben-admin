@@ -83,7 +83,8 @@ export const advanced: IVFormComponent[]= [
     componentProps: {
       api: [getAlldynamicFromNameApi, getOneFieldApi],
     },
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
+    x: 0, y: 0, w: 100, h: 2 
   },
   {
     component: 'JournalNumber',
@@ -94,7 +95,8 @@ export const advanced: IVFormComponent[]= [
     format: "{YYYY}{MM}{DD}{#2/D}",
     componentProps: {
     },
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
+    x: 0, y: 0, w: 100, h: 2
   },
 ]
 /**
@@ -111,7 +113,8 @@ export const customComponents: IVFormComponent[] = [
       api: GetAllTCenterApi,
       // options: CentreList(GetAllTCenterApi)
     },
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
+    x: 0, y: 0, w: 100, h: 2
   },{                               
     component: 'MemberSelect',
     label: '成员',
@@ -129,7 +132,8 @@ export const customComponents: IVFormComponent[] = [
         };
       }) */
     },
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
+    x: 0, y: 0, w: 100, h: 2
   },
 /*{
   component: 'MemberSelect',
@@ -212,10 +216,12 @@ export const baseComponents: IVFormComponent[] = [
     colProps: { span: 24 },
 /*     labelCol: { span: 4 },
     wrapperCol: { span: 20 }, */
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       type: 'text',
+      defaultType: 'custom'//custom---自定义；formula---公式
     },
+    x: 0, y: 0, w: 100, h: 2
   },
   {
     component: 'InputTextArea',
@@ -224,7 +230,8 @@ export const baseComponents: IVFormComponent[] = [
     field: '',
     colProps: { span: 24 },
     componentProps: {},
-    position: { left: 25,top: 4, width: 800, height: 80 },
+    position: { x: 0,y: 0, w: 100, h: 2.5 },
+    x: 0,y: 0, w: 100, h: 2.5
   },
   {
     component: 'InputNumber',
@@ -232,8 +239,9 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'ant-design:field-number-outlined',
     field: '',
     colProps: { span: 24 },
-    // componentProps: { style: 'width:800px;height: 60px;' },
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    // componentProps: { style: 'w:800px;h: 2px;' },
+    position: { x: 0, y: 0, w: 100, h: 2 },
+    x: 0, y: 0, w: 100, h: 2
   },
   {
     component: 'DatePicker',
@@ -246,7 +254,8 @@ export const baseComponents: IVFormComponent[] = [
       valueFormat: "YYYY-MM-DD",
       // defaultValue: dayjs(new Date()).format('YYYY-MM-DD'),
     },
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
+    x: 0, y: 0, w: 100, h: 2
   },
   {
     component: 'RangePicker',
@@ -254,12 +263,16 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'healthicons:i-schedule-school-date-time-outline',
     field: '',
     colProps: { span: 24 },
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       placeholder: ['开始日期', '结束日期'],
       format: 'YYYY-MM-DD HH:mm:ss',
       valueFormat: 'YYYY-MM-DD HH:mm:ss'
     },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
   {
     component: 'MonthPicker',
@@ -267,12 +280,16 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'healthicons:i-schedule-school-date-time-outline',
     field: '',
     // colProps: { span: 24 },
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       placeholder: '请选择月份',
       format: "YYYY-MM",
       valueFormat: "YYYY-MM"
     },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
   {
     component: 'TimePicker',
@@ -280,11 +297,15 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'healthicons:i-schedule-school-date-time',
     field: '',
     // colProps: { span: 24 },
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       format: "HH:mm:ss",
       valueFormat: "HH:mm:ss"
     },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
   {
     component: 'RadioGroup',
@@ -292,7 +313,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'carbon:radio-button-checked',
     field: '',
     colProps: { span: 24 },
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       options: [
         {
@@ -307,6 +328,10 @@ export const baseComponents: IVFormComponent[] = [
       rowShows: 1,
       optionType: 'default'
     },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
   {
     component: 'CheckboxGroup',
@@ -314,7 +339,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'ant-design:check-circle-filled',
     field: '',
     colProps: { span: 24 },
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       options: [
         {
@@ -327,6 +352,10 @@ export const baseComponents: IVFormComponent[] = [
         },
       ],
     },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
   {
     component: 'Select',
@@ -334,7 +363,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'gg:select',
     field: '',
     colProps: { span: 24 },
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       options: [
         {
@@ -347,6 +376,10 @@ export const baseComponents: IVFormComponent[] = [
         },
       ],
     },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
   {
     component: 'Upload',
@@ -354,10 +387,14 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'ant-design:upload-outlined',
     field: '',
     colProps: { span: 24 },
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       api: uploadApi,
     },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
   /* {
     component: 'IconPicker',
@@ -381,11 +418,15 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'radix-icons:divider-horizontal',
     colProps: { span: 24 },
     field: '',
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       orientation: 'center',
       dashed: true,
     },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
   {
     component: 'Slider',
@@ -394,7 +435,11 @@ export const baseComponents: IVFormComponent[] = [
     field: '',
     colProps: { span: 24 },
     componentProps: {},
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
   {
     component: 'Rate',
@@ -403,7 +448,11 @@ export const baseComponents: IVFormComponent[] = [
     field: '',
     colProps: { span: 24 },
     componentProps: {},
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
   
   /* {
@@ -414,7 +463,7 @@ export const baseComponents: IVFormComponent[] = [
     colProps: { span: 24 },
     hiddenLabel: true,
     componentProps: {},
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
   }, */
   {
     component: 'IconPicker',
@@ -423,7 +472,11 @@ export const baseComponents: IVFormComponent[] = [
     colProps: { span: 24 },
     field: '',
     componentProps: {},
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
   {
     component: 'ImageUpload',
@@ -431,17 +484,21 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'line-md:iconify2',
     colProps: { span: 24 },
     field: '',
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       api: uploadApi,
     },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
 
   },
   {
     // component: 'ImageText',
     label: '图文',
     component: 'ImageText',
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       api: uploadApi,
       rules: [{ required: true }],
@@ -454,12 +511,16 @@ export const baseComponents: IVFormComponent[] = [
         });
       },
     },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
   {
     field: 'tinymce',
     component: 'Tinymce',
     label: 'HTML',
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       api: uploadApi,
       rules: [{ required: true }],
@@ -472,6 +533,10 @@ export const baseComponents: IVFormComponent[] = [
         });
       },
     },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2,
     // defaultValue: 'defaultValue',
     rules: [{ required: true }],
     render: ({ model, field }) => {
@@ -489,7 +554,7 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'ant-design:check-circle-outlined',
     colProps: { span: 24 },
     field: '',
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       render: ({ model, field }) => {
         return h(Tinymce, {
@@ -500,6 +565,10 @@ export const baseComponents: IVFormComponent[] = [
         });
       },
     },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
   /* {
     component: 'AutoComplete',
@@ -697,7 +766,7 @@ export const layoutComponents: IVFormComponent[] = [
     label: '栅格布局',
     icon: 'icon-grid',
     componentProps: {},
-    position: { left: 25, top: 4, width: 800, height: 60 },
+    position: { x: 0, y: 0, w: 100, h: 2 },
     columns: [
       {
         span: 12,
@@ -712,5 +781,9 @@ export const layoutComponents: IVFormComponent[] = [
     options: {
       gutter: 0,
     },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2
   },
 ];

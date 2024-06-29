@@ -2,50 +2,10 @@
  * @Description: 表单项布局控件
  * 千万不要在template下面的第一行加注释，因为这里拖动的第一个元素
 -->
-
 <template>
- <!-- <DraggableContainer> -->
-  <!-- 拖拽组件
-      v-model:active="dragData.active"-->
-  <Vue3DraggableResizable
-      classNameDraggable="draggable"
-      :initW="schema.position.width"
-      :initH="schema.position.height"
-      :initX="schema.position.left"
-      :initY="schema.position.top"
-      v-model:x="schema.position.left"
-      v-model:y="schema.position.top"
-      v-model:w="schema.position.width"
-      v-model:h="schema.position.height"
-      v-model:active="schema.active"
-      :draggable="true"
-      :resizable="true"
-      :parent="true"
-      :prevent_drag_overlapping="true"
-      @activated="print('activated')"
-      @deactivated="print('deactivated')"
-      @drag-start="print('drag-start')"
-      @resize-start="print('resize-start')"
-      @dragging="print('dragging')"
-      @resizing="print('resizing')"
-      @drag-end="print('drag-end')"
-      @resize-end="print('resize-end')"
-  >
-  
-  <!-- {{schema.key === currentItem.key}}  -->
-    <Col v-bind="colPropsComputed" >
+  <Col v-bind="colPropsComputed">
     <div class="canvas">
-    <!-- <VueDragResize
-      contentClass="box-currentItem"
-      :isActive="schema.key === currentItem.key?true:false"
-      :w="schema.position.width"
-      :h="schema.position.height"
-      v-on:resizing="resize"
-      v-on:dragging="resize"
-      @clicked="onActivated"
-    > -->
-      <!-- <div> -->
-      <template  v-if="['Grid'].includes(schema.component)">
+      <template v-if="['Grid'].includes(schema.component)">
         <div
           class="grid-box"
           :class="{ active: schema.key === currentItem.key }"
@@ -58,30 +18,15 @@
               :key="index"
               :span="colItem.span"
             >
-             <!--  <draggable
-                class="list-main draggable-box"
-                :component-data="{ name: 'list', tag: 'div', type: 'transition-group' }"
-                v-bind="{
-                  group: 'form-draggable',
-                  ghostClass: 'moving',
-                  animation: 180,
-                  handle: '.drag-move',
-                }"
-                item-key="key"
-                v-model="colItem.children"
-                @start="$emit('dragStart', $event, colItem.children)"
-                @add="$emit('handleColAdd', $event, colItem.children)"
-              > -->
-                <template #item="{ element }">
-                  <LayoutItem
-                    class="drag-move"
-                    :schema="element"
-                    :current-item="currentItem"
-                    @handle-copy="$emit('handle-copy')"
-                    @handle-delete="$emit('handle-delete')"
-                  />
-                </template>
-  <!--             </draggable> -->
+              <template #item="{ element }">
+                <LayoutItem
+                  class="drag-move"
+                  :schema="element"
+                  :current-item="currentItem"
+                  @handle-copy="$emit('handle-copy')"
+                  @handle-delete="$emit('handle-delete')"
+                />
+              </template>
             </Col>
           </Row>
           <FormNodeOperate :schema="schema" :currentItem="currentItem" />
@@ -95,13 +40,8 @@
         @handle-copy="$emit('handle-copy')"
         @handle-delete="$emit('handle-delete')"
       />
-    <!-- </div> -->
-
-    <!-- </VueDragResize> -->
-  </div>
+    </div>
   </Col>
-</Vue3DraggableResizable>
-<!-- </DraggableContainer> -->
 </template>
 <script lang="ts">
   import { computed, defineComponent, PropType, reactive, toRefs } from 'vue';
@@ -112,15 +52,15 @@
   import { IVFormComponent } from '../../../typings/v-form-component';
   import { Row, Col } from 'ant-design-vue';
 
-// 这个组件不是默认导出的，
-// 如果你之前是通过“app.use(Vue3DraggableResizable)”注册的，
-// 那么你这里就不需要再引入了，因为DraggableContainer这个已经被全局注册了，你可以直接使用
-import { DraggableContainer } from 'vue3-draggable-resizable'
+  // 这个组件不是默认导出的，
+  // 如果你之前是通过“app.use(Vue3DraggableResizable)”注册的，
+  // 那么你这里就不需要再引入了，因为DraggableContainer这个已经被全局注册了，你可以直接使用
+  import { DraggableContainer } from 'vue3-draggable-resizable';
   import VueDragResize from 'vue-drag-resize/src';
-import Vue3DraggableResizable from 'vue3-draggable-resizable'
-//需引入默认样式
-import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
-// 导入默认样式
+  import Vue3DraggableResizable from 'vue3-draggable-resizable';
+  //需引入默认样式
+  import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css';
+  // 导入默认样式
   export default defineComponent({
     name: 'LayoutItem',
     components: {
@@ -157,15 +97,15 @@ import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
       });
       const resize = (newRect) => {
         // console.log('resize', newRect);
-        formConfig.value.currentItem!.position.width = newRect.width;
-        formConfig.value.currentItem!.position.height = newRect.height;
-        formConfig.value.currentItem!.position.top = newRect.top;
-        formConfig.value.currentItem!.position.left = newRect.left;
+        formConfig.value.currentItem!.position.w = newRect.width;
+        formConfig.value.currentItem!.position.h = newRect.height;
+        formConfig.value.currentItem!.position.y = newRect.top;
+        formConfig.value.currentItem!.position.x = newRect.left;
         // formConfig.value.currentItem!.componentProps.style = `width:${newRect.width};height:${newRect.height};`
       };
       const onActivated = () => {
         // console.log('onActivated')
-      }
+      };
       const colPropsComputed = computed(() => {
         // console.log('props.schema', props.schema, props.schema.colProps)
         const { colProps = {} } = props.schema;
@@ -173,8 +113,8 @@ import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
       });
 
       const print = (val) => {
-      // console.log(val)
-    }
+        // console.log(val)
+      };
       const list1 = computed(() => props.schema.columns);
 
       // 计算布局元素，水平模式下为ACol，非水平模式下为div
@@ -182,15 +122,15 @@ import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
         return formConfig.value.layout === 'horizontal' ? 'Col' : 'div';
       });
       const onResize = (x, y, width, height) => {
-      state.width = x
-      state.height = y
-      state.width = width
-      state.height = height
-    }
-    const onDrag = (x, y) => {
-      state.width = x
-      state.height = y
-    }
+        state.width = x;
+        state.height = y;
+        state.width = width;
+        state.height = height;
+      };
+      const onDrag = (x, y) => {
+        state.width = x;
+        state.height = y;
+      };
       return {
         ...toRefs(state),
         colPropsComputed,
@@ -216,7 +156,7 @@ import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
   .hidden-item {
     background-color: rgb(240 191 195);
   }
-/*   .content-container {
+  /*   .content-container {
     width: 100%;
     height: 100%;
   } */
@@ -246,8 +186,8 @@ import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
         height: 100%;
       }
 } */
-.drag-move{
-/*   width: unset !important;
+  .drag-move {
+    /*   width: unset !important;
   position: unset !important; */
-}
+  }
 </style>

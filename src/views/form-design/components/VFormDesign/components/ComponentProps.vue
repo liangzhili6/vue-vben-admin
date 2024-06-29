@@ -63,27 +63,29 @@
             @change="handleChange"
           />
         </FormItem>
+        
+        <FormItem label="默认值" v-if="['Input'].includes(formConfig.currentItem.component)">
+          <Select
+            :style="{ width: '40%' }"
+            v-model:value="formConfig.currentItem.componentProps['defaultType']"
+            :options="[
+              { value: 'custom', label: '自定义' },
+              { value: 'formula', label: '公式' },
+            ]"
+            @change="handleDefaultType"
+          />
+          <Input
+            :style="{ width: '60%' }"
+            v-model:value="formConfig.currentItem['format']"
+            @click="formConfig.currentItem.componentProps['defaultType'] === 'formula'?open=true: null"
+            @change="changeJournalNumber"
+          />
+        </FormItem>
         <!--    循环遍历渲染组件属性      -->
         <div v-if="formConfig.currentItem && formConfig.currentItem.componentProps">
           <FormItem v-for="item in inputOptions" :key="item.name" :label="item.label">
             <!--     处理数组属性，placeholder       -->
         
-        <FormItem label="默认值" v-if="['Input'].includes(formConfig.currentItem.component)">
-          <Select
-            :style="{ width: '40%' }"
-            v-model:value="formConfig.currentItem['CentreSelectShowKey']"
-            :options="[
-              { value: '自定义', label: '自定义' },
-              { value: '公式', label: '公式' },
-            ]"
-            @change="handleShowKey"
-          />
-          <Input
-              :style="{ width: '60%' }"
-            v-model:value="formConfig.currentItem['format']"
-            @change="changeJournalNumber"
-          />
-        </FormItem>
             <div v-if="item.children">
               <template v-for="(child, index) of item.children" :key="index">
                 <component
@@ -144,6 +146,37 @@
         </FormItem>
       </Form>
     </div>
+    <Modal v-model:open="open" title="公式计算" @ok="handleOk" style="height: 400px;">
+      <Space style="margin-bottom: 10px;">
+        <Select
+          v-model:value="province"
+          style="width: 150px"
+          placeholder="变量"
+          :options="provinceData.map(pro => ({ value: pro }))"
+        ></Select>
+        <Select
+          v-model:value="province"
+          style="width: 150px"
+          placeholder="操作符"
+          :options="provinceData.map(pro => ({ value: pro }))"
+        ></Select>
+        <Select
+          v-model:value="province"
+          style="width: 150px"
+          placeholder="函数"
+          :options="provinceData.map(pro => ({ value: pro }))"
+        ></Select>
+      </Space>
+      <Textarea
+        v-model:value="formulaValue"
+        placeholder="请输入公式"
+        :auto-size="{ minRows: 5, maxRows: 8 }"
+        style="height: 400px;"
+      />
+      <!-- <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p> -->
+    </Modal>
   </div>
 </template>
 <script lang="ts">
@@ -166,6 +199,9 @@
     Select as MemberSelect,
     Select as CentreSelect,
     notification,
+    Modal,
+    Textarea,
+    Space,
   } from 'ant-design-vue';
   // import { Select  as MemberSelect } from 'ant-design-vue';
   import RadioButtonGroup from '@/components/Form/src/components/RadioButtonGroup.vue';
@@ -212,6 +248,9 @@
       RangePicker,
       MonthPicker,
       TimePicker,
+      Modal,
+      Textarea,
+      Space,
     },
     emits: ['change', 'update:value', 'delete'],
     setup(props, { emit }) {
@@ -221,6 +260,11 @@
       const CorrelationOptionsList = ref([]);
       const CorrelationShowKeyList = ref([]);
       // const CentreSelectShowKeyList = ref([]);
+      
+      const provinceData = ['Zhejiang', 'Jiangsu'];
+      const province = ref('');
+      const formulaValue = ref<string>('');
+      const open = ref<boolean>(false);
       const { prefixCls } = useDesign('basic-title');
       const allOptions = ref([] as Omit<IBaseFormAttrs, 'tag'>[]);
       const showControlAttrs = (includes: string[] | undefined) => {
@@ -368,7 +412,13 @@
             .map(({ label, field }) => ({ label: label + '/' + field, value: field }))
         );
       });
-
+      const handleDefaultType = (e) => {
+        console.log('handleDefaultType', e);
+        if(e === 'formula'){
+          console.log('formula', e)
+          // showModal();
+        }
+      }
       const handleShowKey = (e) => {
         if (!e) {
           formConfig.value.currentItem.CorrelationShowKeyItem = [];
@@ -413,6 +463,13 @@
       const filterOption = (input: string, option: any) => {
         return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
       };
+      const showModal = () => {
+        open.value = true;
+      };
+      const handleOk = (e: MouseEvent) => {
+        console.log(e);
+        open.value = false;
+      };
       return {
         formConfig,
         showControlAttrs,
@@ -430,6 +487,13 @@
         changeJournalNumber,
         prefixCls,
         filterOption,
+        handleDefaultType,
+        open,
+        showModal,
+        handleOk,
+        formulaValue,
+        province,
+        provinceData,
       };
     },
   });
