@@ -17,7 +17,7 @@
         <div style="height: calc(100% - 120px)">
           <grid-layout
             class="list-main ant-row"
-            style="z-index: 999;"
+            style="z-index: 999"
             v-model:layout="formConfig.schemas"
             :col-num="100"
             :row-height="30"
@@ -262,9 +262,9 @@
         console.log(msg);
         formConfig.value.schemas.forEach((el) => {
           if (el.key === i) {
-            el.x = newX
-            el.y = newY
-          };
+            el.x = newX;
+            el.y = newY;
+          }
         });
       };
       const movedEvent = (i, newX, newY) => {
@@ -273,9 +273,9 @@
         console.log(msg);
         formConfig.value.schemas.forEach((el) => {
           if (el.key === i) {
-            el.x = newX
-            el.y = newY
-          };
+            el.x = newX;
+            el.y = newY;
+          }
         });
       };
       const resizeEvent = (i, newH, newW, newHPx, newWPx) => {
@@ -291,12 +291,12 @@
           ', W(px)=' +
           newWPx;
         eventLog.value.push(msg);
-        console.log(msg,  formConfig.value.schemas);
+        console.log(msg, formConfig.value.schemas);
         formConfig.value.schemas.forEach((el) => {
           if (el.key === i) {
-            el.w = newW
-            el.h = newH
-          };
+            el.w = newW;
+            el.h = newH;
+          }
         });
       };
       const resizedEvent = (i, newX, newY, newHPx, newWPx) => {
@@ -315,9 +315,9 @@
         console.log(msg);
         formConfig.value.schemas.forEach((el) => {
           if (el.key === i) {
-            el.x = newX
-            el.y = newY
-          };
+            el.x = newX;
+            el.y = newY;
+          }
         });
       };
       const containerResizedEvent = (i, newH, newW, newHPx, newWPx) => {
@@ -336,9 +336,9 @@
         console.log(msg);
         formConfig.value.schemas.forEach((el) => {
           if (el.key === i) {
-            el.w = newW
-            el.h = newH
-          };
+            el.w = newW;
+            el.h = newH;
+          }
         });
       };
       const layoutCreatedEvent = (newLayout) => {

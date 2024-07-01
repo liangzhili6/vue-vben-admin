@@ -71,8 +71,12 @@
       :zeroWidthTriggerStyle="{ 'margin-top': '-70px', 'background-color': 'gray' }"
       breakpoint="lg"
     >
-      <PropsPanel ref="propsPanel" :activeKey="formConfig.activeKey" >
-        <template v-for="item of formConfig.schemas" #[`${item.component}Props`]="data" :key="`${item.field}Props`">
+      <PropsPanel ref="propsPanel" :activeKey="formConfig.activeKey">
+        <template
+          v-for="item of formConfig.schemas"
+          #[`${item.component}Props`]="data"
+          :key="`${item.field}Props`"
+        >
           <slot
             :name="`${item.component}Props`"
             :schema="formConfig.schemas"
@@ -117,8 +121,8 @@
   import { useDesign } from '@/hooks/web/useDesign';
 
   import { CollapseContainer } from '@/components/Container';
-  import { GetOneFormApi} from '@/api/sys/form';
-  import { useFormStore } from '@/store/modules/form';  
+  import { GetOneFormApi } from '@/api/sys/form';
+  import { useFormStore } from '@/store/modules/form';
   defineProps({
     title: {
       type: String,
@@ -153,16 +157,16 @@
     },
     activeKey: 1,
   });
-  
-  onMounted(async ()=>{
-    if(history.state.isEdit){
+
+  onMounted(async () => {
+    if (history.state.isEdit) {
       // 接收 History API 参数
-      await handleOneForm(history.state.id,history.state.formVersion)
+      await handleOneForm(history.state.id, history.state.formVersion);
     }
-  })
-  async function  handleOneForm (id, formVersion) {
-    const data = await GetOneFormApi({id, formVersion});
-    await setFormConfig(JSON.parse(data.fieldJson))
+  });
+  async function handleOneForm(id, formVersion) {
+    const data = await GetOneFormApi({ id, formVersion });
+    await setFormConfig(JSON.parse(data.fieldJson));
   }
   const setFormConfig = (config: IFormConfig) => {
     //外部导入时，可能会缺少必要的信息。
@@ -201,8 +205,8 @@
   const handleSetSelectItem = (schema: IVFormComponent) => {
     schema.active = true;
     // 按照年龄升序排序
-    formConfig.value.schemas.sort(function(a, b) {
-      if(a.y - b.y === 0){
+    formConfig.value.schemas.sort(function (a, b) {
+      if (a.y - b.y === 0) {
         return a.x - b.x;
       }
       return a.y - b.y;
@@ -218,7 +222,6 @@
     formItem.colProps.span = globalConfigState.span;
     // formItem.position = { x: formItem.x, y: formItem.y, width: formItem.w, height: formItem.h };
     // formItem.componentProps.style = `width:${formItem.w};height:${formItem.h};`
-
   };
 
   /**
@@ -240,40 +243,46 @@
    * @param item {IVFormComponent} 当前点击的组件
    */
   const handleListPush = async (item: IVFormComponent) => {
-/*     let lengthNum = formConfig.value.schemas.length;
+    /*     let lengthNum = formConfig.value.schemas.length;
     console.log('item', item, lengthNum)
     if(lengthNum){
       item.position.top =  item.position.top + (formConfig.value.schemas[lengthNum-1]).position.top+(formConfig.value.schemas[lengthNum-1]).position.height
       // item.y = item.y + (formConfig.value.schemas[lengthNum-1]).y+(formConfig.value.schemas[lengthNum-1]).h
     } */
-    if(item.component === 'CentreSelect'){
+    if (item.component === 'CentreSelect') {
       let options = (await item.componentProps.api()).map((item: any) => {
         return {
           ...item,
           value: item.centerCode,
           label: item.centerName,
         };
-      })
-      item.componentProps.options = options
+      });
+      item.componentProps.options = options;
     }
-    if(item.component === 'MemberSelect'){
+    if (item.component === 'MemberSelect') {
       let options = (await item.componentProps.api()).records.map((item: any) => {
         return {
           ...item,
           value: item.userCode,
           label: item.userName,
         };
-      })
-      item.componentProps.options = options
+      });
+      item.componentProps.options = options;
     }
     const formItem = cloneDeep(item);
     await generateKey(formItem);
     let lengthNum = formConfig.value.schemas.length;
-    console.log('item', item, lengthNum)
-    if(lengthNum){
-      formItem.position.top =  formItem.position.top + (formConfig.value.schemas[lengthNum-1]).position.top+(formConfig.value.schemas[lengthNum-1]).position.height
-      formItem.y = formItem.y + (formConfig.value.schemas[lengthNum-1]).y+(formConfig.value.schemas[lengthNum-1]).h
-      formItem.i = formItem.key
+    console.log('item', item, lengthNum);
+    if (lengthNum) {
+      formItem.position.top =
+        formItem.position.top +
+        formConfig.value.schemas[lengthNum - 1].position.top +
+        formConfig.value.schemas[lengthNum - 1].position.height;
+      formItem.y =
+        formItem.y +
+        formConfig.value.schemas[lengthNum - 1].y +
+        formConfig.value.schemas[lengthNum - 1].h;
+      formItem.i = formItem.key;
     }
     setGlobalConfigState(formItem);
     if (!formConfig.value.currentItem?.key) {
@@ -318,13 +327,18 @@
       schemas.some((formItem: IVFormComponent, index: number) => {
         if (formItem.key === key) {
           // 判断是不是复制
-            if(isCopy){
-              schemas.splice(index, 0, copyFormItem(formItem))
-              delete schemas[index+1].hiddenView//清除复制之后的显隐控制
-              delete schemas[index+1].hidden//清除复制之后的显隐控制
-            }else{
-              schemas.splice(index + 1, 0, item);
-            }
+          if (isCopy) {
+            schemas.splice(index, 0, copyFormItem(formItem));
+            delete schemas[index + 1].hiddenView; //清除复制之后的显隐控制
+            delete schemas[index + 1].hidden; //清除复制之后的显隐控制
+            schemas.forEach((val, i)=>{
+              if(i > index){
+                schemas[i] = { ...val, y: val.y+schemas[index].h }
+              }
+            })
+          } else {
+            schemas.splice(index + 1, 0, item);
+          }
           const event = {
             newIndex: index + 1,
           };
@@ -363,7 +377,7 @@
    */
   const handleOpenModal = (Modal: IToolbarMethods) => {
     const FormStore = useFormStore();
-    FormStore.updateIsPreview(true)
+    FormStore.updateIsPreview(true);
     const config = cloneDeep(formConfig.value);
     Modal?.showModal(config);
   };

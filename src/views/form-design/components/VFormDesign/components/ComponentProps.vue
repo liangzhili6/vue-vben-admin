@@ -63,7 +63,7 @@
             @change="handleChange"
           />
         </FormItem>
-        
+
         <FormItem label="默认值" v-if="['Input'].includes(formConfig.currentItem.component)">
           <Select
             :style="{ width: '40%' }"
@@ -77,7 +77,11 @@
           <Input
             :style="{ width: '60%' }"
             v-model:value="formConfig.currentItem['format']"
-            @click="formConfig.currentItem.componentProps['defaultType'] === 'formula'?open=true: null"
+            @click="
+              formConfig.currentItem.componentProps['defaultType'] === 'formula'
+                ? (open = true)
+                : null
+            "
             @change="changeJournalNumber"
           />
         </FormItem>
@@ -85,7 +89,7 @@
         <div v-if="formConfig.currentItem && formConfig.currentItem.componentProps">
           <FormItem v-for="item in inputOptions" :key="item.name" :label="item.label">
             <!--     处理数组属性，placeholder       -->
-        
+
             <div v-if="item.children">
               <template v-for="(child, index) of item.children" :key="index">
                 <component
@@ -146,32 +150,32 @@
         </FormItem>
       </Form>
     </div>
-    <Modal v-model:open="open" title="公式计算" @ok="handleOk" style="height: 400px;">
-      <Space style="margin-bottom: 10px;">
+    <Modal v-model:open="open" title="公式计算" @ok="handleOk" style="height: 400px">
+      <Space style="margin-bottom: 10px">
         <Select
           v-model:value="province"
           style="width: 150px"
           placeholder="变量"
-          :options="provinceData.map(pro => ({ value: pro }))"
+          :options="provinceData.map((pro) => ({ value: pro }))"
         ></Select>
         <Select
           v-model:value="province"
           style="width: 150px"
           placeholder="操作符"
-          :options="provinceData.map(pro => ({ value: pro }))"
+          :options="provinceData.map((pro) => ({ value: pro }))"
         ></Select>
         <Select
           v-model:value="province"
           style="width: 150px"
           placeholder="函数"
-          :options="provinceData.map(pro => ({ value: pro }))"
+          :options="provinceData.map((pro) => ({ value: pro }))"
         ></Select>
       </Space>
       <Textarea
         v-model:value="formulaValue"
         placeholder="请输入公式"
         :auto-size="{ minRows: 5, maxRows: 8 }"
-        style="height: 400px;"
+        style="height: 400px"
       />
       <!-- <p>Some contents...</p>
       <p>Some contents...</p>
@@ -260,7 +264,7 @@
       const CorrelationOptionsList = ref([]);
       const CorrelationShowKeyList = ref([]);
       // const CentreSelectShowKeyList = ref([]);
-      
+
       const provinceData = ['Zhejiang', 'Jiangsu'];
       const province = ref('');
       const formulaValue = ref<string>('');
@@ -414,11 +418,11 @@
       });
       const handleDefaultType = (e) => {
         console.log('handleDefaultType', e);
-        if(e === 'formula'){
-          console.log('formula', e)
+        if (e === 'formula') {
+          console.log('formula', e);
           // showModal();
         }
-      }
+      };
       const handleShowKey = (e) => {
         if (!e) {
           formConfig.value.currentItem.CorrelationShowKeyItem = [];

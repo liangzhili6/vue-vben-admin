@@ -72,6 +72,7 @@
       };
 
       const handleCopy = () => {
+        console.log('formDesignMethods', formDesignMethods)
         formDesignMethods.handleCopy();
       };
       return { activeClass, handleDelete, handleCopy };

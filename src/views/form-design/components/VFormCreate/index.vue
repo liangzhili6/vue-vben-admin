@@ -3,8 +3,14 @@
 -->
 <template>
   <div class="v-form-container">
-    <Form class="v-form-model" ref="eFormModel" :model="formModel" v-bind="formModelProps" style="position: relative;height: 500px;overflow: hidden;overflow-y: scroll;">
-      <Row>
+    <Form
+      class="v-form-model"
+      ref="eFormModel"
+      :model="formModel"
+      v-bind="formModelProps"
+      style="position: relative; height: 500px; overflow: hidden; overflow-y: scroll"
+    >
+      <Row style="height: 100%;">
         <FormRender
           v-for="(schema, index) of noHiddenList"
           :key="index"
@@ -15,13 +21,25 @@
           :setFormModel="setFormModel"
           @submit="handleSubmit"
           @reset="resetFields"
-          :style="[{ position: 'absolute'}, schema.position?{width: schema.position.w+ '%', height: schema.position.h+ '%', left: schema.position.x+ '%', top: schema.position.y+ '%'}:null]"
+          :style="[
+            { position: 'absolute' },
+            schema.position
+              ? {
+                  width: schema.w + '%',
+                  height: (schema.h)*30 + 'px',
+                  left: (schema.x) + '%',
+                  top: (schema.y)*30 + 'px',
+                }
+              : null,
+          ]"
         >
           <template v-if="schema && schema.componentProps" #[`schema.componentProps!.slotName`]>
             <slot
               :name="schema.componentProps!.slotName"
               v-bind="{ formModel: formModel, field: schema.field, schema }"
-           ? ></slot>?
+              ?
+            ></slot
+            >?
           </template>
         </FormRender>
       </Row>
@@ -29,7 +47,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, PropType, provide, ref, unref } from 'vue';
+  import { computed, defineComponent, PropType, provide, ref, unref, onMounted, nextTick } from 'vue';
   import FormRender from './components/FormRender.vue';
   import { IFormConfig, AForm } from '../../typings/v-form-component';
   import { Form, Row, Col } from 'ant-design-vue';
@@ -71,9 +89,9 @@
       const noHiddenList = computed(() => {
         return (
           props.formConfig.schemas &&
-          props.formConfig.schemas.filter((item) =>{
+          props.formConfig.schemas.filter((item) => {
             /* if( item.hiddenView&&item.hiddenView[item.hiddenView.key] && item.key === item.hiddenView.key) */
-            return  item.hidden !== true 
+            return item.hidden !== true;
           })
         );
       });
@@ -104,28 +122,28 @@
       );
       fApi.value = methods;
       const handleChange = (_event) => {
-        console.log('handleChange_event', _event, linkOn)
+        console.log('handleChange_event', _event, linkOn);
         const { schema, value } = _event;
         const { field } = unref(schema);
-// ---------------------
+        // ---------------------
         Object.values(linkOn).forEach((item) => {
           item.forEach((itemValue) => {
-            if(itemValue.hiddenView&& itemValue?.hiddenView.length){
-              var result = itemValue?.hiddenView.find((re, i)=>{
+            if (itemValue.hiddenView && itemValue?.hiddenView.length) {
+              var result = itemValue?.hiddenView.find((re, i) => {
                 let obj = Object.keys(re)[0];
-                return (field+'__'+value) === obj;
-              })
-              if(result){
-                  itemValue.hidden = false;
-                  // itemValue.hiddenView[i][obj].hidden = false;
-              }else{
+                return field + '__' + value === obj;
+              });
+              if (result) {
+                itemValue.hidden = false;
+                // itemValue.hiddenView[i][obj].hidden = false;
+              } else {
                 itemValue.hidden = true;
-                  // itemValue.hiddenView[i][obj].hidden = true;
+                // itemValue.hiddenView[i][obj].hidden = true;
               }
             }
           });
         });
-// +++++++++++++++++++++
+        // +++++++++++++++++++++
         linkOn[field!]?.forEach((formItem) => {
           formItem.update?.(value, formItem, fApi.value as IVFormMethods);
         });
@@ -148,6 +166,13 @@
 
       provide<(key: String, value: any) => void>('setFormModelMethod', setFormModel);
 
+      onMounted(()=>{
+        // nextTick(() => (showRef.value = true));
+        let vFormModel = document.getElementsByClassName('v-form-model');
+        console.log('v-form-model', vFormModel, vFormModel[0]?.offsetWidth)
+        console.log('v-form-model', vFormModel, vFormModel[0]?.offsetHeight)
+        // 
+      })
       // 把祖先组件的方法项注入到子组件中，子组件可通过inject获取
       return {
         eFormModel,
@@ -165,6 +190,7 @@
         noHiddenList,
       };
     },
+   
   });
 </script>
 

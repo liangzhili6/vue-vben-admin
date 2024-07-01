@@ -15,8 +15,8 @@
               :is="item.component"
               v-model:value="formConfig.currentItem[item.name]"
             />
-          </FormItem> 
-        </div> 
+          </FormItem>
+        </div>
         <div v-for="item of advanceFormItemProps" :key="item.name">
           <FormItem :label="item.label" v-if="showProps(item.exclude)">
             <component
@@ -53,38 +53,42 @@
             placeholder="请输入必选提示"
           />
         </FormItem>
-        <FormItem label="行列宽高" >
+        <FormItem label="行列宽高">
           <InputNumber
-              :style="{ width: '25%' }"
-              v-model:value="formConfig.currentItem.x"
-              :min="0"
-              :step="1"
-            />
+            :style="{ width: '25%' }"
+            v-model:value="formConfig.currentItem.x"
+            :min="0"
+            :step="1"
+          />
           <InputNumber
-              :style="{ width: '25%' }"
-              v-model:value="formConfig.currentItem.y"
-              :min="0"
-              :step="1"
-            />
+            :style="{ width: '25%' }"
+            v-model:value="formConfig.currentItem.y"
+            :min="0"
+            :step="1"
+          />
           <InputNumber
-              :style="{ width: '25%' }"
-              v-model:value="formConfig.currentItem.w"
-              :min="0"
-              :step="1"
-            />
+            :style="{ width: '25%' }"
+            v-model:value="formConfig.currentItem.w"
+            :min="0"
+            :step="1"
+          />
           <InputNumber
-              :style="{ width: '25%' }"
-              v-model:value="formConfig.currentItem.h"
-              :min="0"
-              :step="1"
-            />
+            :style="{ width: '25%' }"
+            v-model:value="formConfig.currentItem.h"
+            :min="0"
+            :step="1"
+          />
         </FormItem>
         <FormItem
-          v-if="['CheckboxGroup', 'RadioGroup', 'RadioButtonGroup', 'Select'].includes(formConfig.currentItem.component)"
+          v-if="
+            ['CheckboxGroup', 'RadioGroup', 'RadioButtonGroup', 'Select'].includes(
+              formConfig.currentItem.component,
+            )
+          "
           label=""
           :class="{ 'form-rule-props': !!formConfig.currentItem.itemProps['rules'] }"
         >
-        <HiddProps />
+          <HiddProps />
         </FormItem>
         <FormItem
           v-if="!['Grid'].includes(formConfig.currentItem.component)"

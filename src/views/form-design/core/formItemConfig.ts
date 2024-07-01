@@ -1,7 +1,11 @@
 /**
  * @description：表单配置
  */
-import { IVFormComponent, MemberFormComponent, CentreFormComponent } from '../typings/v-form-component';
+import {
+  IVFormComponent,
+  MemberFormComponent,
+  CentreFormComponent,
+} from '../typings/v-form-component';
 import { isArray } from 'lodash-es';
 import { componentMap as VbenCmp, add } from '@/components/Form/src/componentMap';
 import { ComponentType } from '@/components/Form/src/types';
@@ -58,22 +62,22 @@ export const MemberList: MemberFormComponent[] = [
     label: '成员2',
     value: '2',
   },
-]
+];
 
 export const CentreList = async (Getfun) => {
-  const data =  await Getfun()
-  return data.map(item=>{
+  const data = await Getfun();
+  return data.map((item) => {
     return {
       ...item,
       value: item.centerCode,
       label: item.centerName,
-    }
-  })
-}
+    };
+  });
+};
 /**
  * 高级字段
  */
-export const advanced: IVFormComponent[]= [
+export const advanced: IVFormComponent[] = [
   {
     component: 'Correlation',
     label: '关联记录',
@@ -84,7 +88,10 @@ export const advanced: IVFormComponent[]= [
       api: [getAlldynamicFromNameApi, getOneFieldApi],
     },
     position: { x: 0, y: 0, w: 100, h: 2 },
-    x: 0, y: 0, w: 100, h: 2 
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2,
   },
   {
     component: 'JournalNumber',
@@ -92,13 +99,15 @@ export const advanced: IVFormComponent[]= [
     icon: 'gg:select',
     field: '',
     colProps: { span: 24 },
-    format: "{YYYY}{MM}{DD}{#2/D}",
-    componentProps: {
-    },
+    format: '{YYYY}{MM}{DD}{#2/D}',
+    componentProps: {},
     position: { x: 0, y: 0, w: 100, h: 2 },
-    x: 0, y: 0, w: 100, h: 2
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2,
   },
-]
+];
 /**
  * 外部设置的自定义控件
  */
@@ -114,8 +123,12 @@ export const customComponents: IVFormComponent[] = [
       // options: CentreList(GetAllTCenterApi)
     },
     position: { x: 0, y: 0, w: 100, h: 2 },
-    x: 0, y: 0, w: 100, h: 2
-  },{                               
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2,
+  },
+  {
     component: 'MemberSelect',
     label: '成员',
     icon: 'gg:select',
@@ -133,9 +146,12 @@ export const customComponents: IVFormComponent[] = [
       }) */
     },
     position: { x: 0, y: 0, w: 100, h: 2 },
-    x: 0, y: 0, w: 100, h: 2
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2,
   },
-/*{
+  /*{
   component: 'MemberSelect',
   label: '成员',
   icon: 'gg:select',
@@ -214,14 +230,17 @@ export const baseComponents: IVFormComponent[] = [
     icon: 'bi:input-cursor-text',
     field: '',
     colProps: { span: 24 },
-/*     labelCol: { span: 4 },
+    /*     labelCol: { span: 4 },
     wrapperCol: { span: 20 }, */
     position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       type: 'text',
-      defaultType: 'custom'//custom---自定义；formula---公式
+      defaultType: 'custom', //custom---自定义；formula---公式
     },
-    x: 0, y: 0, w: 100, h: 2
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2,
   },
   {
     component: 'InputTextArea',
@@ -230,8 +249,11 @@ export const baseComponents: IVFormComponent[] = [
     field: '',
     colProps: { span: 24 },
     componentProps: {},
-    position: { x: 0,y: 0, w: 100, h: 2.5 },
-    x: 0,y: 0, w: 100, h: 2.5
+    position: { x: 0, y: 0, w: 100, h: 2.5 },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2.5,
   },
   {
     component: 'InputNumber',
@@ -241,7 +263,10 @@ export const baseComponents: IVFormComponent[] = [
     colProps: { span: 24 },
     // componentProps: { style: 'w:800px;h: 2px;' },
     position: { x: 0, y: 0, w: 100, h: 2 },
-    x: 0, y: 0, w: 100, h: 2
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2,
   },
   {
     component: 'DatePicker',
@@ -250,12 +275,15 @@ export const baseComponents: IVFormComponent[] = [
     field: '',
     colProps: { span: 24 },
     componentProps: {
-      format: "YYYY-MM-DD",
-      valueFormat: "YYYY-MM-DD",
+      format: 'YYYY-MM-DD',
+      valueFormat: 'YYYY-MM-DD',
       // defaultValue: dayjs(new Date()).format('YYYY-MM-DD'),
     },
     position: { x: 0, y: 0, w: 100, h: 2 },
-    x: 0, y: 0, w: 100, h: 2
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 2,
   },
   {
     component: 'RangePicker',
@@ -267,12 +295,12 @@ export const baseComponents: IVFormComponent[] = [
     componentProps: {
       placeholder: ['开始日期', '结束日期'],
       format: 'YYYY-MM-DD HH:mm:ss',
-      valueFormat: 'YYYY-MM-DD HH:mm:ss'
+      valueFormat: 'YYYY-MM-DD HH:mm:ss',
     },
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
   {
     component: 'MonthPicker',
@@ -283,13 +311,13 @@ export const baseComponents: IVFormComponent[] = [
     position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
       placeholder: '请选择月份',
-      format: "YYYY-MM",
-      valueFormat: "YYYY-MM"
+      format: 'YYYY-MM',
+      valueFormat: 'YYYY-MM',
     },
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
   {
     component: 'TimePicker',
@@ -299,13 +327,13 @@ export const baseComponents: IVFormComponent[] = [
     // colProps: { span: 24 },
     position: { x: 0, y: 0, w: 100, h: 2 },
     componentProps: {
-      format: "HH:mm:ss",
-      valueFormat: "HH:mm:ss"
+      format: 'HH:mm:ss',
+      valueFormat: 'HH:mm:ss',
     },
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
   {
     component: 'RadioGroup',
@@ -326,12 +354,12 @@ export const baseComponents: IVFormComponent[] = [
         },
       ],
       rowShows: 1,
-      optionType: 'default'
+      optionType: 'default',
     },
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
   {
     component: 'CheckboxGroup',
@@ -355,7 +383,7 @@ export const baseComponents: IVFormComponent[] = [
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
   {
     component: 'Select',
@@ -379,7 +407,7 @@ export const baseComponents: IVFormComponent[] = [
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
   {
     component: 'Upload',
@@ -394,7 +422,7 @@ export const baseComponents: IVFormComponent[] = [
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
   /* {
     component: 'IconPicker',
@@ -426,7 +454,7 @@ export const baseComponents: IVFormComponent[] = [
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
   {
     component: 'Slider',
@@ -439,7 +467,7 @@ export const baseComponents: IVFormComponent[] = [
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
   {
     component: 'Rate',
@@ -452,9 +480,9 @@ export const baseComponents: IVFormComponent[] = [
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
-  
+
   /* {
     component: 'Button',
     label: '按钮',
@@ -476,7 +504,7 @@ export const baseComponents: IVFormComponent[] = [
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
   {
     component: 'ImageUpload',
@@ -491,8 +519,7 @@ export const baseComponents: IVFormComponent[] = [
     x: 0,
     y: 0,
     w: 100,
-    h: 2
-
+    h: 2,
   },
   {
     // component: 'ImageText',
@@ -514,7 +541,7 @@ export const baseComponents: IVFormComponent[] = [
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
   {
     field: 'tinymce',
@@ -568,7 +595,7 @@ export const baseComponents: IVFormComponent[] = [
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
   /* {
     component: 'AutoComplete',
@@ -784,6 +811,6 @@ export const layoutComponents: IVFormComponent[] = [
     x: 0,
     y: 0,
     w: 100,
-    h: 2
+    h: 2,
   },
 ];

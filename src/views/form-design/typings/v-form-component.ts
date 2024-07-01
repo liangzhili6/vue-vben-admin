@@ -19,15 +19,15 @@ declare type Value = [number, number] | number;
  * 组件属性
  */
 
-  export interface MemberFormComponent {
-    label: string;
-    value: string;
-  }
-  export interface CentreFormComponent {
-    label: string;
-    value: string;
-  }
-  export interface IVFormComponent {
+export interface MemberFormComponent {
+  label: string;
+  value: string;
+}
+export interface CentreFormComponent {
+  label: string;
+  value: string;
+}
+export interface IVFormComponent {
   // extends Omit<FormSchema, 'component' | 'label' | 'field' | 'rules'> {
   // 对应的字段
   field?: string;
@@ -45,7 +45,7 @@ declare type Value = [number, number] | number;
   hidden?: boolean;
   // 隐藏label
   hiddenLabel?: boolean;
-  // 组件宽度  
+  // 组件宽度
   width?: number | string;
   // 是否必选
   required?: boolean;
@@ -55,7 +55,7 @@ declare type Value = [number, number] | number;
   // 提示信息
   helpMessage?: string;
   // 传给给组件的属性，默认会吧所有的props都传递给控件
-  componentProps?: IAnyObject&any;
+  componentProps?: IAnyObject & any;
   // 监听组件事件对象，以v-on方式传递给控件
   on?: IAnyObject<(...any: []) => void>;
   // 组件选项
@@ -85,15 +85,15 @@ declare type Value = [number, number] | number;
   // 子控件
   columns?: Array<{ span: number; children: any[] }>;
   hiddenView?: any;
-  flag?:any;
+  flag?: any;
   render?: (value: any, formItem: IVFormComponent, fApi: IVFormMethods) => void;
-  defaultValue?:string;
-  position?: any & { "x": 25, "y": 4, "w": 200, "h": 60 };
-  x: any,
-  y: any,
-  w: any,
-  h: any,
-  i?: any,
+  defaultValue?: string;
+  position?: any & { x: 25; y: 4; w: 200; h: 60 };
+  x: any;
+  y: any;
+  w: any;
+  h: any;
+  i?: any;
 }
 
 declare type namesType = string | string[];
@@ -115,7 +115,6 @@ export type PickAntFormConfig = Pick<
 
 export interface IVhiddenView {
   hidden?: Boolean;
-
 }
 // 使用extends 而不使用 &联结 是为了避免 type:check指令类型重载错误
 export interface IFormConfig extends PickAntFormConfig {
@@ -123,10 +122,10 @@ export interface IFormConfig extends PickAntFormConfig {
   submitFormTemplateTxt: string;
   labelLayout?: labelLayout;
   labelWidth?: number;
-  schemas: IVFormComponent&any[];
+  schemas: IVFormComponent & any[];
   currentItem?: IVFormComponent;
   activeKey?: PropsTabKey;
-  hidden?:Boolean;
+  hidden?: Boolean;
   hiddenView?: any;
   children?: any;
   childrenData?: any;
