@@ -56,6 +56,15 @@
           />
         </FormItem> -->
         <FormItem label="成员" v-if="['MemberSelect'].includes(formConfig.currentItem.component)" />
+        <FormItem label="格式" v-if="['Subform'].includes(formConfig.currentItem.component)" >
+          <Select v-model:value="formConfig.currentItem.componentProps['SubformType']"
+            :options="[
+              { value: 'custom', label: '自定义' },
+              { value: 'table', label: '表格' },
+            ]"
+            @change="handleDefaultType"
+          />
+        </FormItem>
         <FormItem label="图文内容" v-if="['ImageText'].includes(formConfig.currentItem.component)">
           <Tinymce
             :schema="{ ...formConfig, defaultValue: '图文内容' }"

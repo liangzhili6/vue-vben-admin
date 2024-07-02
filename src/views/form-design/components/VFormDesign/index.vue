@@ -229,13 +229,34 @@
    * @param schemas
    * @param index
    */
-  const handleAddAttrs = (_formItems: IVFormComponent[], _index: number) => {};
+  const handleAddAttrs = (_formItems: IVFormComponent[], _index: number) => {
+    let formItem = cloneDeep(_formItems[_index]);
+    setGlobalConfigState(formItem);
+    generateKey(formItem);
+    if(formConfig.value.schemas.length){
+      formItem.y =
+        formItem.y +
+        formConfig.value.schemas[formConfig.value.schemas.length - 1].y +
+        formConfig.value.schemas[formConfig.value.schemas.length - 1].h;
+    }
+    if(formConfig.value.currentItem?.component === 'Subform'){
+      formConfig.value.schemas.forEach((val)=>{
+        let hNum = 0
+        if(val.component === 'Subform'){
+          val?.children.forEach(el=>{
+            hNum += el.h
+          })
+          val.h = hNum+formItem.h
+          val.children.push(formItem)
+        }
+      })
+    }
+  };
 
   const handleListPushDrag = (item: IVFormComponent) => {
     const formItem = cloneDeep(item);
     setGlobalConfigState(formItem);
     generateKey(formItem);
-
     return formItem;
   };
   /**
@@ -272,7 +293,6 @@
     const formItem = cloneDeep(item);
     await generateKey(formItem);
     let lengthNum = formConfig.value.schemas.length;
-    console.log('item', item, lengthNum);
     if (lengthNum) {
       formItem.position.top =
         formItem.position.top +

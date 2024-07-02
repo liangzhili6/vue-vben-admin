@@ -55,10 +55,11 @@
 
       const state = reactive({});
       const handleStart = (e: any, list1: IVFormComponent[]) => {
+        console.log('handleStart', list1, e)
         emit('start', list1[e.oldIndex].component);
       };
       const handleAdd = (e: any) => {
-        console.log(e);
+        console.log(e, 'handleAdd');
       };
       // https://github.com/SortableJS/vue.draggable.next
       // https://github.com/SortableJS/vue.draggable.next/blob/master/example/components/custom-clone.vue

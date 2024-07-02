@@ -39,6 +39,8 @@ import { CropperAvatar } from '@/components/Cropper';
 import { Tinymce } from '@/components/Tinymce';
 import { Signature } from '@/components/Signature';
 // import { MemberSelect } from '@/components/MemberSelect';
+import { Subform } from '@/components/Subform';
+
 import { Correlation } from '@/components/Correlation';
 import { JournalNumber } from '@/components/JournalNumber';
 
@@ -92,6 +94,7 @@ componentMap.set('CentreSelect', Select);
 componentMap.set('Correlation', Correlation);
 componentMap.set('BasicTitle', BasicTitle);
 componentMap.set('JournalNumber', JournalNumber);
+componentMap.set('Subform', Subform);
 
 export function add<T extends string, R extends Component>(
   compName: ComponentType | T,

@@ -457,7 +457,7 @@
       width: 100%;
       // overflow: auto;
       .drag-move {
-        min-height: 62px;
+        min-height: 102px;
         cursor: move;
       }
 

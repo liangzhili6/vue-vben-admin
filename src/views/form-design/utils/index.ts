@@ -27,6 +27,7 @@ export async function generateKey(formItem?: IVFormComponent): string | boolean 
   const  RandomOne = await getRandomOneApi()
     const key = uniqueId(`${toLine(formItem.component)}_${RandomOne}`);
     formItem.key = key;
+    formItem.i = key;
     formItem.field = key;
 
     return true;

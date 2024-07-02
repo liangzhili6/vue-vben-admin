@@ -107,6 +107,55 @@ export const advanced: IVFormComponent[] = [
     w: 100,
     h: 2,
   },
+  {
+    component: 'Subform',
+    label: '子表单',
+    icon: 'gg:select',
+    field: '',
+    colProps: { span: 24 },
+    format: '{YYYY}{MM}{DD}{#2/D}',
+    componentProps: {
+      SubformType: 'custom'
+    },
+    position: { x: 0, y: 0, w: 100, h: 12 },
+    x: 0,
+    y: 0,
+    w: 100,
+    h: 6,
+    children:[
+      /* {
+        component: 'Input',
+        label: '单行文本',
+        icon: 'bi:input-cursor-text',
+        field: '',
+        colProps: { span: 24 },
+        position: { x: 0, y: 0, w: 100, h: 2 },
+        componentProps: {
+          type: 'text',
+          defaultType: 'custom', //custom---自定义；formula---公式
+        },
+        x: 0,
+        y: 0,
+        w: 10,
+        h: 2,
+        i: 0,
+      },
+      {
+        component: 'InputTextArea',
+        label: '多行文本',
+        icon: 'ant-design:file-text-filled',
+        field: '',
+        colProps: { span: 24 },
+        componentProps: {},
+        position: { x: 0, y: 0, w: 100, h: 2.5 },
+        x: 0,
+        y: 0,
+        w: 10,
+        h: 2.5,
+        i: 1,
+      } */
+    ]
+  },
 ];
 /**
  * 外部设置的自定义控件

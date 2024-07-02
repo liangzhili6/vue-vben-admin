@@ -8,7 +8,7 @@
       <template
         #label
         v-if="
-          !(['Divider', 'Tinymce', 'ImageText', 'Correlation'].includes(schema.component))&&
+          !(['Divider', 'Tinymce', 'ImageText', 'Correlation', 'Subform'].includes(schema.component))&&
           !formItemProps.hiddenLabel 
         "
       >
@@ -102,6 +102,8 @@ import VueDragResize from "vue-drag-resize/src";
     },
     emits: ['update:form-data', 'change'],
     setup(props, { emit }) {
+      const formConfigData = unref(props).formConfig;
+      console.log('formConfigData106', formConfigData);
       const state = reactive({
         componentMap,
         width: 200,
@@ -244,7 +246,8 @@ import VueDragResize from "vue-drag-resize/src";
         cmpProps,
         handleChange,
         colPropsComputed,
-        resize
+        resize,
+        formConfig: formConfigData
       };
     },
   });
