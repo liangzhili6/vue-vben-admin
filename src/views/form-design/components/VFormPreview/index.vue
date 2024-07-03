@@ -11,7 +11,7 @@
     cancelText="关闭"
     style="top: 20px"
     :destroyOnClose="true"
-    :width="900"
+    width="90%"
     :maskClosable="false"
   >
     <VFormCreate
@@ -80,6 +80,7 @@
         state.visible = false;
         FormStore.updateIsPreview(true)
         state.formModel = {};
+        FormStore.updatePreviewView(false)
       };
       const handleGetData = async () => {
         const _data = await state.fApi.submit?.();

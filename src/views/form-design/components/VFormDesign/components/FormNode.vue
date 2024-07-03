@@ -13,7 +13,7 @@
     <!-- <div class="show-key-box">
       {{ schema.label + (schema.field ? '/' + schema.field : '') }}
     </div> -->
-    <FormNodeOperate :schema="schema" :currentItem="formConfig.currentItem" />
+    <FormNodeOperate v-if="!FormStore.previewView" :schema="schema" :currentItem="formConfig.currentItem" />
   </div>
 </template>
 <script lang="ts">
@@ -22,6 +22,7 @@
   import FormNodeOperate from './FormNodeOperate.vue';
   import { useFormDesignState } from '../../../hooks/useFormDesignState';
   import VFormItem from '../../VFormItem/index.vue';
+  import { useFormStore } from '@/store/modules/form';
   // import VFormItem from '../../VFormItem/vFormItem.vue';
   export default defineComponent({
     name: 'FormNode',
@@ -43,10 +44,13 @@
         // 调用 formDesignMethods
         formDesignMethods.handleSetSelectItem(props.schema);
       };
+      const FormStore = useFormStore();
+
       return {
         ...toRefs(state),
         handleSelectItem,
         formConfig,
+        FormStore,
       };
     },
   });

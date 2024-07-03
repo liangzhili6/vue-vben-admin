@@ -503,7 +503,7 @@ export const baseComponents: IVFormComponent[] = [
     x: 0,
     y: 0,
     w: 100,
-    h: 2,
+    h: 4,
   },
   {
     component: 'Slider',

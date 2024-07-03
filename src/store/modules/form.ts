@@ -14,7 +14,7 @@ export const  useFormStore = defineStore({
       text:'',
       id:''
     },
-
+    previewView: false,
   }),
   actions: {
     updateAddChildrenData(val) {
@@ -25,6 +25,9 @@ export const  useFormStore = defineStore({
     },
     updateRandomOneData(val) {
       this.RandomOneData = val;
+    },
+    updatePreviewView(val) {
+      this.previewView = val;
     },
     updateChildrenSubmit(val: any, id?:'') {
       this.childrenSubmit.text = val;

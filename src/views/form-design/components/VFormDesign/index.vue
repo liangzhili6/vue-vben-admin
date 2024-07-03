@@ -123,6 +123,8 @@
   import { CollapseContainer } from '@/components/Container';
   import { GetOneFormApi } from '@/api/sys/form';
   import { useFormStore } from '@/store/modules/form';
+  const FormStore = useFormStore();
+
   defineProps({
     title: {
       type: String,
@@ -398,6 +400,8 @@
   const handleOpenModal = (Modal: IToolbarMethods) => {
     const FormStore = useFormStore();
     FormStore.updateIsPreview(true);
+    FormStore.updatePreviewView(true)
+    console.log('FormStore.previewView', FormStore.previewView)
     const config = cloneDeep(formConfig.value);
     Modal?.showModal(config);
   };

@@ -2,14 +2,14 @@
   子表单
  -->
 <template>
-  <div style="height: 100%"  class="form-panel v-form-container">
+  <div style="height: 100%; border: 1px solid #cccccc" class="form-panel v-form-container">
     <Empty
       class="empty-text"
       v-show="schema.children.length === 0"
       description="从左侧选择控件添加"
     />
     <Form v-bind="formConfig" style="height: 100%">
-      <div class="draggable-box" >
+      <div class="draggable-box" v-if="!FormStore.previewView">
         <!-- v-if="['custom'].includes(formConfig?.currentItem.componentProps['SubformType'])" -->
         <!-- Subform 子表单 -->
         <grid-layout
@@ -37,14 +37,88 @@
               :schema="item"
               :data="schema.children"
               :current-item="formConfig?.currentItem || {}"
-              :static="formConfig&&formConfig.currentItem&&(formConfig.currentItem.component === item.component)?true: false"
+              :static="
+                formConfig &&
+                formConfig.currentItem &&
+                formConfig.currentItem.component === item.component
+                  ? true
+                  : false
+              "
             />
           </grid-item>
         </grid-layout>
       </div>
-      <div >
+      <div
+        v-if="
+          FormStore.previewView &&
+          ['custom'].includes(formConfig.currentItem.componentProps['SubformType'])
+        "
+      >
         <!-- v-if="['table'].includes(formConfig?.currentItem.componentProps['SubformType'])" -->
-        // 1111111111111
+        <draggable
+          class="list-main ant-row"
+          group="form-draggable"
+          :component-data="{ name: 'list', tag: 'div', type: 'transition-group' }"
+          ghostClass="moving"
+          :animation="180"
+          handle=".drag-move"
+          v-model="schema.children"
+          item-key="key"
+          @add="addItem"
+          @start="handleDragStart"
+        >
+          <template #item="{ element }">
+            <LayoutItem
+              class="drag-move"
+              :schema="element"
+              :data="formConfig"
+              :current-item="formConfig.currentItem || {}"
+            />
+          </template>
+        </draggable>
+      </div>
+      <div
+        v-if="
+          FormStore.previewView &&
+          ['table'].includes(formConfig.currentItem.componentProps['SubformType'])
+        "
+      >
+        <BasicTable
+          ref="tableElRef"
+          :dataSource="dataSource"
+          :columns="getColumns"
+          :pagination="false"
+        >
+          <template #toolbar>
+            <a-button type="primary" @click="handleImportData">导入</a-button>
+            <a-button type="primary" @click="handleExport">导出</a-button>
+          </template>
+          <template #bodyCell="{ column, record }">
+            <!-- <template> -->
+            <template v-if="column.dataIndex === 'edit'">
+              <Dropdown :trigger="['click']">
+                <SettingOutlined @click.prevent />
+                <template #overlay>
+                  <Menu @click="editForm">
+                    <MenuItem key="复制" :item="record">
+                      <a href="javascript:;">复制</a>
+                    </MenuItem>
+                    <MenuItem key="删除" :item="record">
+                      <a href="javascript:;">删除</a>
+                    </MenuItem>
+                    <MenuItem key="上移" :item="record">
+                      <a href="javascript:;">上移</a>
+                    </MenuItem>
+                    <MenuItem key="下移" :item="record">
+                      <a href="javascript:;">下移</a>
+                    </MenuItem>
+                  </Menu>
+                </template>
+              </Dropdown>
+            </template>
+          </template>
+        </BasicTable>
+        <!-- v-if="['table'].includes(formConfig?.currentItem.componentProps['SubformType'])" -->
         <!-- <draggable
           class="list-main ant-row"
           group="form-draggable"
@@ -52,7 +126,7 @@
           ghostClass="moving"
           :animation="180"
           handle=".drag-move"
-          v-model="formConfig.schemas"
+          v-model="schema.children"
           item-key="key"
           @add="addItem"
           @start="handleDragStart"
@@ -75,11 +149,20 @@
   import draggable from 'vuedraggable';
   import { defineComponent, computed, unref, ref, defineAsyncComponent } from 'vue';
   import { asyncComputed } from '@vueuse/core';
-  import { Form, Empty, Button, TypographyTitle } from 'ant-design-vue';
+  import {
+    Form,
+    Empty,
+    TypographyTitle,
+    Dropdown,
+    Menu,
+    Button,
+    Switch,
+    MenuItem,
+  } from 'ant-design-vue';
   import { IVFormComponent, IFormConfig } from '@/views/form-design/typings/v-form-component';
   import { useFormModelState } from '@/views/form-design/hooks/useFormDesignState';
   import { omit } from 'lodash-es';
-  import { PlusOutlined } from '@ant-design/icons-vue';
+  import { SettingOutlined, DownOutlined, PlusOutlined } from '@ant-design/icons-vue';
   import { IToolbarMethods } from '@/views/form-design/typings/form-type';
   import VFormPreviews from '@/views/form-design/components/VFormPreview/useForm.vue';
   import { GetOneFormApi } from '@/api/sys/form';
@@ -87,19 +170,26 @@
   import { cloneDeep } from 'lodash-es';
   import { useFormStore } from '@/store/modules/form';
   import gridLayout from 'vue-grid-layout';
-
-  const FormStore = useFormStore();
+  import { Table } from 'ant-design-vue';
+  import { BasicTable, useTable, TableAction } from '@/components/Table';
+  import { ColumnType } from 'ant-design-vue/es/table/interface';
 
   export default defineComponent({
     name: 'Subform',
     components: {
+      SettingOutlined,
+      MenuItem,
+      Dropdown,
+      Menu,
+      Button,
+      Switch,
+      BasicTable,
       draggable,
       LayoutItem: defineAsyncComponent(
         () => import('@/views/form-design/components/VFormDesign/components/LayoutItem.vue'),
       ),
       Empty,
       Form,
-      Button,
       PlusOutlined,
       VFormPreviews,
       GridLayout: gridLayout.GridLayout,
@@ -121,135 +211,72 @@
     },
     emits: ['update:form-data', 'change'],
     setup(props, { emit }) {
-      // const { push, go, replace } = useRouter();
-      // const { formModel: formData1, setFormModel } = useFormModelState();
-      /* const colPropsComputed = computed(() => {
-        const { colProps = {} } = props.schema;
-        return colProps;
-      }); */
-      /* const layout = ref([
-        { x: 0, y: 0, w: 2, h: 1, i: '0' },
-        { x: 2, y: 0, w: 2, h: 1, i: '1' },
-        { x: 4, y: 0, w: 2, h: 1, i: '2' },
-        { x: 6, y: 0, w: 2, h: 1, i: '3' },
-        { x: 8, y: 0, w: 2, h: 1, i: '4' },
-        { x: 10, y: 0, w: 50, h: 1, i: '5' },
-      ]); */
+      const FormStore = useFormStore();
       const { formConfig } = unref(props);
-
+      const handleImportData = () => {
+        console.log('handleImportData');
+      };
+      const handleExport = () => {
+        console.log('handleExport');
+      };
       // const eFormPreview = ref<null | IToolbarMethods>(null);
       // const itemProp = unref(props.schema);
       // console.log('itemProp', props.formConfig, props.formConfig?.currentItem?.component);
-      
+
       const addItem = ({ newIndex }: any) => {
         /* formConfig.value.schemas = formConfig.value.schemas || [];
         const schemas = formConfig.value.schemas;
         schemas[newIndex] = cloneDeep(schemas[newIndex]);
-        emit('handleSetSelectItem', schemas[newIndex]); */
+        emit('handleSetSelectItem', schemas[newIndex]); */ 
       };
       const handleDragStart = (e: any) => {
         // emit('handleSetSelectItem', formConfig.value.schemas[e.oldIndex]);
       };
-      /* const formItemProps = computed(() => {
-        const { formConfig } = unref(props);
-        let { field, required, rules, labelCol, wrapperCol } = unref(props.schema);
-        const { colon } = props.formConfig;
-        const { itemProps } = unref(props.schema);
-        labelCol = labelCol
-          ? labelCol
-          : formConfig.layout === 'horizontal'
-            ? formConfig.labelLayout === 'flex'
-              ? { style: `width:${formConfig.labelWidth}px` }
-              : formConfig.labelCol
-            : {};
+      const dataSource = [
+        {
+          key: '1',
+          name: '胡彦斌',
+          age: 32,
+          address: '西湖区湖底公园1号',
+        },
+        {
+          key: '2',
+          name: '胡彦祖',
+          age: 42,
+          address: '西湖区湖底公园1号',
+        },
+      ];
 
-        wrapperCol = wrapperCol
-          ? wrapperCol
-          : formConfig.layout === 'horizontal'
-            ? formConfig.labelLayout === 'flex'
-              ? { style: 'width:auto;flex:1' }
-              : formConfig.wrapperCol
-            : {};
-
-        const style =
-          formConfig.layout === 'horizontal' && formConfig.labelLayout === 'flex'
-            ? { display: 'flex' }
-            : {};
-
-        const newConfig = Object.assign(
-          {},
+      /* const columns = [
           {
-            name: field,
-            style: { ...style },
-            colon,
-            required,
-            rules,
-            labelCol,
-            wrapperCol,
+            title: '姓名',
+            dataIndex: 'name',
+            key: 'name',
           },
-          itemProps,
-        );
-        if (!itemProps?.labelCol?.span) {
-          newConfig.labelCol = labelCol;
-        }
-        if (!itemProps?.wrapperCol?.span) {
-          newConfig.wrapperCol = wrapperCol;
-        }
-        if (!itemProps?.rules) {
-          newConfig.rules = rules;
-        }
-        return newConfig;
-      }) as Recordable<any>; */
-
-      /* const componentItem = computed(() => componentMap.get(props.schema.component as string)); */
-
-      /* const goBack = () => {
-        go(-1);
-      };
-      const handleClick = (schema: IVFormComponent) => {
-        if (schema.component === 'Button' && schema.componentProps?.handle)
-          emit(schema.componentProps?.handle);
-      }; */
-      /**
-       * 处理异步属性，异步属性会导致一些属性渲染错误，如defaultValue异步加载会导致渲染不出来，故而此处只处理options，treeData，同步属性在cmpProps中处理
-       */
-      /* const asyncProps = asyncComputed(async () => {
-        let { options, treeData } = props.schema.componentProps ?? {};
-        if (options) options = await handleAsyncOptions(options);
-        if (treeData) treeData = await handleAsyncOptions(treeData);
-        return {
-          options,
-          treeData,
-        };
-      }); */
-
-      /**
-       * 处理同步属性
-       */
-      /* const cmpProps = computed(() => {
-        const isCheck =
-          props.schema && ['Switch', 'Checkbox', 'Radio'].includes(props.schema.component);
-        let { field } = props.schema;
-
-        let { disabled, ...attrs } =
-          omit(props.schema.componentProps, ['options', 'treeData']) ?? {};
-
-        disabled = props.formConfig.disabled || disabled;
-
-        return {
-          ...attrs,
-          disabled,
-          [isCheck ? 'checked' : 'value']: formData1.value[field!],
-        };
-      }); */
-
-      /* const handleChange = function (e) {
-        const isCheck = ['Switch', 'Checkbox', 'Radio'].includes(props.schema.component);
-        const target = e ? e.target : null;
-        const value = target ? (isCheck ? target.checked : target.value) : e;
-        setFormModel(props.schema.field!, value);
-        emit('change', value);
-      }; */
+          {
+            title: '年龄',
+            dataIndex: 'age',
+            key: 'age',
+          },
+          {
+            title: '住址',
+            dataIndex: 'address',
+            key: 'address',
+          },
+        ]; */
+      const getColumns = computed(() => {
+        let columns = [];
+        console.log('schema', props.schema);
+        columns = props.schema.children?.map((el) => {
+          return {
+            ...el,
+            title: el.label,
+            dataIndex: el.field,
+            key: el.field,
+          };
+        });
+        return [{title: "",dataIndex: 'edit', width: 80}, ...columns] as unknown as ColumnType[];
+      });
       return {
         // ...toRefs(state),
         // componentItem,
@@ -266,9 +293,14 @@
         replace,
         eFormPreview,
         childrenDataProp, */
+        getColumns,
+        dataSource,
         formConfig,
         addItem,
+        FormStore,
         handleDragStart,
+        handleImportData,
+        handleExport,
       };
     },
   });
@@ -369,7 +401,7 @@
   }
 </style>
 <style>
-.ant-form-item-control-input{
-  min-height: 165px;
-}
+  .ant-form-item-control-input {
+    min-height: 165px;
+  }
 </style>
