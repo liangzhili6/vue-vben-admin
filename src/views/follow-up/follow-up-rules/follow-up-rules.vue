@@ -53,6 +53,7 @@
       <!-- <template #body> -->
         <BasicForm @register="register" >
         <template #add="{ field }">
+          <div>
           <Table :dataSource="formConfig.dataSource" :columns="formConfig.TableColumns" :pagination="false" :border="true">
             <template #bodyCell="{ column, text, record }">
               <!--   {{ text }} {{ record }} {{field}} -->
@@ -129,16 +130,33 @@
               </template>
             </template>
             <template #summary>
-            <a-table-summary-cell  :col-span="24" :fixed="'bottom'" :border="true" v-if="formConfig.dataSource.length<5">
+            <TableSummaryCell :col-span="24" :fixed="'bottom'" :border="true" v-if="formConfig.dataSource.length<5">
+              <Button type="dashed" block style="width: calc(100% - 4px); margin: 2px;" @click="handleAdd()" >
+                <template #icon>
+                  <PlusOutlined/>
+                </template>
+              </Button>
               <!-- <a-table-summary-row> -->
                 <!-- <a-table-summary-cell :index="2" :col-span="24"> -->
-                  <plus-outlined class="editable-cell-icon" style="margin-left: 10px" @click="handleAdd()" />
-                  <span>添加</span>
+                  <!-- <plus-outlined class="editable-cell-icon" style="margin-left: 10px" @click="handleAdd()" />
+                  <span>添加</span> -->
                 <!-- </a-table-summary-cell> -->
               <!-- </a-table-summary-row> -->
-            </a-table-summary-cell>
+               
+              <!-- <Button type="dashed" block style="width: calc(100% - 4px); margin: 2px;" >
+                <template #icon>
+                  <PlusOutlined @click="handleAdd()" />
+                </template>
+              </Button> -->
+            </TableSummaryCell>
           </template>
           </Table>
+  <!--         <Button type="dashed" block style="width: calc(100% - 4px); margin: 2px;" @click="handleAdd()" >
+                <template #icon>
+                  <PlusOutlined/>
+                </template>
+              </Button> -->
+            </div>
           <!-- <a-button v-if="Number(field) === 0" @click="add">+</a-button>
           <a-button class="ml-2" v-if="Number(field) === 0" @click="batchAdd">
             批量添加表单配置
@@ -162,10 +180,10 @@
     UpdataDynamicValueApi,
     DeleTeDynamicValueApi,
   } from '@/api/sys/data';
-  import { getAllRulesApi } from '@/api/sys/follow-up';
+  import { getAllTActionApi } from '@/api/sys/follow-up';
   import { cloneDeep } from 'lodash-es';
   import { onMounted, reactive, ref, UnwrapRef  } from 'vue';
-  import { Button, Input, InputSearch, Popconfirm, message, Select, Modal, Table } from 'ant-design-vue';
+  import { Button, Input, InputSearch, Popconfirm, message, Select, Modal, Table, TableSummaryCell, TableSummary } from 'ant-design-vue';
 const keyword = ref<any>('');
 const addModal = ref<boolean>(true)
 const loading = ref<boolean>(false);
@@ -543,7 +561,7 @@ const loading = ref<boolean>(false);
   };
   const [registerTable, { getForm }] = useTable({
     // title: '开启搜索区域',
-    // api: getAllRulesApi,
+    // api: getAllTActionApi,
     columns: getBasicColumns(),
     dataSource: formConfig.list,
     useSearchForm: false,
@@ -583,7 +601,7 @@ const loading = ref<boolean>(false);
     addModal.value = false;
   };
   const handleAllRulesApi = () => {
-    getAllRulesApi({
+    getAllTActionApi({
       "current": 1,
       "size": 999,
       projectName: formConfig.projectName,

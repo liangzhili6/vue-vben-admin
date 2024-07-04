@@ -62,7 +62,7 @@
           ghostClass="moving"
           :animation="180"
           handle=".drag-move"
-          v-model="schema.children"
+          v-model="childrenList"
           item-key="key"
           @add="addItem"
           @start="handleDragStart"
@@ -87,30 +87,61 @@
           ref="tableElRef"
           :dataSource="dataSource"
           :columns="getColumns"
+          :bordered="true"
+          :canResize="true"
+          :showIndexColumn="false"
+          editable
+          :showTableSetting="false"
           :pagination="false"
+          :scroll="{ x: 800, y: 500 }"
         >
-          <template #toolbar>
-            <a-button type="primary" @click="handleImportData">导入</a-button>
-            <a-button type="primary" @click="handleExport">导出</a-button>
-          </template>
-          <template #bodyCell="{ column, record }">
-            <!-- <template> -->
+          <template #bodyCell="{ column }">
             <template v-if="column.dataIndex === 'edit'">
               <Dropdown :trigger="['click']">
-                <SettingOutlined @click.prevent />
+                <EllipsisOutlined @click.prevent />
                 <template #overlay>
-                  <Menu @click="editForm">
-                    <MenuItem key="复制" :item="record">
+                  <Menu @click="editForm(column )">
+                    <MenuItem key="复制" :item="column">
                       <a href="javascript:;">复制</a>
                     </MenuItem>
-                    <MenuItem key="删除" :item="record">
+                    <MenuItem key="删除" :item="column">
                       <a href="javascript:;">删除</a>
                     </MenuItem>
-                    <MenuItem key="上移" :item="record">
+                    <MenuItem key="上移" :item="column">
                       <a href="javascript:;">上移</a>
                     </MenuItem>
-                    <MenuItem key="下移" :item="record">
+                    <MenuItem key="下移" :item="column">
                       <a href="javascript:;">下移</a>
+                    </MenuItem>
+                  </Menu>
+                </template>
+              </Dropdown>
+            </template>
+            <template v-else>
+              <div>
+                <LayoutItem
+                  class="drag-move"
+                  :schema="column"
+                  :data="formConfig"
+                  :current-item="formConfig.currentItem || {}"
+                />
+              </div>
+            </template>
+          </template>
+          <template #headerCell="{ column }">
+            <template v-if="column.dataIndex === 'edit'">
+              <Dropdown :trigger="['click']">
+                <EllipsisOutlined @click.prevent />
+                <template #overlay>
+                  <Menu @click="editForm(column)">
+                    <MenuItem key="全屏" :item="column">
+                      <a href="javascript:;">全屏</a>
+                    </MenuItem>
+                    <MenuItem key="导入" :item="column">
+                      <a href="javascript:;">导入</a>
+                    </MenuItem>
+                    <MenuItem key="导出" :item="column">
+                      <a href="javascript:;">导出</a>
                     </MenuItem>
                   </Menu>
                 </template>
@@ -118,36 +149,24 @@
             </template>
           </template>
         </BasicTable>
-        <!-- v-if="['table'].includes(formConfig?.currentItem.componentProps['SubformType'])" -->
-        <!-- <draggable
-          class="list-main ant-row"
-          group="form-draggable"
-          :component-data="{ name: 'list', tag: 'div', type: 'transition-group' }"
-          ghostClass="moving"
-          :animation="180"
-          handle=".drag-move"
-          v-model="schema.children"
-          item-key="key"
-          @add="addItem"
-          @start="handleDragStart"
-        >
-          <template #item="{ element }">
-            <LayoutItem
-              class="drag-move"
-              :schema="element"
-              :data="formConfig"
-              :current-item="formConfig.currentItem || {}"
-            />
-          </template>
-        </draggable> -->
       </div>
+      <Button v-if="FormStore.previewView && ['table'].includes(formConfig.currentItem.componentProps['SubformType'])" type="dashed" block style="width: calc(100% - 4px); margin: 2px;" @click="AddDataSource">
+          <template #icon>
+            <PlusOutlined />
+          </template>
+        </Button>
+      <Button v-if="FormStore.previewView && ['custom'].includes(formConfig.currentItem.componentProps['SubformType'])" type="dashed" block style="width: calc(100% - 4px); margin: 2px;" @click="AddDataSourceCustom">
+          <template #icon>
+            <PlusOutlined />
+          </template>
+        </Button>
     </Form>
   </div>
 </template>
 
 <script lang="ts" name="Subform">
   import draggable from 'vuedraggable';
-  import { defineComponent, computed, unref, ref, defineAsyncComponent } from 'vue';
+  import { defineComponent, computed, unref, ref, defineAsyncComponent, reactive, onMounted, onBeforeMount } from 'vue';
   import { asyncComputed } from '@vueuse/core';
   import {
     Form,
@@ -162,7 +181,7 @@
   import { IVFormComponent, IFormConfig } from '@/views/form-design/typings/v-form-component';
   import { useFormModelState } from '@/views/form-design/hooks/useFormDesignState';
   import { omit } from 'lodash-es';
-  import { SettingOutlined, DownOutlined, PlusOutlined } from '@ant-design/icons-vue';
+  import { EllipsisOutlined, DownOutlined, PlusOutlined, SmileOutlined } from '@ant-design/icons-vue';
   import { IToolbarMethods } from '@/views/form-design/typings/form-type';
   import VFormPreviews from '@/views/form-design/components/VFormPreview/useForm.vue';
   import { GetOneFormApi } from '@/api/sys/form';
@@ -170,14 +189,16 @@
   import { cloneDeep } from 'lodash-es';
   import { useFormStore } from '@/store/modules/form';
   import gridLayout from 'vue-grid-layout';
-  import { Table } from 'ant-design-vue';
+  import { Table, TableSummaryCell } from 'ant-design-vue';
   import { BasicTable, useTable, TableAction } from '@/components/Table';
   import { ColumnType } from 'ant-design-vue/es/table/interface';
 
   export default defineComponent({
     name: 'Subform',
     components: {
-      SettingOutlined,
+      TableSummaryCell,
+      SmileOutlined,
+      EllipsisOutlined,
       MenuItem,
       Dropdown,
       Menu,
@@ -219,6 +240,15 @@
       const handleExport = () => {
         console.log('handleExport');
       };
+      const editForm = (column) => {
+        console.log('editForm--click', column);
+      };
+      const schemaList = reactive({
+        // childrenList: props.schema.children
+        childrenList: []
+      });
+      const childrenList = ref([])
+      const dataSourceObj = ref({})
       // const eFormPreview = ref<null | IToolbarMethods>(null);
       // const itemProp = unref(props.schema);
       // console.log('itemProp', props.formConfig, props.formConfig?.currentItem?.component);
@@ -232,49 +262,47 @@
       const handleDragStart = (e: any) => {
         // emit('handleSetSelectItem', formConfig.value.schemas[e.oldIndex]);
       };
-      const dataSource = [
-        {
-          key: '1',
-          name: '胡彦斌',
-          age: 32,
-          address: '西湖区湖底公园1号',
-        },
-        {
-          key: '2',
-          name: '胡彦祖',
-          age: 42,
-          address: '西湖区湖底公园1号',
-        },
-      ];
+      const dataSource = ref([]);
+      onBeforeMount(()=>{
+        childrenList.value = props.schema.children.map((el)=>{
+          return{
+            ...el
+          }
+        })
+      })
+      const AddDataSourceCustom = () => {
+        console.log('AddDataSourceCustom',props.schema.children, 'schemaList.childrenList', schemaList.childrenList, childrenList.value)
+        childrenList.value = [...childrenList.value, ...props.schema.children]
+        console.log('AddDataSourceCustom---------',props.schema.children, 'schemaList.childrenList', schemaList.childrenList, childrenList.value)
 
-      /* const columns = [
-          {
-            title: '姓名',
-            dataIndex: 'name',
-            key: 'name',
-          },
-          {
-            title: '年龄',
-            dataIndex: 'age',
-            key: 'age',
-          },
-          {
-            title: '住址',
-            dataIndex: 'address',
-            key: 'address',
-          },
-        ]; */
+      }
+      const AddDataSource = () => {
+        // dataSource.value.push(dataSourceObj)
+        console.log('dataSourceObj.value', dataSourceObj.value, 'dataSource.value', dataSource.value)
+        // dataSource.value = [...dataSource.value, dataSourceObj.value]
+        dataSource.value.push(dataSourceObj.value)
+      }
       const getColumns = computed(() => {
         let columns = [];
         console.log('schema', props.schema);
         columns = props.schema.children?.map((el) => {
+          console.log('el', el, el.field);
+          dataSourceObj.value[el.field] = ''
           return {
             ...el,
             title: el.label,
             dataIndex: el.field,
             key: el.field,
+            itemProps: {
+              ...el.itemProps,
+              "hiddenLabel": true
+            }
           };
         });
+        // console.log('dataSourceArr', dataSourceArr)
+        dataSource.value.push(dataSourceObj.value)
+        // dataSource.value = [...dataSource.value, dataSourceObj.value]
+        console.log('dataSource.value', dataSource.value)
         return [{title: "",dataIndex: 'edit', width: 80}, ...columns] as unknown as ColumnType[];
       });
       return {
@@ -297,10 +325,16 @@
         dataSource,
         formConfig,
         addItem,
+        AddDataSource,
         FormStore,
         handleDragStart,
         handleImportData,
         handleExport,
+        AddDataSourceCustom,
+        schemaList,
+        childrenList,
+        dataSourceObj,
+        editForm,
       };
     },
   });
