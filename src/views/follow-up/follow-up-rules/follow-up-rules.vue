@@ -3,7 +3,13 @@
     <!-- <div class="mb-4">
       <a-button class="mr-2" @click="reloadTable"> 还原 </a-button>
     </div> -->
-    <BasicTable @register="registerTable">
+    <!-- @register="registerTable"  -->
+    <BasicTable
+      :columns="getBasicColumns()"
+      :dataSource="formConfig.list"
+      :pagination="pagination"
+      @change="handlerChange"
+    >
       <template #form-custom> custom-slot </template>
       <template #toolbar>
         <div
@@ -15,11 +21,12 @@
             justify-content: space-between;
           "
         >
-          <div style="display: flex;">
+          <div style="display: flex">
             <Input
               ref="keywordRef"
               placeholder="请输入方案名称"
-              v-model:value="keyword"
+              style="width: 180px"
+              v-model:value="formConfig.ruleName"
               :allowClear="true"
               @search="onSearchKeyword"
               class="keywordView"
@@ -27,23 +34,51 @@
             />
             <Select
               ref="keywordRef"
-              placeholder="请输入方案名称"
-              style="margin-left: 10px"
+              placeholder="请选择研究项目"
+              style="margin-left: 10px; width: 180px"
               v-model:value="formConfig.projectName"
               :allowClear="true"
               class="keywordView"
-              :options="formConfig.projectNameOptions.map(pro => ({ value: pro.dataIndex, label: pro.title }))" 
+              :options="
+                formConfig.projectNameOptions.map((pro) => ({
+                  value: pro.projectCode,
+                  label: pro.projectName,
+                }))
+              "
             />
           </div>
           <div>
             <Button type="primary" @click="getFormValues">搜索</Button>
-            <Button type="primary" @click="getFormValues">清空</Button>
-            <Button type="primary" @click="addModal=true">新增</Button>
+            <Button type="primary" @click="empty" style="margin-left: 10px">清空</Button>
+            <Button
+              type="primary"
+              @click="
+                getSchamas();
+                addModal = true;
+              "
+              style="margin-left: 10px"
+              >新增</Button
+            >
           </div>
         </div>
       </template>
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'edit'">
+          <Button
+            type="link"
+            block
+            style="width: 80px"
+            @click="
+              handleItem(record.id);
+              addModal = true;
+            "
+            >编辑</Button
+          >
+          <Button type="link" danger style="width: 80px">删除</Button>
+        </template>
+      </template>
     </BasicTable>
-    <Modal v-model:open="addModal" :title="title" @ok="handleOk" :width="'60%'" >
+    <Modal v-model:open="addModal" :title="title" @ok="handleOk" :width="'60%'">
       <!-- height="80%" style="overflow: hidden;overflow-y: scroll;" -->
       <template #footer>
         <a-button key="back" @click="handleCancel">取消</a-button>
@@ -51,112 +86,158 @@
       </template>
       <!-- <div> -->
       <!-- <template #body> -->
-        <BasicForm @register="register" >
+      <BasicForm @register="register">
         <template #add="{ field }">
           <div>
-          <Table :dataSource="formConfig.dataSource" :columns="formConfig.TableColumns" :pagination="false" :border="true">
-            <template #bodyCell="{ column, text, record }">
-              <!--   {{ text }} {{ record }} {{field}} -->
-              <template v-if="column.dataIndex === 'AssociatedDate'">
-                <div class="editable-cell">
-                  <div v-if="editableData[record.key]" class="editable-cell-input-wrapper">
-                    <Select
-                      ref="keywordRef"
-                      placeholder="请输入方案名称"
-                      v-model:value="editableData[record.key].AssociatedDate"
-                      :allowClear="true"
-                      class="keywordView"
-                      :options="formConfig.projectNameOptions.map(pro => ({ value: pro.dataIndex, label: pro.title }))" 
-                    />
-                    <!-- <a-input v-model:value="editableData[record.key].name" @pressEnter="save(record.key)" /> -->
-                    <!-- <check-outlined class="editable-cell-icon-check" @click="save(record.key)" /> -->
+            {{ field }}
+            <Table
+              :dataSource="formConfig.dataSource"
+              :columns="formConfig.TableColumns"
+              :pagination="false"
+              :border="true"
+            >
+              <template #bodyCell="{ column, text, record }">
+                <!--   {{ text }} {{ record }} {{field}} -->
+                <template v-if="column.dataIndex === 'AssociatedDate'">
+                  <div class="editable-cell">
+                    <div v-if="editableData[record.key]" class="editable-cell-input-wrapper">
+                      <Select
+                        ref="keywordRef"
+                        placeholder="请输入方案名称"
+                        v-model:value="editableData[record.key].AssociatedDate"
+                        :allowClear="true"
+                        class="keywordView"
+                        :options="
+                          formConfig.projectNameOptions.map((pro) => ({
+                            value: pro.projectCode,
+                            label: pro.projectName,
+                          }))
+                        "
+                      />
+                      <!-- <a-input v-model:value="editableData[record.key].name" @pressEnter="save(record.key)" /> -->
+                      <!-- <check-outlined class="editable-cell-icon-check" @click="save(record.key)" /> -->
+                    </div>
+                    <div v-else class="editable-cell-text-wrapper">
+                      {{ text || ' ' }}
+                      <!-- <edit-outlined class="editable-cell-icon" @click="edit(record.key)" /> -->
+                    </div>
                   </div>
-                  <div v-else class="editable-cell-text-wrapper">
-                    {{ text || ' ' }}
-                    <!-- <edit-outlined class="editable-cell-icon" @click="edit(record.key)" /> -->
+                </template>
+                <template v-if="column.dataIndex === 'startTime'">
+                  <div class="editable-cell">
+                    <div
+                      v-if="editableData[record.key]"
+                      class="editable-cell-input-wrapper"
+                      style="display: flex"
+                    >
+                      <a-input
+                        v-model:value="editableData[record.key].startTime"
+                        @pressEnter="save(record.key)"
+                      />
+                      <span style="width: 40px"> 天后</span>
+                      <!-- <check-outlined class="editable-cell-icon-check" @click="save(record.key)" /> -->
+                    </div>
+                    <div v-else class="editable-cell-text-wrapper">
+                      {{ text || ' ' }} 天后
+                      <!-- <edit-outlined class="editable-cell-icon" @click="edit(record.key)" /> -->
+                    </div>
                   </div>
-                </div>
-              </template>
-              <template v-if="column.dataIndex === 'startTime'">
-                <div class="editable-cell">
-                  <div v-if="editableData[record.key]" class="editable-cell-input-wrapper" style="display: flex;">
-                    <a-input v-model:value="editableData[record.key].startTime" @pressEnter="save(record.key)" /> 
-                    <span style="width: 40px;"> 天后</span>
-                    <!-- <check-outlined class="editable-cell-icon-check" @click="save(record.key)" /> -->
+                </template>
+                <template v-if="column.dataIndex === 'endTime'">
+                  <div class="editable-cell">
+                    <div
+                      v-if="editableData[record.key]"
+                      class="editable-cell-input-wrapper"
+                      style="display: flex"
+                    >
+                      <a-input
+                        v-model:value="editableData[record.key].endTime"
+                        @pressEnter="save(record.key)"
+                      />
+                      <span style="width: 40px"> 天后</span>
+                      <!-- <check-outlined class="editable-cell-icon-check" @click="save(record.key)" /> -->
+                    </div>
+                    <div v-else class="editable-cell-text-wrapper">
+                      {{ text || ' ' }} 天后
+                      <!-- <edit-outlined class="editable-cell-icon" @click="edit(record.key)" /> -->
+                    </div>
                   </div>
-                  <div v-else class="editable-cell-text-wrapper">
-                    {{ text || ' ' }} 天后
-                    <!-- <edit-outlined class="editable-cell-icon" @click="edit(record.key)" /> -->
+                </template>
+                <template v-if="column.dataIndex === 'note'">
+                  <div class="editable-cell">
+                    <div v-if="editableData[record.key]" class="editable-cell-input-wrapper">
+                      <a-input
+                        v-model:value="editableData[record.key].note"
+                        @pressEnter="save(record.key)"
+                      />
+                      <!-- <check-outlined class="editable-cell-icon-check" @click="save(record.key)" /> -->
+                    </div>
+                    <div v-else class="editable-cell-text-wrapper">
+                      {{ text || ' ' }}
+                      <!-- <edit-outlined class="editable-cell-icon" @click="edit(record.key)" /> -->
+                    </div>
                   </div>
-                </div>
-              </template>
-              <template v-if="column.dataIndex === 'endTime'">
-                <div class="editable-cell">
-                  <div v-if="editableData[record.key]" class="editable-cell-input-wrapper" style="display: flex;">
-                    <a-input v-model:value="editableData[record.key].endTime" @pressEnter="save(record.key)" /> 
-                    <span style="width: 40px;"> 天后</span>
-                    <!-- <check-outlined class="editable-cell-icon-check" @click="save(record.key)" /> -->
-                  </div>
-                  <div v-else class="editable-cell-text-wrapper">
-                    {{ text || ' ' }} 天后
-                    <!-- <edit-outlined class="editable-cell-icon" @click="edit(record.key)" /> -->
-                  </div>
-                </div>
-              </template>
-              <template v-if="column.dataIndex === 'note'">
-                <div class="editable-cell">
-                  <div v-if="editableData[record.key]" class="editable-cell-input-wrapper">
-                    <a-input v-model:value="editableData[record.key].note" @pressEnter="save(record.key)" />
-                    <!-- <check-outlined class="editable-cell-icon-check" @click="save(record.key)" /> -->
-                  </div>
-                  <div v-else class="editable-cell-text-wrapper">
-                    {{ text || ' ' }}
-                    <!-- <edit-outlined class="editable-cell-icon" @click="edit(record.key)" /> -->
-                  </div>
-                </div>
-              </template>
-              <template v-if="column.dataIndex === 'edit'">
-                <div class="editable-cell">
-                  <div  class="editable-cell-input-wrapper">
-                    <!-- <a-input v-model:value="editableData[record.key].name" @pressEnter="save(record.key)" /> -->
-                    <check-outlined v-if="editableData[record.key]" class="editable-cell-icon-check" @click="save(record.key)" />
-                    <edit-outlined v-else class="editable-cell-icon" @click="edit(record.key)" />
-                    <delete-outlined class="editable-cell-icon" style="margin-left: 10px" @click="edit(record.key)" />
-                  </div>
-                  <!-- <div  class="editable-cell-text-wrapper">
+                </template>
+                <template v-if="column.dataIndex === 'edit'">
+                  <div class="editable-cell">
+                    <div class="editable-cell-input-wrapper">
+                      <!-- <a-input v-model:value="editableData[record.key].name" @pressEnter="save(record.key)" /> -->
+                      <check-outlined
+                        v-if="editableData[record.key]"
+                        class="editable-cell-icon-check"
+                        @click="save(record.key)"
+                      />
+                      <edit-outlined v-else class="editable-cell-icon" @click="edit(record.key)" />
+                      <delete-outlined
+                        class="editable-cell-icon"
+                        style="margin-left: 10px"
+                        @click="edit(record.key)"
+                      />
+                    </div>
+                    <!-- <div  class="editable-cell-text-wrapper">
                     <delete-outlined class="editable-cell-icon" style="margin-left: 10px" @click="edit(record.key)" />
                   </div> -->
-                </div>
-              </template>
-            </template>
-            <template #summary>
-            <TableSummaryCell :col-span="24" :fixed="'bottom'" :border="true" v-if="formConfig.dataSource.length<5">
-              <Button type="dashed" block style="width: calc(100% - 4px); margin: 2px;" @click="handleAdd()" >
-                <template #icon>
-                  <PlusOutlined/>
+                  </div>
                 </template>
-              </Button>
-              <!-- <a-table-summary-row> -->
-                <!-- <a-table-summary-cell :index="2" :col-span="24"> -->
+              </template>
+              <template #summary>
+                <TableSummaryCell
+                  :col-span="24"
+                  :fixed="'bottom'"
+                  :border="true"
+                  v-if="formConfig.dataSource.length < 5"
+                >
+                  <Button
+                    type="dashed"
+                    block
+                    style="width: calc(100% - 4px); margin: 2px"
+                    @click="handleAdd()"
+                  >
+                    <template #icon>
+                      <PlusOutlined />
+                    </template>
+                  </Button>
+                  <!-- <a-table-summary-row> -->
+                  <!-- <a-table-summary-cell :index="2" :col-span="24"> -->
                   <!-- <plus-outlined class="editable-cell-icon" style="margin-left: 10px" @click="handleAdd()" />
                   <span>添加</span> -->
-                <!-- </a-table-summary-cell> -->
-              <!-- </a-table-summary-row> -->
-               
-              <!-- <Button type="dashed" block style="width: calc(100% - 4px); margin: 2px;" >
+                  <!-- </a-table-summary-cell> -->
+                  <!-- </a-table-summary-row> -->
+
+                  <!-- <Button type="dashed" block style="width: calc(100% - 4px); margin: 2px;" >
                 <template #icon>
                   <PlusOutlined @click="handleAdd()" />
                 </template>
               </Button> -->
-            </TableSummaryCell>
-          </template>
-          </Table>
-  <!--         <Button type="dashed" block style="width: calc(100% - 4px); margin: 2px;" @click="handleAdd()" >
+                </TableSummaryCell>
+              </template>
+            </Table>
+            <!--         <Button type="dashed" block style="width: calc(100% - 4px); margin: 2px;" @click="handleAdd()" >
                 <template #icon>
                   <PlusOutlined/>
                 </template>
               </Button> -->
-            </div>
+          </div>
           <!-- <a-button v-if="Number(field) === 0" @click="add">+</a-button>
           <a-button class="ml-2" v-if="Number(field) === 0" @click="batchAdd">
             批量添加表单配置
@@ -171,7 +252,13 @@
   import { BasicTable, useTable } from '@/components/Table';
   import { BasicForm, FormSchema, useForm } from '@/components/Form';
   import { getBasicColumns, getFormConfig } from './tableData';
-  import { CheckOutlined, EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue';
+  import {
+    CheckOutlined,
+    EditOutlined,
+    DeleteOutlined,
+    PlusOutlined,
+    EllipsisOutlined,
+  } from '@ant-design/icons-vue';
   import {
     getOneFieldApi,
     getAllDynamicValueApi,
@@ -180,27 +267,56 @@
     UpdataDynamicValueApi,
     DeleTeDynamicValueApi,
   } from '@/api/sys/data';
-  import { getAllTActionApi } from '@/api/sys/follow-up';
+  import {
+    getAllRulesApi,
+    getAllProjectNotParamApi,
+    getOneRulesApi,
+    addRulesApi,
+  } from '@/api/sys/follow-up';
   import { cloneDeep } from 'lodash-es';
-  import { onMounted, reactive, ref, UnwrapRef  } from 'vue';
-  import { Button, Input, InputSearch, Popconfirm, message, Select, Modal, Table, TableSummaryCell, TableSummary } from 'ant-design-vue';
-const keyword = ref<any>('');
-const addModal = ref<boolean>(true)
-const loading = ref<boolean>(false);
+  import { onMounted, reactive, ref, UnwrapRef } from 'vue';
+  import {
+    Button,
+    Input,
+    InputSearch,
+    Popconfirm,
+    message,
+    Select,
+    Modal,
+    Table,
+    TableSummaryCell,
+    TableSummary,
+  } from 'ant-design-vue';
+  const keyword = ref<any>('');
+  const addModal = ref<boolean>(false);
+  const loading = ref<boolean>(false);
   const title = ref<string>('新增随访规则');
-  // const pagination = ref<any>(true);
+  const pagination = ref<any>(true);
   // const [registerForm, { validate }] = useForm();
   const editableData: UnwrapRef<Record<string, any>> = reactive({});
-    const edit = (key: string) => {
-      console.log('edit', key)
-      editableData[key] = cloneDeep(formConfig.dataSource.filter(item => key === item.key)[0]);
-    };
-    const save = (key: string) => {
-      console.log('save', key)
-      Object.assign(formConfig.dataSource.filter(item => key === item.key)[0], editableData[key]);
-      delete editableData[key];
-      formConfig.dataSource = [].concat(formConfig.dataSource);
-    };
+  const edit = (key: string) => {
+    console.log('edit', key);
+    editableData[key] = cloneDeep(formConfig.dataSource.filter((item) => key === item.key)[0]);
+  };
+  const save = (key: string) => {
+    console.log('save', key);
+    Object.assign(formConfig.dataSource.filter((item) => key === item.key)[0], editableData[key]);
+    delete editableData[key];
+    formConfig.dataSource = [].concat(formConfig.dataSource);
+  };
+  const ruleInfoJson = reactive({
+    SMSRules: {
+      field5: '',
+      field6: '',
+      field7: '',
+      field8: '',
+      field9: '',
+      field10: '',
+      field11: '',
+      field12: '',
+    },
+    VisitCycle: [],
+  });
   const formConfig = reactive({
     schemas: [
       // ...getAdvanceSchema(5),
@@ -223,7 +339,7 @@ const loading = ref<boolean>(false);
           xl: 12,
           xxl: 8,
         },
-      } 
+      },
       /* 
       {
         field: `field11`,
@@ -259,119 +375,171 @@ const loading = ref<boolean>(false);
           xl: 12,
           xxl: 8,
         },
-      }, */,
+      }, */
     ],
+    current: 1,
+    size: 10,
     ruleName: '',
     projectName: '',
-    projectNameOptions: [{
-      dataIndex: 1,
-      title: 1
-    }],
+    projectNameOptions: [],
+    projectNameArr: [],
     list: [],
-    dataSource: [{
-      visitCycle:'访视一',
-      AssociatedDate: '1',
-      startTime: '1',
-      endTime:  '7',
-      note: '1',
-      key: 0,
-    },{
-      visitCycle:'访视二',
-      AssociatedDate: '1',
-      startTime: '1',
-      endTime:  '7',
-      note: '1',
-      key: 1,
-    },{
-      visitCycle:'访视三',
-      AssociatedDate: '1',
-      startTime: '1',
-      endTime:  '7',
-      note: '1',
-      key: 2,
-    },{
-      visitCycle:'访视四',
-      AssociatedDate: '1',
-      startTime: '1',
-      endTime:  '7',
-      note: '1',
-      key: 3,
-    }],
-    TableColumns: [{
-      title:'访视一',
-      width: 150,
-      dataIndex:'visitCycle',
-    },{
-      title:'关联日期',
-      dataIndex:'AssociatedDate',
-      width: 150,
-    },{
-      title:'随访开始时间',
-      dataIndex:'startTime',
-      width: 180,
-    },{
-      title:'随访结束时间',
-      dataIndex:'endTime',
-      width: 180,
-    },{
-      title:'短信',
-      dataIndex:'note',
-      width: 150,
-    },
-    {
-      title: '操作',
-      width: 150,
-      dataIndex: 'edit',
-    },]
+    dataSource: [
+      {
+        visitCycle: '访视一',
+        AssociatedDate: '1',
+        startTime: '1',
+        endTime: '7',
+        note: '1',
+        key: 0,
+      },
+      {
+        visitCycle: '访视二',
+        AssociatedDate: '1',
+        startTime: '1',
+        endTime: '7',
+        note: '1',
+        key: 1,
+      },
+      {
+        visitCycle: '访视三',
+        AssociatedDate: '1',
+        startTime: '1',
+        endTime: '7',
+        note: '1',
+        key: 2,
+      },
+      {
+        visitCycle: '访视四',
+        AssociatedDate: '1',
+        startTime: '1',
+        endTime: '7',
+        note: '1',
+        key: 3,
+      },
+    ],
+    TableColumns: [
+      {
+        title: '访视一',
+        width: 150,
+        dataIndex: 'visitCycle',
+      },
+      {
+        title: '关联日期',
+        dataIndex: 'AssociatedDate',
+        width: 150,
+      },
+      {
+        title: '随访开始时间',
+        dataIndex: 'startTime',
+        width: 180,
+      },
+      {
+        title: '随访结束时间',
+        dataIndex: 'endTime',
+        width: 180,
+      },
+      {
+        title: '短信',
+        dataIndex: 'note',
+        width: 150,
+      },
+      {
+        title: '操作',
+        width: 150,
+        dataIndex: 'edit',
+      },
+    ],
   });
   let count = formConfig.dataSource.length;
   const handleAdd = () => {
-      const newData = {
-        key: `${count}`,
-        name: `Edward King ${count}`,
-        age: 32,
-        address: `London, Park Lane no. ${count}`,
-        visitCycle:'访视四',
-        AssociatedDate: '',
-        startTime: '',
-        endTime:  '',
-        note: '',
-      };
-      count++;
-      formConfig.dataSource.push(newData);
-      formConfig.dataSource = [].concat(formConfig.dataSource);
-      edit(newData.key)
+    const newData = {
+      key: `${count}`,
+      name: `Edward King ${count}`,
+      age: 32,
+      address: `London, Park Lane no. ${count}`,
+      visitCycle: '访视四',
+      AssociatedDate: '',
+      startTime: '',
+      endTime: '',
+      note: '',
     };
-  const getSchamas = (): FormSchema[] => {
+    count++;
+    formConfig.dataSource.push(newData);
+    formConfig.dataSource = [].concat(formConfig.dataSource);
+    edit(newData.key);
+  };
+  const handlerChange = (params) => {
+    formConfig.current = params.current;
+    formConfig.size = params.pageSize;
+    // 更新翻页器参数
+    pagination.value = { current: params.current };
+    handleAllRulesApi();
+  };
+  const projectNameList = async () => {
+    await getAllProjectNotParamApi()
+      .then((res: any) => {
+        if (res) {
+          formConfig.projectNameOptions = res;
+          formConfig.projectNameArr = res.map((val) => {
+            return {
+              ...val,
+              value: val.projectCode,
+              label: val.projectName,
+              key: val.projectCode,
+            };
+          });
+        }
+      })
+      .catch((e: any) => {});
+  };
+  const getSchamas = () => {
+    projectNameList();
+    console.log('formConfig.projectNameArr', formConfig.projectNameArr);
     return [
       {
-        field: 'field1',
+        field: 'ruleName',
         component: 'Input',
         label: '规则名称',
         colProps: {
           span: 24,
         },
         componentProps: {
-          placeholder: '自定义placeholder',
+          placeholder: '请输入规则名称',
           onChange: (e: any) => {
             console.log(e);
           },
         },
       },
       {
-        field: 'field2',
-        component: 'Input',
+        field: 'projectCode',
+        component: 'Select',
         label: '研究项目',
         colProps: {
-          span:  24,
-        }
+          span: 24,
+        },
+        componentProps: {
+          placeholder: '请选择研究项目',
+          options: formConfig.projectNameArr /*  [
+            {
+              label: '是',
+              value: '1',
+              key: '1',
+            },
+            {
+              label: '否',
+              value: '2',
+              key: '2',
+            },
+          ], */,
+        },
       },
       {
-        field: 'field3',
+        field: 'status',
         component: 'RadioGroup',
         label: '是否启用',
         colProps: {
-          span:  24,
+          span: 24,
         },
         defaultValue: '1',
         componentProps: {
@@ -395,20 +563,21 @@ const loading = ref<boolean>(false);
         label: ' ',
         slot: 'add',
         itemProps: {
-          "labelCol": {
-            "span": 0
+          hiddenLabel: true,
+          labelCol: {
+            span: 0,
           },
-          "wrapperCol": {
-            "span": 24
-          }
-        }
+          wrapperCol: {
+            span: 24,
+          },
+        },
       },
       {
         field: 'field5',
         component: 'RadioGroup',
         label: '是否启用短信随访(患者)',
         colProps: {
-          span:  8,
+          span: 8,
         },
         defaultValue: '1',
         componentProps: {
@@ -431,12 +600,12 @@ const loading = ref<boolean>(false);
         component: 'TimePicker',
         label: '短信随访任务开始执行时间',
         colProps: {
-          span:  16,
+          span: 16,
         },
         defaultValue: '1',
         componentProps: {
-          format: "HH:mm",
-          valueFormat: "HH:mm"
+          format: 'HH:mm',
+          valueFormat: 'HH:mm',
         },
       },
       {
@@ -444,7 +613,7 @@ const loading = ref<boolean>(false);
         component: 'RadioGroup',
         label: '是否启用短信随访(患者)',
         colProps: {
-          span:  8,
+          span: 8,
         },
         defaultValue: '1',
         componentProps: {
@@ -467,7 +636,7 @@ const loading = ref<boolean>(false);
         component: 'Select',
         label: '短信随访任务开始执行时间',
         colProps: {
-          span:  8,
+          span: 8,
         },
         defaultValue: '1',
         componentProps: {
@@ -490,12 +659,12 @@ const loading = ref<boolean>(false);
         component: 'TimePicker',
         label: '短信随访任务开始执行时间',
         colProps: {
-          span:  8,
+          span: 8,
         },
         defaultValue: '1',
         componentProps: {
-          format: "HH:mm",
-          valueFormat: "HH:mm"
+          format: 'HH:mm',
+          valueFormat: 'HH:mm',
         },
       },
       {
@@ -503,7 +672,7 @@ const loading = ref<boolean>(false);
         component: 'RadioGroup',
         label: '是否启用短信随访(患者)',
         colProps: {
-          span:  8,
+          span: 8,
         },
         defaultValue: '1',
         componentProps: {
@@ -526,7 +695,7 @@ const loading = ref<boolean>(false);
         component: 'Select',
         label: '短信随访任务开始执行时间',
         colProps: {
-          span:  8,
+          span: 8,
         },
         defaultValue: '1',
         componentProps: {
@@ -549,19 +718,19 @@ const loading = ref<boolean>(false);
         component: 'TimePicker',
         label: '短信随访任务开始执行时间',
         colProps: {
-          span:  8,
+          span: 8,
         },
         defaultValue: '1',
         componentProps: {
-          format: "HH:mm",
-          valueFormat: "HH:mm"
+          format: 'HH:mm',
+          valueFormat: 'HH:mm',
         },
       },
     ];
   };
   const [registerTable, { getForm }] = useTable({
     // title: '开启搜索区域',
-    // api: getAllTActionApi,
+    // api: getAllRulesApi,
     columns: getBasicColumns(),
     dataSource: formConfig.list,
     useSearchForm: false,
@@ -575,59 +744,143 @@ const loading = ref<boolean>(false);
     }, */
     showSelectionBar: false, // 显示多选状态栏
   });
-  const [register] = useForm({
-    labelWidth: 80,
+  const handleSubmit = () => {
+    console.log('handleSubmit');
+  };
+  const [register, { updateSchema, submit, getFieldsValue }] = useForm({
+    // labelWidth: 80,
     schemas: getSchamas(),
     actionColOptions: {
       span: 24,
     },
-  /*   compact: true,
+    /*   compact: true,
     showAdvancedButton: true, */
   });
+
+  console.log(
+    'updateSchema',
+    updateSchema,
+    formConfig.projectNameArr,
+    updateSchema({
+      field: 'field2',
+      component: 'Select',
+      label: '研究项目',
+      colProps: {
+        span: 24,
+      },
+      componentProps: {
+        placeholder: '请选择研究项目',
+        options: formConfig.projectNameArr,
+      },
+    }),
+  );
+  /* updateSchema({
+    field: 'field2',
+    component: 'Select',
+    label: '研究项目',
+    colProps: {
+      span: 24,
+    },
+    componentProps: {
+      placeholder: '请选择研究项目',
+      options: formConfig.projectNameArr
+    },
+  }); */
   const showModal = () => {
     addModal.value = true;
   };
-  const handleOk = () => {
-  // loading.value = true;
-  setTimeout(() => {
-    // loading.value = false;
-    addModal.value = false;
-  }, 2000);
-};
+
+  const handleItem = (id) => {
+    getOneRulesApi({ id }).then((res) => {
+      console.log('handleItem', res);
+    });
+    getSchamas();
+  };
+  const empty = () => {
+    console.log('empty');
+    formConfig.ruleName = '';
+    formConfig.projectName = '';
+    handleAllRulesApi();
+  };
   function getFormValues() {
-    console.log(getForm().getFieldsValue());
+    handleAllRulesApi();
+    /* console.log('registerTable', registerTable);
+    console.log(getForm());
+    console.log(getForm().getFieldsValue()); */
   }
   const handleCancel = () => {
     addModal.value = false;
   };
   const handleAllRulesApi = () => {
-    getAllTActionApi({
-      "current": 1,
-      "size": 999,
+    getAllRulesApi({
+      current: formConfig.current,
+      size: formConfig.size,
       projectName: formConfig.projectName,
       ruleName: formConfig.ruleName,
-    }).then((res: any)=>{
-      if(res){
-        formConfig.list = res.data.records;
-
-      }
-    }).catch((e: any)=>{})
-  }
+    })
+      .then((res: any) => {
+        if (res) {
+          formConfig.list = res.records;
+        }
+      })
+      .catch((e: any) => {});
+  };
   const onSearchKeyword = (searchValue: string) => {
-    console.log('searchValue', searchValue, searchValue.target.value)
-    handleAllRulesApi()
+    console.log('searchValue', searchValue, searchValue.target.value);
+    handleAllRulesApi();
     // console.log('searchValue',searchValue)
     // getFormManagerList()
-  }
+  };
+  const handleOk = () => {
+    ruleInfoJson.SMSRules.field5 = getFieldsValue().field5;
+    ruleInfoJson.SMSRules.field6 = getFieldsValue().field6;
+    ruleInfoJson.SMSRules.field7 = getFieldsValue().field7;
+    ruleInfoJson.SMSRules.field8 = getFieldsValue().field8;
+    ruleInfoJson.SMSRules.field9 = getFieldsValue().field9;
+    ruleInfoJson.SMSRules.field10 = getFieldsValue().field10;
+    ruleInfoJson.SMSRules.field11 = getFieldsValue().field11;
+    ruleInfoJson.SMSRules.field12 = getFieldsValue().field12;
+    ruleInfoJson.VisitCycle = formConfig.dataSource;
+    console.log(
+      'handleOk- getFieldsValue',
+      getFieldsValue,
+      getFieldsValue(),
+      formConfig.dataSource,
+    );
+    // console.log('handleOk', submit, ruleInfoJson.SMSRules)
+    console.log('ruleInfoJson', ruleInfoJson);
+    addRulesApi({
+      // "fromId": 0,
+      fromName: getFieldsValue().fromName,
+      // "id": 0,
+      // projectCode: getFieldsValue().projectCode,
+      projectCode: '01',
+      // "projectName": "",
+      ruleInfoJson: JSON.stringify(ruleInfoJson),
+      ruleName: getFieldsValue().ruleName,
+      status: getFieldsValue().status,
+      // "visitCycle": ""
+    }).then((res: any) => {
+      console.log('addRulesApi', res);
+    });
+    // getFieldsValue
+    // console.log(getForm().getFieldsValue());
+    // loading.value = true;
+    setTimeout(() => {
+      // loading.value = false;
+      addModal.value = false;
+    }, 2000);
+  };
   onMounted(() => {
     // console.log('registerTable', registerTable);
-    console.log('register.schemas', getSchamas())
-    
+    console.log('register.schemas', getSchamas());
+
     handleAllRulesApi();
+    projectNameList();
   });
 </script>
 <style>
-.ant-table-summary{
-  border: 1px solid #cccccc;
-}
+  .ant-table-summary {
+    border: 1px solid #cccccc;
+  }
 </style>

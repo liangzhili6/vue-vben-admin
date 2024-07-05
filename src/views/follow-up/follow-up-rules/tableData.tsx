@@ -2,15 +2,15 @@ import { FormProps, FormSchema, BasicColumn } from '@/components/Table';
 
 export function getBasicColumns(): BasicColumn[] {
   return [
-    {
+    /* {
       title: 'ID',
       dataIndex: '序号',
       fixed: 'left',
       width: 200,
-    },
+    }, */
     {
       title: '随访规则名称',
-      dataIndex: 'name',
+      dataIndex: 'ruleName',
       width: 150,
       /* filters: [
         { text: 'Male', value: 'male' },
@@ -19,45 +19,45 @@ export function getBasicColumns(): BasicColumn[] {
     },
     {
       title: '研究项目',
-      dataIndex: 'address',
+      dataIndex: 'projectName',
     },
     {
       title: '科室',
-      dataIndex: 'no',
+      dataIndex: 'dept',
       width: 150,
-      sorter: true,
-      defaultHidden: true,
+      // sorter: true,
+      // defaultHidden: true,
     },
     {
       title: '访视周期',
       width: 150,
-      sorter: true,
-      dataIndex: 'beginTime',
+      // sorter: true,
+      dataIndex: 'visitCycle',
     },
     {
-      title: '病例报告表',
+      title: '表单名',
       width: 150,
-      sorter: true,
-      dataIndex: 'endTime',
+      // sorter: true,
+      dataIndex: 'fromName',
     },
     {
       title: '是否启用',
-      dataIndex: 'no',
+      dataIndex: 'status',
       width: 150,
-      sorter: true,
+      // sorter: true,
       defaultHidden: true,
     },
     {
       title: '创建时间',
       width: 150,
-      sorter: true,
-      dataIndex: 'beginTime',
+      // sorter: true,
+      dataIndex: 'createTime',
     },
     {
       title: '操作',
-      width: 150,
-      sorter: true,
-      dataIndex: 'endTime',
+      // width: 150,
+      // sorter: true,
+      dataIndex: 'edit',
     },
   ];
 }

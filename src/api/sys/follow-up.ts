@@ -11,9 +11,38 @@ enum Api {
   GetAllTCenter = "/dynamicFormsService/api/v1/opt/center/getAllTCenter",
   GetAllUser = "/dynamicFormsService/api/v1/u4a/users/pagination",
   ExportExcel = "/dynamicFormsService/api/v1/dynamicForms/value/exportDynamicValue",
-  getAllTAction = "/dynamicFormsService/api/v1/dynamicForms/action/getAllTAction"
+  getAllTAction = "/dynamicFormsService/api/v1/dynamicForms/action/getAllTAction",
+  getAllProjectNotParam = "/dynamicFormsService/api/v1/opt/JDictProject/getAllProjectNotParam",
+  getOneRules = "/dynamicFormsService/api/v1/followUp/rules/getOneRules",
+  // addRules = "/dynamicFormsService/api/v1/followUp/rules/addRules"
 }
-
+/**
+ * @description: 数据列表 - 获取表头
+ */
+export function getOneRulesApi(params: {id: string | number },mode: ErrorMessageMode = 'none') {
+  return defHttp.get(
+    {
+      url: Api.getOneRules,
+      params
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+/**
+ * @description: 数据列表 - 获取表头
+ */
+export function getAllProjectNotParamApi(mode: ErrorMessageMode = 'none') {
+  return defHttp.post(
+    {
+      url: Api.getAllProjectNotParam,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
 /**
  * @description: 数据列表 - 获取表头
  */
@@ -44,8 +73,19 @@ export function getAllTActionApi(params: {current?: string | number, size?: stri
 }
 /**
  * @description: 新增随访规则
+ * {
+  "fromId": 0,
+  "fromName": "",
+  "id": 0,
+  "projectCode": "",
+  "projectName": "",
+  "ruleInfoJson": "",
+  "ruleName": "",
+  "status": 0,
+  "visitCycle": ""
+}
  */
-export function addRulesApi(params: {current: number | string, size: number | string, fromId: number | string, sortType: number, param?: string | number, conditions?: any, fromName?: string, followUpStatus?: string | Number, followUpFinish?: Number}, mode: ErrorMessageMode = 'none') {
+export function addRulesApi(params: {fromId?: number | string,fromName?: string, id: number | string, projectCode?: number | string, projectName?: number | string, ruleInfoJson?: string , ruleName?: string,  status?: string | Number, visitCycle?: string}, mode: ErrorMessageMode = 'none') {
   return defHttp.post(
     {
       url: Api.addRules,
