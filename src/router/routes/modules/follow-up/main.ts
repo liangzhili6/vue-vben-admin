@@ -18,6 +18,14 @@ const data: AppRouteModule = {
   },
   children: [
     {
+      path: 'sms-template',
+      name: 'SmsTemplate',
+      meta: {
+        title: '短信模版',
+      },
+      component: () => import('@/views/follow-up/follow-up-rules/sms-template.vue'),
+    },
+    {
       path: 'follow-up-rules',
       name: 'FollowUpRules',
       meta: {

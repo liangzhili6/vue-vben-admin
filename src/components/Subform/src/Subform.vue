@@ -83,7 +83,7 @@
           ['table'].includes(formConfig.currentItem.componentProps['SubformType'])
         "
       >
-        <BasicTable
+        <Table
           ref="tableElRef"
           :dataSource="dataSource"
           :columns="getColumns"
@@ -148,7 +148,7 @@
               </Dropdown>
             </template>
           </template>
-        </BasicTable>
+        </Table>
       </div>
       <Button v-if="FormStore.previewView && ['table'].includes(formConfig.currentItem.componentProps['SubformType'])" type="dashed" block style="width: calc(100% - 4px); margin: 2px;" @click="AddDataSource">
           <template #icon>
@@ -177,6 +177,8 @@
     Button,
     Switch,
     MenuItem,
+    Table,
+    TableSummaryCell
   } from 'ant-design-vue';
   import { IVFormComponent, IFormConfig } from '@/views/form-design/typings/v-form-component';
   import { useFormModelState } from '@/views/form-design/hooks/useFormDesignState';
@@ -189,7 +191,6 @@
   import { cloneDeep } from 'lodash-es';
   import { useFormStore } from '@/store/modules/form';
   import gridLayout from 'vue-grid-layout';
-  import { Table, TableSummaryCell } from 'ant-design-vue';
   import { BasicTable, useTable, TableAction } from '@/components/Table';
   import { ColumnType } from 'ant-design-vue/es/table/interface';
 
@@ -206,6 +207,8 @@
       Switch,
       BasicTable,
       draggable,
+      TypographyTitle,
+      Table,
       LayoutItem: defineAsyncComponent(
         () => import('@/views/form-design/components/VFormDesign/components/LayoutItem.vue'),
       ),

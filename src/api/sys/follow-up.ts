@@ -14,10 +14,150 @@ enum Api {
   getAllTAction = "/dynamicFormsService/api/v1/dynamicForms/action/getAllTAction",
   getAllProjectNotParam = "/dynamicFormsService/api/v1/opt/JDictProject/getAllProjectNotParam",
   getOneRules = "/dynamicFormsService/api/v1/followUp/rules/getOneRules",
-  // addRules = "/dynamicFormsService/api/v1/followUp/rules/addRules"
+  updataRules = "/dynamicFormsService/api/v1/followUp/rules/updataRules",
+  deleteRules = "/dynamicFormsService/api/v1/followUp/rules/deleteRules",
+  getAllMassage = "/dynamicFormsService/api/v1/followUp/massage/getAllMassage",
+  addMassage = "/dynamicFormsService/api/v1/followUp/massage/addMassage",
+  updataMassage = "/dynamicFormsService/api/v1/followUp/massage/updataMassage",
+  deleteMassage = "/dynamicFormsService/api/v1/followUp/massage/deleteMassage",
+  getOneMassage = "/dynamicFormsService/api/v1/followUp/massage/getOneMassage",
+  getallMessageInfo = "/dynamicFormsService/api/v1/followUp/massage/getallMessageInfo",
+  updataStatus = "/dynamicFormsService/api/v1/followUp/massage/updataStatus",
 }
 /**
- * @description: 数据列表 - 获取表头
+ * @description: 随访规则单条
+ */
+export function updataStatusApi(params: {id: string | number, status: string | number },mode: ErrorMessageMode = 'none') {
+  return defHttp.get(
+    {
+      url: Api.updataStatus,
+      params
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+/**
+ * @description: 随访规则单条
+ */
+export function getallMessageInfoApi(params: {id: string | number },mode: ErrorMessageMode = 'none') {
+  return defHttp.get(
+    {
+      url: Api.getallMessageInfo,
+      params
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+/**
+ * @description: 随访规则单条
+ */
+export function getOneMassageApi(params: {id: string | number },mode: ErrorMessageMode = 'none') {
+  return defHttp.get(
+    {
+      url: Api.getOneMassage,
+      params
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+/**
+ * @description: 随访规则单条
+ */
+export function deleteMassageApi(params: {id: string | number },mode: ErrorMessageMode = 'none') {
+  return defHttp.get(
+    {
+      url: Api.deleteMassage,
+      params
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+/**
+ * @description: 修改随访规则
+ */
+export function updataMassageApi(params: {current: string | number ,size: string | number ,messageType: string | number ,tempName: string | number },mode: ErrorMessageMode = 'none') {
+  console.log('params', params);
+  return defHttp.post(
+    {
+      url: Api.updataMassage,
+      params
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+/**
+ * @description: 修改随访规则
+ */
+export function addMassageApi(params: {current: string | number ,size: string | number ,messageType: string | number ,tempName: string | number },mode: ErrorMessageMode = 'none') {
+  console.log('params', params);
+  return defHttp.post(
+    {
+      url: Api.addMassage,
+      params
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+/**
+ * @description: 修改随访规则
+ */
+export function getAllMassageApi(params: {current: string | number ,size: string | number ,messageType: string | number ,tempName: string | number },mode: ErrorMessageMode = 'none') {
+  console.log('params', params);
+  return defHttp.post(
+    {
+      url: Api.getAllMassage,
+      params
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+/**
+ * @description: 随访规则单条
+ */
+export function deleteRulesApi(params: {id: string | number },mode: ErrorMessageMode = 'none') {
+  return defHttp.get(
+    {
+      url: Api.deleteRules,
+      params
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+/**
+ * @description: 修改随访规则
+ */
+export function updataRulesApi(params: {id: string | number },mode: ErrorMessageMode = 'none') {
+  return defHttp.post(
+    {
+      url: Api.updataRules,
+      params
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+/**
+ * @description: 随访规则单条
  */
 export function getOneRulesApi(params: {id: string | number },mode: ErrorMessageMode = 'none') {
   return defHttp.get(

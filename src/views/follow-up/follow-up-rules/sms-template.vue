@@ -1,11 +1,11 @@
 <template>
-  <div class="p-4 flex flex-col">
+  <div class="p-4 flex flex-col sms-template">
     <!-- <div class="mb-4">
       <a-button class="mr-2" @click="reloadTable"> 还原 </a-button>
     </div> -->
     <!-- @register="registerTable"  -->
     <BasicTable
-      :columns="getBasicColumns()"
+      :columns="getSmsTemplateBasicColumns()"
       :dataSource="formConfig.list"
       :pagination="pagination"
       @change="handlerChange"
@@ -24,7 +24,7 @@
           <div style="display: flex">
             <Input
               ref="keywordRef"
-              placeholder="请输入方案名称"
+              placeholder="请输入模板名称"
               style="width: 180px"
               v-model:value="formConfig.ruleName"
               :allowClear="true"
@@ -34,7 +34,7 @@
             />
             <Select
               ref="keywordRef"
-              placeholder="请选择研究项目"
+              placeholder="请选择短信消息类型"
               style="margin-left: 10px; width: 180px"
               v-model:value="formConfig.projectName"
               :allowClear="true"
@@ -69,13 +69,13 @@
             block
             style="width: 80px"
             @click="
-            title = '编辑随访规则'
+            title = '编辑模板'
               handleItem(record.id);
               addModal = true;
             "
             >编辑</Button
           >
-          <Button type="link" danger style="width: 80px" @click="deleteRulesfun(record.id)">删除</Button>
+          <!-- <Button type="link" danger style="width: 80px" @click="deleteRulesfun(record.id)">删除</Button> -->
         </template>
       </template>
     </BasicTable>
@@ -85,10 +85,8 @@
         <a-button key="back" @click="handleCancel">取消</a-button>
         <a-button key="submit" type="primary" :loading="loading" @click="handleOk">提交</a-button>
       </template>
-      <!-- <div> -->
-      <!-- <template #body> -->
       <BasicForm @register="register">
-        <template #add="{ field }">
+        <!-- <template #add="{ field }">
           <div>
             <Table
               :dataSource="formConfig.dataSource"
@@ -97,7 +95,6 @@
               :border="true"
             >
               <template #bodyCell="{ column, text, record }">
-                <!--   {{ text }} {{ record }} {{field}} -->
                 <template v-if="column.dataIndex === 'AssociatedDate'">
                   <div class="editable-cell">
                     <div v-if="editableData[record.key]" class="editable-cell-input-wrapper">
@@ -114,12 +111,9 @@
                           }))
                         "
                       />
-                      <!-- <a-input v-model:value="editableData[record.key].name" @pressEnter="save(record.key)" /> -->
-                      <!-- <check-outlined class="editable-cell-icon-check" @click="save(record.key)" /> -->
                     </div>
                     <div v-else class="editable-cell-text-wrapper">
                       {{ text || ' ' }}
-                      <!-- <edit-outlined class="editable-cell-icon" @click="edit(record.key)" /> -->
                     </div>
                   </div>
                 </template>
@@ -135,11 +129,9 @@
                         @pressEnter="save(record.key)"
                       />
                       <span style="width: 40px"> 天后</span>
-                      <!-- <check-outlined class="editable-cell-icon-check" @click="save(record.key)" /> -->
                     </div>
                     <div v-else class="editable-cell-text-wrapper">
                       {{ text || ' ' }} 天后
-                      <!-- <edit-outlined class="editable-cell-icon" @click="edit(record.key)" /> -->
                     </div>
                   </div>
                 </template>
@@ -155,11 +147,9 @@
                         @pressEnter="save(record.key)"
                       />
                       <span style="width: 40px"> 天后</span>
-                      <!-- <check-outlined class="editable-cell-icon-check" @click="save(record.key)" /> -->
                     </div>
                     <div v-else class="editable-cell-text-wrapper">
                       {{ text || ' ' }} 天后
-                      <!-- <edit-outlined class="editable-cell-icon" @click="edit(record.key)" /> -->
                     </div>
                   </div>
                 </template>
@@ -170,18 +160,15 @@
                         v-model:value="editableData[record.key].note"
                         @pressEnter="save(record.key)"
                       />
-                      <!-- <check-outlined class="editable-cell-icon-check" @click="save(record.key)" /> -->
                     </div>
                     <div v-else class="editable-cell-text-wrapper">
                       {{ text || ' ' }}
-                      <!-- <edit-outlined class="editable-cell-icon" @click="edit(record.key)" /> -->
                     </div>
                   </div>
                 </template>
                 <template v-if="column.dataIndex === 'edit'">
                   <div class="editable-cell">
                     <div class="editable-cell-input-wrapper">
-                      <!-- <a-input v-model:value="editableData[record.key].name" @pressEnter="save(record.key)" /> -->
                       <check-outlined
                         v-if="editableData[record.key]"
                         class="editable-cell-icon-check"
@@ -194,9 +181,6 @@
                         @click="edit(record.key)"
                       />
                     </div>
-                    <!-- <div  class="editable-cell-text-wrapper">
-                    <delete-outlined class="editable-cell-icon" style="margin-left: 10px" @click="edit(record.key)" />
-                  </div> -->
                   </div>
                 </template>
               </template>
@@ -217,33 +201,11 @@
                       <PlusOutlined />
                     </template>
                   </Button>
-                  <!-- <a-table-summary-row> -->
-                  <!-- <a-table-summary-cell :index="2" :col-span="24"> -->
-                  <!-- <plus-outlined class="editable-cell-icon" style="margin-left: 10px" @click="handleAdd()" />
-                  <span>添加</span> -->
-                  <!-- </a-table-summary-cell> -->
-                  <!-- </a-table-summary-row> -->
-
-                  <!-- <Button type="dashed" block style="width: calc(100% - 4px); margin: 2px;" >
-                <template #icon>
-                  <PlusOutlined @click="handleAdd()" />
-                </template>
-              </Button> -->
                 </TableSummaryCell>
               </template>
             </Table>
-            <!--         <Button type="dashed" block style="width: calc(100% - 4px); margin: 2px;" @click="handleAdd()" >
-                <template #icon>
-                  <PlusOutlined/>
-                </template>
-              </Button> -->
           </div>
-          <!-- <a-button v-if="Number(field) === 0" @click="add">+</a-button>
-          <a-button class="ml-2" v-if="Number(field) === 0" @click="batchAdd">
-            批量添加表单配置
-          </a-button>
-          <a-button v-if="Number(field) > 0" @click="() => del(field)">-</a-button> -->
-        </template>
+        </template> -->
       </BasicForm>
     </Modal>
   </div>
@@ -251,7 +213,7 @@
 <script lang="ts" setup>
   import { BasicTable, useTable } from '@/components/Table';
   import { BasicForm, FormSchema, useForm } from '@/components/Form';
-  import { getBasicColumns, getFormConfig } from './tableData';
+  import { getSmsTemplateBasicColumns, getSmsTemplateFormConfig } from './tableData';
   import {
     CheckOutlined,
     EditOutlined,
@@ -268,7 +230,7 @@
     DeleTeDynamicValueApi,
   } from '@/api/sys/data';
   import {
-    getAllRulesApi,
+    getAllMassageApi,
     getAllProjectNotParamApi,
     getOneRulesApi,
     addRulesApi,
@@ -295,7 +257,7 @@
   const addModal = ref<boolean>(false);
   const loading = ref<boolean>(false);
   const followUpItem = ref<any>();
-  const title = ref<string>('新增随访规则');
+  const title = ref<string>('新增模板');
   const pagination = ref<any>(true);
   // const [registerForm, { validate }] = useForm();
   const editableData: UnwrapRef<Record<string, any>> = reactive({});
@@ -479,7 +441,7 @@
     formConfig.size = params.pageSize;
     // 更新翻页器参数
     pagination.value = { current: params.current };
-    handleAllRulesApi();
+    handleAllMassageApi();
   };
   const projectNameList = async () => {
     await getAllProjectNotParamApi()
@@ -504,13 +466,25 @@
     return [
       {
         field: 'ruleName',
-        component: 'Input',
-        label: '规则名称',
+        component: 'Select',
+        label: '模板分类',
         colProps: {
           span: 24,
         },
         componentProps: {
-          placeholder: '请输入规则名称',
+          placeholder: '请选择模板分类',
+          options:  [
+            {
+              label: '随访提醒',
+              value: '1',
+              key: '1',
+            },
+            {
+              label: '节日祝福',
+              value: '2',
+              key: '2',
+            },
+          ],
           onChange: (e: any) => {
             console.log(e);
           },
@@ -518,13 +492,13 @@
       },
       {
         field: 'projectCode',
-        component: 'Select',
-        label: '研究项目',
+        component: 'Input',
+        label: '模板名称',
         colProps: {
           span: 24,
         },
         componentProps: {
-          placeholder: '请选择研究项目',
+          placeholder: '请输入模板名称',
           options: formConfig.projectNameArr /*  [
             {
               label: '是',
@@ -542,13 +516,41 @@
       {
         field: 'status',
         component: 'RadioGroup',
-        label: '是否启用',
+        label: '模板参数',
         colProps: {
           span: 24,
         },
         defaultValue: '1',
         componentProps: {
           options: [
+            {
+              label: '姓名',
+              value: '1',
+              key: '1',
+            },
+            {
+              label: '手机号码',
+              value: '2',
+              key: '2',
+            },
+            {
+              label: '访视病例报告表问卷链接',
+              value: '3',
+              key: '3',
+            },
+          ],
+        },
+      },
+      {
+        field: 'projectCode',
+        component: 'Select',
+        label: '研究项目',
+        colProps: {
+          span: 24,
+        },
+        componentProps: {
+          placeholder: '请选择研究项目',
+          options: /* formConfig.projectNameArr */  [
             {
               label: '是',
               value: '1',
@@ -563,6 +565,48 @@
         },
       },
       {
+        field: 'ruleName',
+        component: 'InputTextArea',
+        label: '模板内容',
+        colProps: {
+          span: 24,
+        },
+        componentProps: {
+          placeholder: '请输入模板内容',
+          onChange: (e: any) => {
+            console.log(e);
+          },
+        },
+      },
+      {
+        field: 'ruleName',
+        component: 'Switch',
+        label: '是否基线期短信',
+        colProps: {
+          span: 24,
+        },
+        componentProps: {
+          placeholder: '请输入是否基线期短信',
+          onChange: (e: any) => {
+            console.log(e);
+          },
+        },
+      },
+      {
+        field: 'ruleName',
+        component: 'Switch',
+        label: '是否启用',
+        colProps: {
+          span: 24,
+        },
+        componentProps: {
+          placeholder: '请输入是否启用',
+          onChange: (e: any) => {
+            console.log(e);
+          },
+        },
+      },
+      /* {
         field: 'field4',
         // component: 'Input',
         label: ' ',
@@ -730,16 +774,16 @@
           format: 'HH:mm',
           valueFormat: 'HH:mm',
         },
-      },
+      }, */
     ];
   };
   const [registerTable, { getForm }] = useTable({
     // title: '开启搜索区域',
-    // api: getAllRulesApi,
-    columns: getBasicColumns(),
+    // api: getAllMassageApi,
+    columns: getSmsTemplateBasicColumns(),
     dataSource: formConfig.list,
     useSearchForm: false,
-    formConfig: getFormConfig(),
+    formConfig: getSmsTemplateFormConfig(),
     showTableSetting: false,
     tableSetting: { fullScreen: false },
     showIndexColumn: true,
@@ -762,7 +806,7 @@
     showAdvancedButton: true, */
   });
 
-  /* console.log(
+/*   console.log(
     'updateSchema',
     updateSchema,
     formConfig.projectNameArr,
@@ -806,10 +850,10 @@
     console.log('empty');
     formConfig.ruleName = '';
     formConfig.projectName = '';
-    handleAllRulesApi();
+    handleAllMassageApi();
   };
   function getFormValues() {
-    handleAllRulesApi();
+    handleAllMassageApi();
     /* console.log('registerTable', registerTable);
     console.log(getForm());
     console.log(getForm().getFieldsValue()); */
@@ -817,12 +861,12 @@
   const handleCancel = () => {
     addModal.value = false;
   };
-  const handleAllRulesApi = () => {
-    getAllRulesApi({
+  const handleAllMassageApi = () => {
+    getAllMassageApi({
       current: formConfig.current,
       size: formConfig.size,
-      projectName: formConfig.projectName,
-      ruleName: formConfig.ruleName,
+      messageType: 0,
+      tempName: formConfig.ruleName,
     })
       .then((res: any) => {
         if (res) {
@@ -833,7 +877,7 @@
   };
   const onSearchKeyword = (searchValue: string) => {
     console.log('searchValue', searchValue, searchValue.target.value);
-    handleAllRulesApi();
+    handleAllMassageApi();
     // console.log('searchValue',searchValue)
     // getFormManagerList()
   };
@@ -856,7 +900,7 @@
     );
     // console.log('handleOk', submit, ruleInfoJson.SMSRules)
     console.log('ruleInfoJson', ruleInfoJson);
-    if (title.value === '新增随访规则') {
+    if (title.value === '新增模板') {
       addRulesApi({
         // "fromId": 0,
         fromName: getFieldsValue().fromName,
@@ -870,7 +914,7 @@
         // "visitCycle": ""
       }).then((res: any) => {
         console.log('addRulesApi', res);
-        handleAllRulesApi();
+        handleAllMassageApi();
         notification.success({
           message: res,
           duration: 3,
@@ -892,7 +936,7 @@
           message: res,
           duration: 3,
         });
-        handleAllRulesApi();
+        handleAllMassageApi();
       });
     }
     // getFieldsValue
@@ -919,7 +963,7 @@
     // console.log('registerTable', registerTable);
     console.log('register.schemas', getSchamas());
 
-    handleAllRulesApi();
+    handleAllMassageApi();
     projectNameList();
   });
 </script>
