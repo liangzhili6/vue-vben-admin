@@ -8,6 +8,7 @@
       :columns="getSmsTemplateBasicColumns()"
       :dataSource="formConfig.list"
       :pagination="pagination"
+      :showIndexColumn="false"
       @change="handlerChange"
     >
       <template #form-custom> custom-slot </template>
@@ -36,15 +37,26 @@
               ref="keywordRef"
               placeholder="请选择短信消息类型"
               style="margin-left: 10px; width: 180px"
-              v-model:value="formConfig.projectName"
-              :allowClear="true"
+              v-model:value="formConfig.messageType"
               class="keywordView"
-              :options="
-                formConfig.projectNameOptions.map((pro) => ({
-                  value: pro.projectCode,
-                  label: pro.projectName,
-                }))
-              "
+              :options="[
+            {
+              label: '随访提醒',
+              value: 0,
+            },
+            {
+              label: '医生短信',
+              value: 1,
+            },
+            {
+              label: '节日祝福',
+              value: 2,
+            },
+            {
+              label: '全部',
+              value: 3,
+            },
+          ]"
             />
           </div>
           <div>
@@ -77,6 +89,16 @@
           >
           <!-- <Button type="link" danger style="width: 80px" @click="deleteRulesfun(record.id)">删除</Button> -->
         </template>
+        <template v-if="column.dataIndex === 'status'">
+          <Switch v-model:checked="record.status" @change="changeStatus(record)" :checkedValue="1" :unCheckedValue="0"/>
+        </template>
+        <template v-if="column.dataIndex === 'messageType'">
+          <span style="width: 80px" v-if="record.messageType == 0" >随访提醒</span>
+          <span style="width: 80px" v-if="record.messageType == 1" >医生短信</span>
+          <span style="width: 80px" v-if="record.messageType == 2" >节日祝福</span>
+          <span style="width: 80px" v-if="record.messageType == 3" >全部</span>
+          <!-- <Button type="link" danger style="width: 80px" @click="deleteRulesfun(record.id)">删除</Button> -->
+        </template>
       </template>
     </BasicTable>
     <Modal v-model:open="addModal" :title="title" @ok="handleOk" :width="'60%'">
@@ -87,123 +109,7 @@
       </template>
       <BasicForm @register="register">
         <!-- <template #add="{ field }">
-          <div>
-            <Table
-              :dataSource="formConfig.dataSource"
-              :columns="formConfig.TableColumns"
-              :pagination="false"
-              :border="true"
-            >
-              <template #bodyCell="{ column, text, record }">
-                <template v-if="column.dataIndex === 'AssociatedDate'">
-                  <div class="editable-cell">
-                    <div v-if="editableData[record.key]" class="editable-cell-input-wrapper">
-                      <Select
-                        ref="keywordRef"
-                        placeholder="请输入方案名称"
-                        v-model:value="editableData[record.key].AssociatedDate"
-                        :allowClear="true"
-                        class="keywordView"
-                        :options="
-                          formConfig.projectNameOptions.map((pro) => ({
-                            value: pro.projectCode,
-                            label: pro.projectName,
-                          }))
-                        "
-                      />
-                    </div>
-                    <div v-else class="editable-cell-text-wrapper">
-                      {{ text || ' ' }}
-                    </div>
-                  </div>
-                </template>
-                <template v-if="column.dataIndex === 'startTime'">
-                  <div class="editable-cell">
-                    <div
-                      v-if="editableData[record.key]"
-                      class="editable-cell-input-wrapper"
-                      style="display: flex"
-                    >
-                      <a-input
-                        v-model:value="editableData[record.key].startTime"
-                        @pressEnter="save(record.key)"
-                      />
-                      <span style="width: 40px"> 天后</span>
-                    </div>
-                    <div v-else class="editable-cell-text-wrapper">
-                      {{ text || ' ' }} 天后
-                    </div>
-                  </div>
-                </template>
-                <template v-if="column.dataIndex === 'endTime'">
-                  <div class="editable-cell">
-                    <div
-                      v-if="editableData[record.key]"
-                      class="editable-cell-input-wrapper"
-                      style="display: flex"
-                    >
-                      <a-input
-                        v-model:value="editableData[record.key].endTime"
-                        @pressEnter="save(record.key)"
-                      />
-                      <span style="width: 40px"> 天后</span>
-                    </div>
-                    <div v-else class="editable-cell-text-wrapper">
-                      {{ text || ' ' }} 天后
-                    </div>
-                  </div>
-                </template>
-                <template v-if="column.dataIndex === 'note'">
-                  <div class="editable-cell">
-                    <div v-if="editableData[record.key]" class="editable-cell-input-wrapper">
-                      <a-input
-                        v-model:value="editableData[record.key].note"
-                        @pressEnter="save(record.key)"
-                      />
-                    </div>
-                    <div v-else class="editable-cell-text-wrapper">
-                      {{ text || ' ' }}
-                    </div>
-                  </div>
-                </template>
-                <template v-if="column.dataIndex === 'edit'">
-                  <div class="editable-cell">
-                    <div class="editable-cell-input-wrapper">
-                      <check-outlined
-                        v-if="editableData[record.key]"
-                        class="editable-cell-icon-check"
-                        @click="save(record.key)"
-                      />
-                      <edit-outlined v-else class="editable-cell-icon" @click="edit(record.key)" />
-                      <delete-outlined
-                        class="editable-cell-icon"
-                        style="margin-left: 10px"
-                        @click="edit(record.key)"
-                      />
-                    </div>
-                  </div>
-                </template>
-              </template>
-              <template #summary>
-                <TableSummaryCell
-                  :col-span="24"
-                  :fixed="'bottom'"
-                  :border="true"
-                  v-if="formConfig.dataSource.length < 5"
-                >
-                  <Button
-                    type="dashed"
-                    block
-                    style="width: calc(100% - 4px); margin: 2px"
-                    @click="handleAdd()"
-                  >
-                    <template #icon>
-                      <PlusOutlined />
-                    </template>
-                  </Button>
-                </TableSummaryCell>
-              </template>
-            </Table>
+          <div>11111
           </div>
         </template> -->
       </BasicForm>
@@ -232,10 +138,12 @@
   import {
     getAllMassageApi,
     getAllProjectNotParamApi,
-    getOneRulesApi,
-    addRulesApi,
-    updataRulesApi,
-    deleteRulesApi,
+    getOneMassageApi,
+    addMassageApi,
+    updataMassageApi,
+    deleteMassageApi,
+    updataStatusApi,
+    getMessageTemplateValueApi,
   } from '@/api/sys/follow-up';
   import { cloneDeep } from 'lodash-es';
   import { onMounted, reactive, ref, UnwrapRef } from 'vue';
@@ -250,6 +158,8 @@
     Table,
     TableSummaryCell,
     TableSummary,
+    Switch,
+    CheckboxGroup
   } from 'ant-design-vue';
   import { useMessage } from '@/hooks/web/useMessage';
   const { notification } = useMessage();
@@ -259,14 +169,25 @@
   const followUpItem = ref<any>();
   const title = ref<string>('新增模板');
   const pagination = ref<any>(true);
+  const status = ref<any>();
   // const [registerForm, { validate }] = useForm();
   const editableData: UnwrapRef<Record<string, any>> = reactive({});
+  const changeStatus = (record) => {
+    updataStatusApi({
+      id: record.id,
+      status: record.status ?  1 : 0,
+    }).then(res=>{
+      handleAllMassageApi();
+      notification.success({
+        message: res?res: '修改成功',
+        duration: 3,
+      });
+    })
+  }
   const edit = (key: string) => {
-    console.log('edit', key);
     editableData[key] = cloneDeep(formConfig.dataSource.filter((item) => key === item.key)[0]);
   };
   const save = (key: string) => {
-    console.log('save', key);
     Object.assign(formConfig.dataSource.filter((item) => key === item.key)[0], editableData[key]);
     delete editableData[key];
     formConfig.dataSource = [].concat(formConfig.dataSource);
@@ -347,6 +268,7 @@
     current: 1,
     size: 10,
     ruleName: '',
+    messageType: 3,
     projectName: '',
     projectNameOptions: [],
     projectNameArr: [],
@@ -456,16 +378,9 @@
               key: val.projectCode,
             };
           });
-        }
-      })
-      .catch((e: any) => {});
-  };
-  const getSchamas = () => {
-    projectNameList();
-    console.log('formConfig.projectNameArr', formConfig.projectNameArr);
-    return [
+       updateSchema([
       {
-        field: 'ruleName',
+        field: 'messageType',
         component: 'Select',
         label: '模板分类',
         colProps: {
@@ -476,13 +391,23 @@
           options:  [
             {
               label: '随访提醒',
-              value: '1',
-              key: '1',
+              value: 0,
+              key: 0,
+            },
+            {
+              label: '医生短信',
+              value: 1,
+              key: 1,
             },
             {
               label: '节日祝福',
-              value: '2',
-              key: '2',
+              value: 2,
+              key: 2,
+            },
+            {
+              label: '全部',
+              value: 3,
+              key: 3,
             },
           ],
           onChange: (e: any) => {
@@ -491,7 +416,7 @@
         },
       },
       {
-        field: 'projectCode',
+        field: 'tempName',
         component: 'Input',
         label: '模板名称',
         colProps: {
@@ -499,44 +424,37 @@
         },
         componentProps: {
           placeholder: '请输入模板名称',
-          options: formConfig.projectNameArr /*  [
-            {
-              label: '是',
-              value: '1',
-              key: '1',
-            },
-            {
-              label: '否',
-              value: '2',
-              key: '2',
-            },
-          ], */,
         },
       },
       {
-        field: 'status',
-        component: 'RadioGroup',
+        field: 'templateValue',
+        component: 'CheckboxGroup',
         label: '模板参数',
         colProps: {
           span: 24,
         },
-        defaultValue: '1',
         componentProps: {
+          onChange: (e: any) => {
+            if(e.length){
+              getMessageTemplateValueApi({
+                value: e[e.length-1]+''
+              }).then(res=>{
+                setFieldsValue({tempContent: getFieldsValue().tempContent?getFieldsValue().tempContent+ res:'' + res})
+              })
+            }
+          },
           options: [
             {
               label: '姓名',
-              value: '1',
-              key: '1',
+              value: "姓名",
             },
             {
               label: '手机号码',
-              value: '2',
-              key: '2',
+              value: "手机号码",
             },
             {
               label: '访视病例报告表问卷链接',
-              value: '3',
-              key: '3',
+              value: "访视病例报告表问卷链接",
             },
           ],
         },
@@ -550,22 +468,22 @@
         },
         componentProps: {
           placeholder: '请选择研究项目',
-          options: /* formConfig.projectNameArr */  [
+          options: formConfig.projectNameArr/*   [
             {
               label: '是',
-              value: '1',
-              key: '1',
+              value: 1,
+              key: 1,
             },
             {
               label: '否',
-              value: '2',
-              key: '2',
+              value: 2,
+              key: 2,
             },
-          ],
+          ] */,
         },
       },
       {
-        field: 'ruleName',
+        field: 'tempContent',
         component: 'InputTextArea',
         label: '模板内容',
         colProps: {
@@ -573,19 +491,198 @@
         },
         componentProps: {
           placeholder: '请输入模板内容',
+          mousemove: (e: any) => {
+            // console.log('mousemove', e);
+          },
           onChange: (e: any) => {
-            console.log(e);
+            // console.log(e);
           },
         },
       },
       {
-        field: 'ruleName',
+        field: 'isBaseline',
         component: 'Switch',
         label: '是否基线期短信',
         colProps: {
           span: 24,
         },
         componentProps: {
+          checkedValue: 1,
+          unCheckedValue: 0,
+          placeholder: '请输入是否基线期短信',
+          onChange: (e: any) => {
+            // console.log(e);
+          },
+        },
+      },
+      {
+        field: 'status',
+        component: 'Switch',
+        label: '是否启用',
+        colProps: {
+          span: 24,
+        },
+        componentProps: {
+          checkedValue: 1,
+          unCheckedValue: 0,
+          options: /* formConfig.projectNameArr */  [
+            {
+              label: '是',
+              value: 1,
+              key: 1,
+            },
+            {
+              label: '否',
+              value: 2,
+              key: 2,
+            },
+          ],
+          placeholder: '请输入是否启用',
+          onChange: (e: any) => {
+            console.log(e);
+          },
+        },
+      },
+      
+    ])
+        }
+      })
+      .catch((e: any) => {});
+  };
+  const getSchamas = () => {
+    projectNameList();
+    return [
+      {
+        field: 'messageType',
+        component: 'Select',
+        label: '模板分类',
+        colProps: {
+          span: 24,
+        },
+        componentProps: {
+          placeholder: '请选择模板分类',
+          options:  [
+            {
+              label: '随访提醒',
+              value: 0,
+              key: 0,
+            },
+            {
+              label: '医生短信',
+              value: 1,
+              key: 1,
+            },
+            {
+              label: '节日祝福',
+              value: 2,
+              key: 2,
+            },
+            {
+              label: '全部',
+              value: 3,
+              key: 3,
+            },
+          ],
+          onChange: (e: any) => {
+            console.log(e);
+          },
+        },
+      },
+      {
+        field: 'tempName',
+        component: 'Input',
+        label: '模板名称',
+        colProps: {
+          span: 24,
+        },
+        componentProps: {
+          placeholder: '请输入模板名称',
+        },
+      },
+      {
+        field: 'templateValue',
+        component: 'CheckboxGroup',
+        label: '模板参数',
+        colProps: {
+          span: 24,
+        },
+        componentProps: {
+          onChange: (e: any) => {
+            console.log(e);
+            if(e.length){
+              getMessageTemplateValueApi({
+                value: e[e.length-1]+''
+              }).then(res=>{
+                setFieldsValue({tempContent: getFieldsValue().tempContent?getFieldsValue().tempContent+ res:'' + res})
+              })
+            }
+          },
+          options: [
+            {
+              label: '姓名',
+              value: "姓名",
+            },
+            {
+              label: '手机号码',
+              value: "手机号码",
+            },
+            {
+              label: '访视病例报告表问卷链接',
+              value: "访视病例报告表问卷链接",
+            },
+          ],
+        },
+      },
+      {
+        field: 'projectCode',
+        component: 'Select',
+        label: '研究项目',
+        colProps: {
+          span: 24,
+        },
+        componentProps: {
+          placeholder: '请选择研究项目',
+          options: formConfig.projectNameArr/*   [
+            {
+              label: '是',
+              value: 1,
+              key: 1,
+            },
+            {
+              label: '否',
+              value: 2,
+              key: 2,
+            },
+          ] */,
+        },
+      },
+      {
+        field: 'tempContent',
+        component: 'InputTextArea',
+        label: '模板内容',
+        colProps: {
+          span: 24,
+        },
+        componentProps: {
+          placeholder: '请输入模板内容',
+          mousemove: (e: any) => {
+            console.log('mousemove', e);
+          },
+          onChange: (e: any) => {
+            console.log(e);
+          },
+        },
+      },
+      {
+        field: 'isBaseline',
+        component: 'Switch',
+        label: '是否基线期短信',
+        colProps: {
+          span: 24,
+        },
+        componentProps: {
+          checkedValue: 1,
+          unCheckedValue: 0,
           placeholder: '请输入是否基线期短信',
           onChange: (e: any) => {
             console.log(e);
@@ -593,188 +690,34 @@
         },
       },
       {
-        field: 'ruleName',
+        field: 'status',
         component: 'Switch',
         label: '是否启用',
         colProps: {
           span: 24,
         },
         componentProps: {
+          checkedValue: 1,
+          unCheckedValue: 0,
+          options: /* formConfig.projectNameArr */  [
+            {
+              label: '是',
+              value: 1,
+              key: 1,
+            },
+            {
+              label: '否',
+              value: 2,
+              key: 2,
+            },
+          ],
           placeholder: '请输入是否启用',
           onChange: (e: any) => {
             console.log(e);
           },
         },
       },
-      /* {
-        field: 'field4',
-        // component: 'Input',
-        label: ' ',
-        slot: 'add',
-        itemProps: {
-          hiddenLabel: true,
-          labelCol: {
-            span: 0,
-          },
-          wrapperCol: {
-            span: 24,
-          },
-        },
-      },
-      {
-        field: 'field5',
-        component: 'RadioGroup',
-        label: '是否启用短信随访(患者)',
-        colProps: {
-          span: 8,
-        },
-        defaultValue: '1',
-        componentProps: {
-          options: [
-            {
-              label: '是',
-              value: '1',
-              key: '1',
-            },
-            {
-              label: '否',
-              value: '2',
-              key: '2',
-            },
-          ],
-        },
-      },
-      {
-        field: 'field6',
-        component: 'TimePicker',
-        label: '短信随访任务开始执行时间',
-        colProps: {
-          span: 16,
-        },
-        defaultValue: '1',
-        componentProps: {
-          format: 'HH:mm',
-          valueFormat: 'HH:mm',
-        },
-      },
-      {
-        field: 'field7',
-        component: 'RadioGroup',
-        label: '是否启用短信随访(患者)',
-        colProps: {
-          span: 8,
-        },
-        defaultValue: '1',
-        componentProps: {
-          options: [
-            {
-              label: '是',
-              value: '1',
-              key: '1',
-            },
-            {
-              label: '否',
-              value: '2',
-              key: '2',
-            },
-          ],
-        },
-      },
-      {
-        field: 'field8',
-        component: 'Select',
-        label: '短信随访任务开始执行时间',
-        colProps: {
-          span: 8,
-        },
-        defaultValue: '1',
-        componentProps: {
-          options: [
-            {
-              label: '是',
-              value: '1',
-              key: '1',
-            },
-            {
-              label: '否',
-              value: '2',
-              key: '2',
-            },
-          ],
-        },
-      },
-      {
-        field: 'field9',
-        component: 'TimePicker',
-        label: '短信随访任务开始执行时间',
-        colProps: {
-          span: 8,
-        },
-        defaultValue: '1',
-        componentProps: {
-          format: 'HH:mm',
-          valueFormat: 'HH:mm',
-        },
-      },
-      {
-        field: 'field10',
-        component: 'RadioGroup',
-        label: '是否启用短信随访(患者)',
-        colProps: {
-          span: 8,
-        },
-        defaultValue: '1',
-        componentProps: {
-          options: [
-            {
-              label: '是',
-              value: '1',
-              key: '1',
-            },
-            {
-              label: '否',
-              value: '2',
-              key: '2',
-            },
-          ],
-        },
-      },
-      {
-        field: 'field11',
-        component: 'Select',
-        label: '短信随访任务开始执行时间',
-        colProps: {
-          span: 8,
-        },
-        defaultValue: '1',
-        componentProps: {
-          options: [
-            {
-              label: '是',
-              value: '1',
-              key: '1',
-            },
-            {
-              label: '否',
-              value: '2',
-              key: '2',
-            },
-          ],
-        },
-      },
-      {
-        field: 'field12',
-        component: 'TimePicker',
-        label: '短信随访任务开始执行时间',
-        colProps: {
-          span: 8,
-        },
-        defaultValue: '1',
-        componentProps: {
-          format: 'HH:mm',
-          valueFormat: 'HH:mm',
-        },
-      }, */
+      
     ];
   };
   const [registerTable, { getForm }] = useTable({
@@ -796,7 +739,7 @@
   const handleSubmit = () => {
     console.log('handleSubmit');
   };
-  const [register, { updateSchema, submit, getFieldsValue }] = useForm({
+  const [register, { updateSchema, submit, getFieldsValue, setFieldsValue, resetSchema }] = useForm({
     // labelWidth: 80,
     schemas: getSchamas(),
     actionColOptions: {
@@ -805,67 +748,35 @@
     /*   compact: true,
     showAdvancedButton: true, */
   });
-
-/*   console.log(
-    'updateSchema',
-    updateSchema,
-    formConfig.projectNameArr,
-    updateSchema({
-      field: 'field2',
-      component: 'Select',
-      label: '研究项目',
-      colProps: {
-        span: 24,
-      },
-      componentProps: {
-        placeholder: '请选择研究项目',
-        options: formConfig.projectNameArr,
-      },
-    }),
-  ); */
-  /* updateSchema({
-    field: 'field2',
-    component: 'Select',
-    label: '研究项目',
-    colProps: {
-      span: 24,
-    },
-    componentProps: {
-      placeholder: '请选择研究项目',
-      options: formConfig.projectNameArr
-    },
-  }); */
   const showModal = () => {
     addModal.value = true;
   };
 
   const handleItem = (id) => {
-    getOneRulesApi({ id }).then((res) => {
-      console.log('handleItem', res);
+    getOneMassageApi({ id }).then((res) => {
       followUpItem.value = res
+      followUpItem.value.id = id
     });
     getSchamas();
   };
   const empty = () => {
-    console.log('empty');
-    formConfig.ruleName = '';
-    formConfig.projectName = '';
+    formConfig.tempName = '';
+    formConfig.messageType = 3;
     handleAllMassageApi();
   };
   function getFormValues() {
     handleAllMassageApi();
-    /* console.log('registerTable', registerTable);
-    console.log(getForm());
-    console.log(getForm().getFieldsValue()); */
   }
   const handleCancel = () => {
     addModal.value = false;
+    followUpItem.value={}
+    setFieldsValue({tempName:'',isBaseline:'',createBy:'',projectCode:'',messageType:'',tempContent:'',ruleName:'',status:''})
   };
   const handleAllMassageApi = () => {
     getAllMassageApi({
       current: formConfig.current,
       size: formConfig.size,
-      messageType: 0,
+      messageType: formConfig.messageType,
       tempName: formConfig.ruleName,
     })
       .then((res: any) => {
@@ -876,71 +787,57 @@
       .catch((e: any) => {});
   };
   const onSearchKeyword = (searchValue: string) => {
-    console.log('searchValue', searchValue, searchValue.target.value);
     handleAllMassageApi();
-    // console.log('searchValue',searchValue)
     // getFormManagerList()
   };
   const handleOk = () => {
-    console.log('followUpItem.value', followUpItem.value)
-    ruleInfoJson.SMSRules.field5 = getFieldsValue().field5;
-    ruleInfoJson.SMSRules.field6 = getFieldsValue().field6;
-    ruleInfoJson.SMSRules.field7 = getFieldsValue().field7;
-    ruleInfoJson.SMSRules.field8 = getFieldsValue().field8;
-    ruleInfoJson.SMSRules.field9 = getFieldsValue().field9;
-    ruleInfoJson.SMSRules.field10 = getFieldsValue().field10;
-    ruleInfoJson.SMSRules.field11 = getFieldsValue().field11;
-    ruleInfoJson.SMSRules.field12 = getFieldsValue().field12;
-    ruleInfoJson.VisitCycle = formConfig.dataSource;
-    console.log(
-      'handleOk- getFieldsValue',
-      getFieldsValue,
-      getFieldsValue(),
-      formConfig.dataSource,
-    );
-    // console.log('handleOk', submit, ruleInfoJson.SMSRules)
-    console.log('ruleInfoJson', ruleInfoJson);
     if (title.value === '新增模板') {
-      addRulesApi({
-        // "fromId": 0,
-        fromName: getFieldsValue().fromName,
-        // "id": 0,
-        // projectCode: getFieldsValue().projectCode,
-        projectCode: '01',
-        // "projectName": "",
-        ruleInfoJson: JSON.stringify(ruleInfoJson),
+      addMassageApi({
+        tempName: getFieldsValue().tempName,
+        isBaseline: getFieldsValue().isBaseline,
+        createBy: getFieldsValue().createBy,
+        projectCode: getFieldsValue().projectCode,
+        messageType: getFieldsValue().messageType,
+        tempContent: getFieldsValue().tempContent,
         ruleName: getFieldsValue().ruleName,
         status: getFieldsValue().status,
         // "visitCycle": ""
       }).then((res: any) => {
-        console.log('addRulesApi', res);
         handleAllMassageApi();
         notification.success({
-          message: res,
+          message:  res?res: '新增成功',
           duration: 3,
         });
+        // resetSchema()
+        setFieldsValue({tempName:'',isBaseline:'',createBy:'',projectCode:'',messageType:'',tempContent:'',ruleName:'',status:''})
+        // resetSchema({tempName:'',isBaseline:'',createBy:'',projectCode:'',messageType:'',tempContent:'',ruleName:'',status:''})
+        followUpItem.value = {}
       });
     } else {
-      updataRulesApi({
+      updataMassageApi({
         id: followUpItem.value.id,
-        // projectCode: followUpItem.value.projectCode,
-        // projectCode: followUpItem.value.projectCode,
-        projectCode: '01',
-        // projectName: '',
-        ruleInfoJson: JSON.stringify(ruleInfoJson),
+        tempName: getFieldsValue().tempName,
+        isBaseline: getFieldsValue().isBaseline,
+        createBy: getFieldsValue().createBy,
+        projectCode: getFieldsValue().projectCode,
+        messageType: getFieldsValue().messageType,
+        tempContent: getFieldsValue().tempContent,
+        // ruleInfoJson: JSON.stringify(ruleInfoJson),
         ruleName: getFieldsValue().ruleName,
         status: getFieldsValue().status,
       }).then((res) => {
-        console.log('updataRulesApi----res', res);
+        handleAllMassageApi();
         notification.success({
-          message: res,
+          message:  res?res: '编辑成功',
           duration: 3,
         });
-        handleAllMassageApi();
+        // resetSchema()
+        setFieldsValue({tempName:'',isBaseline:'',createBy:'',projectCode:'',messageType:'',tempContent:'',ruleName:'',status:''})
+        // resetSchema({tempName:'',isBaseline:'',createBy:'',projectCode:'',messageType:'',tempContent:'',ruleName:'',status:''})
+        followUpItem.value = {}
       });
     }
     // getFieldsValue
-    // console.log(getForm().getFieldsValue());
     // loading.value = true;
     setTimeout(() => {
       // loading.value = false;
@@ -948,21 +845,16 @@
     }, 100);
   };
   const deleteRulesfun = (id) => {
-    console.log('deleteRulesApi', id)
-    deleteRulesApi({
+    deleteMassageApi({
       id,
     }).then((res)=>{
-      console.log('deleteRulesApi----res', res)
       notification.success({
-        message: res,
+        message: res?res: '删除成功',
         duration: 3,
       });
     })
   } 
   onMounted(() => {
-    // console.log('registerTable', registerTable);
-    console.log('register.schemas', getSchamas());
-
     handleAllMassageApi();
     projectNameList();
   });

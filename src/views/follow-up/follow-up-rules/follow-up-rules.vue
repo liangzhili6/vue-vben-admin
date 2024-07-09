@@ -8,6 +8,7 @@
       :columns="getBasicColumns()"
       :dataSource="formConfig.list"
       :pagination="pagination"
+      :showIndexColumn="false"
       @change="handlerChange"
     >
       <template #form-custom> custom-slot </template>
@@ -494,6 +495,237 @@
               key: val.projectCode,
             };
           });
+          updateSchema([
+      {
+        field: 'ruleName',
+        component: 'Input',
+        label: '规则名称',
+        colProps: {
+          span: 24,
+        },
+        componentProps: {
+          placeholder: '请输入规则名称',
+          onChange: (e: any) => {
+            console.log(e);
+          },
+        },
+      },
+      {
+        field: 'projectCode',
+        component: 'Select',
+        label: '研究项目',
+        colProps: {
+          span: 24,
+        },
+        componentProps: {
+          placeholder: '请选择研究项目',
+          options: formConfig.projectNameArr /*  [
+            {
+              label: '是',
+              value: '1',
+              key: '1',
+            },
+            {
+              label: '否',
+              value: '2',
+              key: '2',
+            },
+          ], */,
+        },
+      },
+      {
+        field: 'status',
+        component: 'RadioGroup',
+        label: '是否启用',
+        colProps: {
+          span: 24,
+        },
+        defaultValue: '1',
+        componentProps: {
+          options: [
+            {
+              label: '是',
+              value: '1',
+              key: '1',
+            },
+            {
+              label: '否',
+              value: '2',
+              key: '2',
+            },
+          ],
+        },
+      },
+      {
+        field: 'field4',
+        // component: 'Input',
+        label: ' ',
+        slot: 'add',
+        itemProps: {
+          hiddenLabel: true,
+          labelCol: {
+            span: 0,
+          },
+          wrapperCol: {
+            span: 24,
+          },
+        },
+      },
+      {
+        field: 'field5',
+        component: 'RadioGroup',
+        label: '是否启用短信随访(患者)',
+        colProps: {
+          span: 8,
+        },
+        defaultValue: '1',
+        componentProps: {
+          options: [
+            {
+              label: '是',
+              value: '1',
+              key: '1',
+            },
+            {
+              label: '否',
+              value: '2',
+              key: '2',
+            },
+          ],
+        },
+      },
+      {
+        field: 'field6',
+        component: 'TimePicker',
+        label: '短信随访任务开始执行时间',
+        colProps: {
+          span: 16,
+        },
+        defaultValue: '1',
+        componentProps: {
+          format: 'HH:mm',
+          valueFormat: 'HH:mm',
+        },
+      },
+      {
+        field: 'field7',
+        component: 'RadioGroup',
+        label: '是否启用短信随访(患者)',
+        colProps: {
+          span: 8,
+        },
+        defaultValue: '1',
+        componentProps: {
+          options: [
+            {
+              label: '是',
+              value: '1',
+              key: '1',
+            },
+            {
+              label: '否',
+              value: '2',
+              key: '2',
+            },
+          ],
+        },
+      },
+      {
+        field: 'field8',
+        component: 'Select',
+        label: '短信随访任务开始执行时间',
+        colProps: {
+          span: 8,
+        },
+        defaultValue: '1',
+        componentProps: {
+          options: [
+            {
+              label: '是',
+              value: '1',
+              key: '1',
+            },
+            {
+              label: '否',
+              value: '2',
+              key: '2',
+            },
+          ],
+        },
+      },
+      {
+        field: 'field9',
+        component: 'TimePicker',
+        label: '短信随访任务开始执行时间',
+        colProps: {
+          span: 8,
+        },
+        defaultValue: '1',
+        componentProps: {
+          format: 'HH:mm',
+          valueFormat: 'HH:mm',
+        },
+      },
+      {
+        field: 'field10',
+        component: 'RadioGroup',
+        label: '是否启用短信随访(患者)',
+        colProps: {
+          span: 8,
+        },
+        defaultValue: '1',
+        componentProps: {
+          options: [
+            {
+              label: '是',
+              value: '1',
+              key: '1',
+            },
+            {
+              label: '否',
+              value: '2',
+              key: '2',
+            },
+          ],
+        },
+      },
+      {
+        field: 'field11',
+        component: 'Select',
+        label: '短信随访任务开始执行时间',
+        colProps: {
+          span: 8,
+        },
+        defaultValue: '1',
+        componentProps: {
+          options: [
+            {
+              label: '是',
+              value: '1',
+              key: '1',
+            },
+            {
+              label: '否',
+              value: '2',
+              key: '2',
+            },
+          ],
+        },
+      },
+      {
+        field: 'field12',
+        component: 'TimePicker',
+        label: '短信随访任务开始执行时间',
+        colProps: {
+          span: 8,
+        },
+        defaultValue: '1',
+        componentProps: {
+          format: 'HH:mm',
+          valueFormat: 'HH:mm',
+        },
+      },
+    ])
         }
       })
       .catch((e: any) => {});

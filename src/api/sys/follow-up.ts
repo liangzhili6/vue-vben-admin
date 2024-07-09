@@ -23,7 +23,23 @@ enum Api {
   getOneMassage = "/dynamicFormsService/api/v1/followUp/massage/getOneMassage",
   getallMessageInfo = "/dynamicFormsService/api/v1/followUp/massage/getallMessageInfo",
   updataStatus = "/dynamicFormsService/api/v1/followUp/massage/updataStatus",
+  getMessageTemplateValue = "/dynamicFormsService/api/v1/followUp/massage/getMessageTemplateValue",
 }
+/**
+ * @description: 随访规则单条
+ */
+export function getMessageTemplateValueApi(params: {value: string },mode: ErrorMessageMode = 'none') {
+  return defHttp.get(
+    {
+      url: Api.getMessageTemplateValue,
+      params
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
 /**
  * @description: 随访规则单条
  */

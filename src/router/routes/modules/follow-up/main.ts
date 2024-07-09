@@ -18,22 +18,6 @@ const data: AppRouteModule = {
   },
   children: [
     {
-      path: 'sms-template',
-      name: 'SmsTemplate',
-      meta: {
-        title: '短信模版',
-      },
-      component: () => import('@/views/follow-up/follow-up-rules/sms-template.vue'),
-    },
-    {
-      path: 'follow-up-rules',
-      name: 'FollowUpRules',
-      meta: {
-        title: '随访规则',
-      },
-      component: () => import('@/views/follow-up/follow-up-rules/follow-up-rules.vue'),
-    },
-    {
       path: 'follow-up-list-two',
       name: 'FollowUpListTwo',
       meta: {
@@ -56,6 +40,22 @@ const data: AppRouteModule = {
         title: '随访四',
       },
       component: () => import('@/views/follow-up/follow-up-list-four/follow-up-list-four.vue'),
+    },
+    {
+      path: 'sms-template',
+      name: 'SmsTemplate',
+      meta: {
+        title: '短信模版',
+      },
+      component: () => import('@/views/follow-up/follow-up-rules/sms-template.vue'),
+    },
+    {
+      path: 'follow-up-rules',
+      name: 'FollowUpRules',
+      meta: {
+        title: '随访规则',
+      },
+      component: () => import('@/views/follow-up/follow-up-rules/follow-up-rules.vue'),
     },
   ],
 };
