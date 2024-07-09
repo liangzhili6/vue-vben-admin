@@ -57,6 +57,14 @@ const data: AppRouteModule = {
       },
       component: () => import('@/views/follow-up/follow-up-rules/follow-up-rules.vue'),
     },
+    {
+      path: 'follow-up-feedback',
+      name: 'FollowUpFeedback',
+      meta: {
+        title: '填写反馈',
+      },
+      component: () => import('@/views/follow-up/follow-up-feedback/follow-up-feedback.vue'),
+    },
   ],
 };
 

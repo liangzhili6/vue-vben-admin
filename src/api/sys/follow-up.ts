@@ -24,6 +24,22 @@ enum Api {
   getallMessageInfo = "/dynamicFormsService/api/v1/followUp/massage/getallMessageInfo",
   updataStatus = "/dynamicFormsService/api/v1/followUp/massage/updataStatus",
   getMessageTemplateValue = "/dynamicFormsService/api/v1/followUp/massage/getMessageTemplateValue",
+  getAllFeedBack = "/dynamicFormsService/api/v1/dynamicForms/feedBack/getAll",
+}
+/**
+ * @description: 修改随访规则
+ */
+export function getAllFeedBackApi(params: {current: string | number ,size: string | number ,messageType: string | number ,tempName: string | number },mode: ErrorMessageMode = 'none') {
+  console.log('params', params);
+  return defHttp.post(
+    {
+      url: Api.getAllFeedBack,
+      params
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
 }
 /**
  * @description: 随访规则单条
