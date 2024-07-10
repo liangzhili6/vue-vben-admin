@@ -28,8 +28,20 @@ enum Api {
 }
 /**
  * @description: 修改随访规则
+ * {
+  "current": 0,
+  "size": 0,
+  "countdown": "",
+  "endTime": "",
+  "startTime": "",
+  "expire": 0,
+  "fillInStatus": 0,
+  "name": "",
+  "patientId": "",
+  "schedule": "",
+}
  */
-export function getAllFeedBackApi(params: {current: string | number ,size: string | number ,messageType: string | number ,tempName: string | number },mode: ErrorMessageMode = 'none') {
+export function getAllFeedBackApi(params: {current: string | number ,size: string | number ,countdown?: string | number ,endTime?: string | number,startTime?: string | number,expire?: string | number,fillInStatus?: string | number,name?: string | number,patientId?: string | number,schedule?: string | number },mode: ErrorMessageMode = 'none') {
   console.log('params', params);
   return defHttp.post(
     {

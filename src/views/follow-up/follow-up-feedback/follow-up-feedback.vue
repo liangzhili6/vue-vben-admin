@@ -6,127 +6,101 @@
     </div> -->
     <!-- @register="registerTable"  -->
     <BasicTable
-      :columns="getSmsTemplateBasicColumns()"
+      :columns="getfeedbackColumns()"
       :dataSource="formConfig.list"
       :pagination="pagination"
       :showIndexColumn="false"
       @change="handlerChange"
     >
-      <template #form-custom> custom-slot </template>
+      <!-- <template #form-custom> custom-slot </template> -->
       <template #toolbar>
         <div
           style="
             display: flex;
             flex-direction: row;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
             flex: 1;
             justify-content: space-between;
           "
         >
-          <div style="display: flex">
-            <Input
-              ref="keywordRef"
-              placeholder="请输入患者ID"
-              style="width: 180px"
-              v-model:value="formConfig.ruleName"
-              :allowClear="true"
-              @search="onSearchKeyword"
-              class="keywordView"
-              @pressEnter="onSearchKeyword"
-            />
-            <Select
-              ref="keywordRef"
-              placeholder="请选择访视期"
-              style="margin-left: 10px; width: 180px"
-              :allowClear="true"
-              v-model:value="formConfig.messageType"
-              class="keywordView"
-              :options="[
-                {
-                  label: '随访提醒',
-                  value: 0,
-                },
-                {
-                  label: '医生短信',
-                  value: 1,
-                },
-                {
-                  label: '节日祝福',
-                  value: 2,
-                },
-                {
-                  label: '全部',
-                  value: 3,
-                },
-              ]"
-            />
-            <Select
-              ref="keywordRef"
-              placeholder="请选择随访日期范围"
-              style="margin-left: 10px; width: 180px"
-              :allowClear="true"
-              v-model:value="formConfig.messageType"
-              class="keywordView"
-              :options="[
-                {
-                  label: '随访提醒',
-                  value: 0,
-                },
-                {
-                  label: '医生短信',
-                  value: 1,
-                },
-                {
-                  label: '节日祝福',
-                  value: 2,
-                },
-                {
-                  label: '全部',
-                  value: 3,
-                },
-              ]"
-            />
-            <Select
-              ref="keywordRef"
-              placeholder="请选择随访日期范围"
-              style="margin-left: 10px; width: 180px"
-              :allowClear="true"
-              v-model:value="formConfig.messageType"
-              class="keywordView"
-              :options="[
-                {
-                  label: '待填写',
-                  value: 0,
-                },
-                {
-                  label: '已填写',
-                  value: 1,
-                }
-              ]"
-            />
-            <Select
-              ref="keywordRef"
-              placeholder="请选择过期状态"
-              style="margin-left: 10px; width: 180px"
-              :allowClear="true"
-              v-model:value="formConfig.messageType"
-              class="keywordView"
-              :options="[
-                {
-                  label: '是',
-                  value: 0,
-                },
-                {
-                  label: '否',
-                  value: 1,
-                }
-              ]"
-            />
-          </div>
-          <div>
-            <Button type="primary" @click="getFormValues">搜索</Button>
-            <Button type="primary" @click="empty" style="margin-left: 10px">清空</Button>
-            <!-- <Button
+          <div
+            style="
+              display: flex;
+              flex-direction: row;
+              flex-wrap: nowrap;
+              flex: 1;
+              justify-content: space-between;
+            "
+          >
+            <div style="display: flex">
+              <Input
+                ref="keywordRef"
+                placeholder="请输入患者ID"
+                style="width: 180px"
+                v-model:value="formConfig.patientId"
+                :allowClear="true"
+                @search="onSearchKeyword"
+                class="keywordView"
+                @pressEnter="onSearchKeyword"
+              />
+              <Select
+                ref="keywordRef"
+                placeholder="请选择访视期"
+                style="margin-left: 10px; width: 180px"
+                :allowClear="true"
+                v-model:value="formConfig.schedule"
+                class="keywordView"
+                :options="formConfig.dataSource"
+              />
+              <RangePicker
+                ref="keywordRef"
+                placeholder="请选择随访日期范围"
+                style="margin-left: 10px; width: 220px"
+                :allowClear="true"
+                v-model:value="formConfig.times"
+                class="keywordView"
+              />
+              <Select
+                ref="keywordRef"
+                placeholder="填写状态"
+                style="margin-left: 10px; width: 180px"
+                :allowClear="true"
+                v-model:value="formConfig.fillInStatus"
+                class="keywordView"
+                :options="[
+                  {
+                    label: '待填写',
+                    value: 0,
+                  },
+                  {
+                    label: '已填写',
+                    value: 1,
+                  },
+                ]"
+              />
+              <Select
+                ref="keywordRef"
+                placeholder="请选择过期状态"
+                style="margin-left: 10px; width: 180px"
+                :allowClear="true"
+                v-model:value="formConfig.expire"
+                class="keywordView"
+                :options="[
+                  {
+                    label: '是',
+                    value: 0,
+                  },
+                  {
+                    label: '否',
+                    value: 1,
+                  },
+                ]"
+              />
+            </div>
+            <div>
+              <Button type="primary" @click="getFormValues">搜索</Button>
+              <Button type="primary" @click="empty" style="margin-left: 10px">清空</Button>
+              <!-- <Button
               type="primary"
               @click="
                 getSchamas();
@@ -135,12 +109,33 @@
               style="margin-left: 10px"
               >新增</Button
             > -->
+            </div>
           </div>
+          <!-- <div>
+            <Tabs v-model:activeKey="activeKey">
+              <TabPane key="1" tab="全部"></TabPane>
+              <TabPane key="2" tab="基线期" force-render></TabPane>
+              <TabPane key="3" tab="访视一"></TabPane>
+              <TabPane key="4" tab="访视二"></TabPane>
+              <TabPane key="5" tab="访视三"></TabPane>
+              <TabPane key="6" tab="访视四"></TabPane>
+            </Tabs>
+          </div> -->
         </div>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'edit'">
-          <Button
+          <Popover placement="topLeft">
+          <template #content>
+            <p>Content</p>
+            <p>Content</p>
+          </template>
+          <template #title>
+            <span>Title</span>
+          </template>
+          <a-button>详情</a-button>
+        </Popover>
+          <!-- <Button
             type="link"
             block
             style="width: 80px"
@@ -149,17 +144,17 @@
               handleItem(record.id);
               addModal = true;
             "
-            >编辑</Button
-          >
+            >详情</Button
+          > -->
           <!-- <Button type="link" danger style="width: 80px" @click="deleteRulesfun(record.id)">删除</Button> -->
         </template>
-        <template v-if="column.dataIndex === 'status'">
-          <Switch
-            v-model:checked="record.status"
-            @change="changeStatus(record)"
-            :checkedValue="1"
-            :unCheckedValue="0"
-          />
+        <template v-if="column.dataIndex === 'sex'">
+          <span v-if="record.sex == 1">男</span>
+          <span v-if="record.sex == 0">女</span>
+        </template>
+        <template v-if="column.dataIndex === 'isExpire	'">
+          <span v-if="record.sex == 1">是</span>
+          <span v-if="record.sex == 0">否</span>
         </template>
         <template v-if="column.dataIndex === 'messageType'">
           <span style="width: 80px" v-if="record.messageType == 0">随访提醒</span>
@@ -188,7 +183,7 @@
 <script lang="ts" setup>
   import { BasicTable, useTable } from '@/components/Table';
   import { BasicForm, FormSchema, useForm } from '@/components/Form';
-  import { getSmsTemplateBasicColumns, getSmsTemplateFormConfig } from './tableData';
+  import { getfeedbackColumns, getSmsTemplateFormConfig } from './tableData';
   import {
     CheckOutlined,
     EditOutlined,
@@ -213,10 +208,10 @@
     deleteMassageApi,
     updataStatusApi,
     getMessageTemplateValueApi,
-    getAllFeedBackApi
+    getAllFeedBackApi,
   } from '@/api/sys/follow-up';
   import { cloneDeep } from 'lodash-es';
-  import { onMounted, reactive, ref, UnwrapRef } from 'vue';
+  import { onMounted, reactive, ref, UnwrapRef, watch } from 'vue';
   import {
     Button,
     Input,
@@ -230,10 +225,15 @@
     TableSummary,
     Switch,
     CheckboxGroup,
+    Tabs,
+    TabPane,
+    RangePicker,
+    Popover,
   } from 'ant-design-vue';
   import { useMessage } from '@/hooks/web/useMessage';
   const { notification } = useMessage();
   const keyword = ref<any>('');
+  const activeKey = ref('1');
   const addModal = ref<boolean>(false);
   const loading = ref<boolean>(false);
   const followUpItem = ref<any>();
@@ -343,7 +343,35 @@
     projectNameOptions: [],
     projectNameArr: [],
     list: [],
+    name: '',
+    patientId: '',
+    times: '',
+    startTime: '',
+    endTime: '',
+    schedule: '',
+    fillInStatus: '1',
+    expire: '1',
     dataSource: [
+      {
+        visitCycle: '全部',
+        AssociatedDate: '1',
+        startTime: '1',
+        endTime: '7',
+        note: '1',
+        key: 0,
+        label: '全部',
+        value: 100,
+      },
+      {
+        visitCycle: '基线期',
+        AssociatedDate: '1',
+        startTime: '1',
+        endTime: '7',
+        note: '1',
+        key: 0,
+        label: '基线期',
+        value: 0,
+      },
       {
         visitCycle: '访视一',
         AssociatedDate: '1',
@@ -351,6 +379,8 @@
         endTime: '7',
         note: '1',
         key: 0,
+        label: '访视一',
+        value: 1,
       },
       {
         visitCycle: '访视二',
@@ -359,6 +389,8 @@
         endTime: '7',
         note: '1',
         key: 1,
+        label: '访视二',
+        value: 2,
       },
       {
         visitCycle: '访视三',
@@ -367,6 +399,8 @@
         endTime: '7',
         note: '1',
         key: 2,
+        label: '访视三',
+        value: 3,
       },
       {
         visitCycle: '访视四',
@@ -375,6 +409,8 @@
         endTime: '7',
         note: '1',
         key: 3,
+        label: '访视四',
+        value: 4,
       },
     ],
     TableColumns: [
@@ -410,6 +446,19 @@
       },
     ],
   });
+  watch(
+    () => formConfig.times,
+    (newVal, oldVal) => {
+      if (newVal && newVal.length) {
+        formConfig.startTime = newVal[0];
+        formConfig.endTime = newVal[1];
+      } else {
+        formConfig.startTime = '';
+        formConfig.endTime = '';
+      }
+    },
+    { deep: true, immediate: true },
+  );
   let count = formConfig.dataSource.length;
   const handleAdd = () => {
     const newData = {
@@ -799,7 +848,7 @@
   const [registerTable, { getForm }] = useTable({
     // title: '开启搜索区域',
     // api: getAllMassageApi,
-    columns: getSmsTemplateBasicColumns(),
+    columns: getfeedbackColumns(),
     dataSource: formConfig.list,
     useSearchForm: false,
     formConfig: getSmsTemplateFormConfig(),
@@ -860,11 +909,17 @@
     });
   };
   const handleAllMassageApi = () => {
-    getAllMassageApi({
+    getAllFeedBackApi({
       current: formConfig.current,
       size: formConfig.size,
-      messageType: formConfig.messageType,
-      tempName: formConfig.ruleName,
+      fillInStatus: formConfig.fillInStatus,
+      countdown: formConfig.countdown,
+      endTime: formConfig.endTime,
+      startTime: formConfig.startTime,
+      expire: formConfig.expire,
+      name: formConfig.name,
+      patientId: formConfig.patientId,
+      schedule: formConfig.schedule,
     })
       .then((res: any) => {
         if (res) {

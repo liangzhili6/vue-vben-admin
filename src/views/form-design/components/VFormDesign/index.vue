@@ -177,7 +177,11 @@
       item.colProps = item.colProps || { span: 24 };
       item.componentProps = item.componentProps || {};
       item.itemProps = item.itemProps || {};
-      // item.position = { x: 25, y: 4, w: 200, h: 60 };
+      item.position = item.position || { x: 25, y: 4, w: 200, h: 60 };
+      item.x = item?.x || 0;
+      item.y = item?.y || 0;
+      item.w = item?.w || 100;
+      item.h = item?.h || 2;
     });
     formConfig.value = config as any;
   };
